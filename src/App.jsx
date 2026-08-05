@@ -52,13 +52,13 @@ export default function App() {
       )}
 
       {/* Fixed Sticky Header Navigation */}
-      <Navigation onReplayIntro={handleReplayIntro} />
+      {!showIntro && <Navigation onReplayIntro={handleReplayIntro} />}
 
       {/* Main Content Area: Intentionally Empty Canvas */}
       <main className="relative z-10 flex-1 min-h-[85vh]" />
 
       {/* Minimal Editorial Footer */}
-      <Footer onReplayIntro={handleReplayIntro} />
+      {!showIntro && <Footer onReplayIntro={handleReplayIntro} />}
     </div>
   );
 }

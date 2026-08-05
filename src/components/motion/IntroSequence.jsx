@@ -215,6 +215,9 @@ export default function IntroSequence({ onComplete }) {
       const p = elapsedMs / DURATION_LINE;
       const eased = easeInOutCubic(p);
 
+      linePath.style.opacity = p > 0 ? '1' : '0';
+      circleArcPath.style.opacity = '0';
+
       linePath.style.strokeDashoffset = (LINE_LENGTH * (1 - eased)).toString();
       circleArcPath.style.strokeDashoffset = ARC_LENGTH.toString();
       arrowheadGroup.style.opacity = '0';
@@ -232,6 +235,8 @@ export default function IntroSequence({ onComplete }) {
       if (subtitle) subtitle.style.opacity = '0';
     } else if (elapsedMs <= DURATION_LINE + DURATION_CIRCLE) {
       // Phase 2: Sweep Perfect Circular Arc + Cinematic Title Begin Fade-In
+      linePath.style.opacity = '1';
+      circleArcPath.style.opacity = '1';
       linePath.style.strokeDashoffset = '0';
 
       const circleTime = elapsedMs - DURATION_LINE;
@@ -265,6 +270,8 @@ export default function IntroSequence({ onComplete }) {
       if (subtitle) subtitle.style.opacity = '0';
     } else if (elapsedMs <= DURATION_LINE + DURATION_CIRCLE + DURATION_ARROW) {
       // Phase 3: Resolve Tangent Arrowhead & Marvel Text Lock-in + Sub Impact Hit
+      linePath.style.opacity = '1';
+      circleArcPath.style.opacity = '1';
       linePath.style.strokeDashoffset = '0';
       circleArcPath.style.strokeDashoffset = '0';
 
@@ -285,6 +292,8 @@ export default function IntroSequence({ onComplete }) {
       if (subtitle) subtitle.style.opacity = (p * 0.4).toString();
     } else {
       // Phase 4: Full Hold of Marvel Title & Logo
+      linePath.style.opacity = '1';
+      circleArcPath.style.opacity = '1';
       linePath.style.strokeDashoffset = '0';
       circleArcPath.style.strokeDashoffset = '0';
       animDot.style.opacity = '0';
@@ -315,6 +324,8 @@ export default function IntroSequence({ onComplete }) {
     const circleArcPath = circleArcPathRef.current;
 
     if (linePath && circleArcPath) {
+      linePath.style.opacity = '0';
+      circleArcPath.style.opacity = '0';
       linePath.style.strokeDasharray = `${LINE_LENGTH} ${LINE_LENGTH}`;
       circleArcPath.style.strokeDasharray = `${ARC_LENGTH} ${ARC_LENGTH}`;
       linePath.style.strokeDashoffset = LINE_LENGTH.toString();
@@ -381,6 +392,7 @@ export default function IntroSequence({ onComplete }) {
                 strokeWidth="9"
                 strokeLinecap="round"
                 style={{
+                  opacity: 0,
                   strokeDasharray: `${LINE_LENGTH} ${LINE_LENGTH}`,
                   strokeDashoffset: `${LINE_LENGTH}`,
                 }}
@@ -396,6 +408,7 @@ export default function IntroSequence({ onComplete }) {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 style={{
+                  opacity: 0,
                   strokeDasharray: `${ARC_LENGTH} ${ARC_LENGTH}`,
                   strokeDashoffset: `${ARC_LENGTH}`,
                 }}
