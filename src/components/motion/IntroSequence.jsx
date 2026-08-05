@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useCallback, useState } from 'react';
 
 // Geometry Constants
 const CX = 300;
@@ -310,7 +310,7 @@ export default function IntroSequence({ onComplete }) {
     }
   }, [renderProgress]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const linePath = linePathRef.current;
     const circleArcPath = circleArcPathRef.current;
 
@@ -380,6 +380,10 @@ export default function IntroSequence({ onComplete }) {
                 stroke="#ffffff"
                 strokeWidth="9"
                 strokeLinecap="round"
+                style={{
+                  strokeDasharray: `${LINE_LENGTH} ${LINE_LENGTH}`,
+                  strokeDashoffset: `${LINE_LENGTH}`,
+                }}
               />
 
               {/* Path 1b: Open Circular Arc */}
@@ -391,13 +395,17 @@ export default function IntroSequence({ onComplete }) {
                 strokeWidth="9"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                style={{
+                  strokeDasharray: `${ARC_LENGTH} ${ARC_LENGTH}`,
+                  strokeDashoffset: `${ARC_LENGTH}`,
+                }}
               />
 
               {/* Path 2: Tangent Arrowhead */}
               <g
                 ref={arrowheadGroupRef}
                 transform="translate(437.65, 399.93) rotate(-52.3)"
-                className="opacity-0"
+                style={{ opacity: 0 }}
               >
                 <path
                   d="M 14 0 L -8 -9 L -2 0 L -8 9 Z"
@@ -416,8 +424,7 @@ export default function IntroSequence({ onComplete }) {
                 cy="300"
                 r="5"
                 fill="#ffffff"
-                className="opacity-100"
-                style={{ filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 1))' }}
+                style={{ opacity: 1, filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 1))' }}
               />
             </g>
           </svg>
