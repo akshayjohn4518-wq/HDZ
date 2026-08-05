@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { RotateCcw } from 'lucide-react';
 
-export default function Navigation({ onReplayIntro }) {
+export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [activeChapter] = useState('01');
 
@@ -26,11 +25,7 @@ export default function Navigation({ onReplayIntro }) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex items-center justify-between gap-2">
         {/* DAY ZERO Logo */}
-        <button
-          onClick={onReplayIntro}
-          className="flex items-center gap-2 sm:gap-3 group text-left focus:outline-none shrink-0"
-          title="Replay Intro Animation"
-        >
+        <div className="flex items-center gap-2 sm:gap-3 group text-left shrink-0 select-none">
           <div className="w-7 h-7 sm:w-8 sm:h-8 relative flex items-center justify-center">
             <svg viewBox="0 0 600 600" className="w-7 h-7 sm:w-8 sm:h-8 overflow-visible">
               <g>
@@ -44,11 +39,11 @@ export default function Navigation({ onReplayIntro }) {
           </div>
 
           <div className="flex flex-col">
-            <span className="font-display text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.25em] font-semibold text-white uppercase group-hover:text-white/80 transition-colors whitespace-nowrap">
+            <span className="font-display text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.25em] font-semibold text-white uppercase whitespace-nowrap">
               DAY ZERO
             </span>
           </div>
-        </button>
+        </div>
 
         {/* Film Chapter Selector (01 to 04) */}
         <nav className="flex items-center gap-1 sm:gap-2 bg-[#0B0B0B]/90 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full border border-white/10 text-xs font-mono">
@@ -73,16 +68,6 @@ export default function Navigation({ onReplayIntro }) {
             );
           })}
         </nav>
-
-        {/* Minimal Intro Replay Utility */}
-        <button
-          onClick={onReplayIntro}
-          className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-[11px] font-mono text-white/40 hover:text-white border border-white/10 hover:border-white/25 rounded-sm transition-all glass-panel uppercase tracking-wider shrink-0"
-          title="Replay Opening Sequence"
-        >
-          <RotateCcw className="w-3 h-3" />
-          <span className="hidden sm:inline">REPLAY</span>
-        </button>
       </div>
     </header>
   );

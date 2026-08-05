@@ -52,7 +52,7 @@ export default function App() {
       )}
 
       {/* Fixed Sticky Header Navigation */}
-      {!showIntro && <Navigation onReplayIntro={handleReplayIntro} />}
+      {!showIntro && <Navigation />}
 
       {/* Main Content Area: Intentionally Empty Canvas */}
       <main className="relative z-10 flex-1 min-h-[85vh]" />
