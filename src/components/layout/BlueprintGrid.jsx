@@ -1,14 +1,8 @@
-import React from 'react';
-import GreenVitalsStream from './GreenVitalsStream';
-
 export default function BlueprintGrid() {
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none">
       {/* Structural Architectural Blueprint Grid Overlay */}
       <div className="absolute inset-0 bg-blueprint-grid opacity-60" />
-
-      {/* Green Hospital Vitals Flowing Bottom-to-Top on Left Side */}
-      <GreenVitalsStream />
 
       {/* 35mm Film Grain Overlay */}
       <svg className="pointer-events-none fixed inset-0 opacity-[0.035] mix-blend-overlay w-full h-full">
