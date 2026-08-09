@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import Lenis from 'lenis';
 import IntroSequence from './components/motion/IntroSequence';
 import BlueprintGrid from './components/layout/BlueprintGrid';
 import Navigation from './components/layout/Navigation';
 import Footer from './components/layout/Footer';
+import ContactSection from './components/layout/ContactSection';
 
 export default function App() {
   const [showIntro, setShowIntro] = useState(true);
   const [replayKey, setReplayKey] = useState(0);
+  const [showContact, setShowContact] = useState(false);
 
   // Initialize Lenis Smooth Scroll
   useEffect(() => {
@@ -35,6 +38,7 @@ export default function App() {
   const handleReplayIntro = () => {
     setReplayKey((prev) => prev + 1);
     setShowIntro(true);
+    setShowContact(false);
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
@@ -54,11 +58,23 @@ export default function App() {
       {/* Fixed Sticky Header Navigation */}
       {!showIntro && <Navigation />}
 
-      {/* Main Content Area: Intentionally Empty Canvas */}
+      {/* Main Content Area: Intentionally Empty/Void Canvas as before */}
       <main className="relative z-10 flex-1 min-h-[85vh]" />
 
+      {/* Contact Workstation Overlay - Only displayed when triggered from Footer */}
+      <AnimatePresence>
+        {!showIntro && showContact && (
+          <ContactSection onClose={() => setShowContact(false)} />
+        )}
+      </AnimatePresence>
+
       {/* Minimal Editorial Footer */}
-      {!showIntro && <Footer onReplayIntro={handleReplayIntro} />}
+      {!showIntro && (
+        <Footer
+          onReplayIntro={handleReplayIntro}
+          onOpenContact={() => setShowContact(true)}
+        />
+      )}
     </div>
   );
 }

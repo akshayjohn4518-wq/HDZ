@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Footer({ onReplayIntro }) {
+export default function Footer({ onReplayIntro, onOpenContact }) {
   return (
     <footer className="relative bg-[#050505] border-t border-white/10 py-8 sm:py-12 px-4 sm:px-6 md:px-8 text-xs font-mono text-white/50 z-10">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-8">
@@ -11,7 +11,7 @@ export default function Footer({ onReplayIntro }) {
               DAY ZERO
             </span>
             <span className="text-[10px] text-white/30 border-l border-white/15 pl-2.5 sm:pl-3 tracking-widest uppercase">
-              Documenting Beginnings
+              THE FIRST COMMIT
             </span>
           </div>
           <p className="text-white/40 text-[10px] sm:text-[11px] font-light">
@@ -29,15 +29,17 @@ export default function Footer({ onReplayIntro }) {
           >
             GitHub
           </a>
-          <a
-            href="mailto:contact@dayzero.dev"
-            className="hover:text-white transition-colors"
+          <button
+            type="button"
+            onClick={onOpenContact}
+            className="hover:text-white transition-colors cursor-pointer text-left"
           >
             Contact
-          </a>
+          </button>
           <button
+            type="button"
             onClick={onReplayIntro}
-            className="hover:text-white transition-colors text-left"
+            className="hover:text-white transition-colors text-left cursor-pointer"
           >
             Replay Intro
           </button>

@@ -17,11 +17,10 @@ export default function Navigation() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
-        scrolled
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${scrolled
           ? 'bg-[#050505]/85 backdrop-blur-md border-b border-white/10 py-3 sm:py-4'
           : 'bg-transparent py-4 sm:py-6'
-      }`}
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex items-center justify-between gap-2">
         {/* DAY ZERO Logo */}
@@ -56,11 +55,10 @@ export default function Navigation() {
               <button
                 key={num}
                 onClick={(e) => e.preventDefault()}
-                className={`px-1.5 sm:px-2 py-0.5 rounded transition-all cursor-default text-[10px] sm:text-[11px] font-mono ${
-                  isActive
+                className={`px-1.5 sm:px-2 py-0.5 rounded transition-all cursor-default text-[10px] sm:text-[11px] font-mono ${isActive
                     ? 'bg-white text-black font-semibold shadow-sm'
                     : 'text-white/40 hover:text-white/80 hover:bg-white/5'
-                }`}
+                  }`}
                 title={`Chapter ${num} — Unwritten`}
               >
                 {num}
