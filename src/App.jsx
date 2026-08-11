@@ -6,6 +6,7 @@ import BlueprintGrid from './components/layout/BlueprintGrid';
 import Navigation from './components/layout/Navigation';
 import Footer from './components/layout/Footer';
 import ContactSection from './components/layout/ContactSection';
+import CinematicHomepage from './components/blueprint/CinematicHomepage';
 
 export default function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -58,10 +59,14 @@ export default function App() {
       {/* Fixed Sticky Header Navigation */}
       {!showIntro && <Navigation />}
 
-      {/* Main Content Area: Intentionally Empty/Void Canvas as before */}
-      <main className="relative z-10 flex-1 min-h-[85vh]" />
+      {/* Main Interactive Blueprint Documentary Homepage */}
+      {!showIntro && (
+        <main className="relative z-10 flex-1">
+          <CinematicHomepage onOpenContact={() => setShowContact(true)} />
+        </main>
+      )}
 
-      {/* Contact Workstation Overlay - Only displayed when triggered from Footer */}
+      {/* Contact Workstation Overlay - Triggered from Footer or Homepage CTAs */}
       <AnimatePresence>
         {!showIntro && showContact && (
           <ContactSection onClose={() => setShowContact(false)} />
@@ -78,3 +83,4 @@ export default function App() {
     </div>
   );
 }
+

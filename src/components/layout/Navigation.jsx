@@ -1,26 +1,55 @@
 import React, { useState, useEffect } from 'react';
 
+const CHAPTERS = ['01', '02', '03', '04', '05', '06', '07'];
+
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
-  const [activeChapter] = useState('01');
+  const [activeChapter, setActiveChapter] = useState(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 30);
+      const scrollY = window.scrollY;
+      setScrolled(scrollY > 30);
+
+      // Track active chapter with equal medium pacing
+      if (scrollY < 300) {
+        setActiveChapter(null); // Hero section
+      } else {
+        const chapterPositions = [300, 950, 1600, 2250, 2900, 3550, 4200];
+        let current = '01';
+        chapterPositions.forEach((pos, idx) => {
+          if (scrollY >= pos) {
+            current = CHAPTERS[idx];
+          }
+        });
+        setActiveChapter(current);
+      }
     };
-    window.addEventListener('scroll', handleScroll);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Updated Chapter Navigation: 01 to 04
-  const chapters = ['01', '02', '03', '04'];
+  const scrollToChapter = (chNum) => {
+    const el = document.getElementById(`chapter-${chNum}`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      const idx = CHAPTERS.indexOf(chNum);
+      if (idx !== -1) {
+        window.scrollTo({ top: 350 + idx * 650, behavior: 'smooth' });
+      }
+    }
+  };
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${scrolled
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
+        scrolled
           ? 'bg-[#050505]/85 backdrop-blur-md border-b border-white/10 py-3 sm:py-4'
           : 'bg-transparent py-4 sm:py-6'
-        }`}
+      }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex items-center justify-between gap-2">
         {/* DAY ZERO Logo */}
@@ -44,22 +73,24 @@ export default function Navigation() {
           </div>
         </div>
 
-        {/* Film Chapter Selector (01 to 04) */}
+        {/* Film Chapter Selector (01 to 07) */}
         <nav className="flex items-center gap-1 sm:gap-2 bg-[#0B0B0B]/90 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full border border-white/10 text-xs font-mono">
           <span className="text-white/30 text-[10px] tracking-widest uppercase hidden md:inline px-1">
             CHAPTER:
           </span>
-          {chapters.map((num) => {
+          {CHAPTERS.map((num) => {
             const isActive = num === activeChapter;
             return (
               <button
                 key={num}
-                onClick={(e) => e.preventDefault()}
-                className={`px-1.5 sm:px-2 py-0.5 rounded transition-all cursor-default text-[10px] sm:text-[11px] font-mono ${isActive
+                type="button"
+                onClick={() => scrollToChapter(num)}
+                className={`px-1.5 sm:px-2 py-0.5 rounded transition-all cursor-pointer text-[10px] sm:text-[11px] font-mono ${
+                  isActive
                     ? 'bg-white text-black font-semibold shadow-sm'
                     : 'text-white/40 hover:text-white/80 hover:bg-white/5'
-                  }`}
-                title={`Chapter ${num} — Unwritten`}
+                }`}
+                title={`Navigate to Chapter ${num}`}
               >
                 {num}
               </button>
