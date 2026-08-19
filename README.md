@@ -1,16 +1,35 @@
-# React + Vite
+# HDZ
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Modern dynamic web application built with React, Vite, Tailwind CSS, and Framer Motion.
 
-Currently, two official plugins are available:
+## Features
+- **Interactive Blueprint & Quest Workstation**: Interactive chapters, gamified quest tracking, and dynamic node visualizer.
+- **Intro Sequence & Seamless Navigation**: Isolated motion system with seamless section transitions.
+- **Gamified Contact Section**: Interactive consultation workstation & quest booking interface.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack
+- **Framework**: React + Vite
+- **Styling**: Tailwind CSS / Custom Glassmorphism CSS
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prerequisites
+- Node.js (v18+ recommended)
+- npm
 
-## Expanding the Oxlint configuration
+### Installation
+```bash
+npm install
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+### Development
+```bash
+npm run dev
+```
+
+### Build
+```bash
+npm run build
+```
