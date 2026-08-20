@@ -1,8 +1,8 @@
 # DAY ZERO (HDZ) — SAFE RESTORE POINT (SAFE_CHECKPOINT_V1)
 
-**Checkpoint Name**: `SAFE_CHECKPOINT_V1` (Updated - Interactive Blueprint Documentary Edition)  
+**Checkpoint Name**: `SAFE_CHECKPOINT_V1` (Updated - Synchronized Chapter Navigation & Blueprint Edition)  
 **Git Branch**: `main`  
-**Date**: 2026-08-11  
+**Date**: 2026-08-15  
 
 ---
 
@@ -21,21 +21,22 @@ This checkpoint saves the complete, production-ready implementation of **DAY ZER
    - Binary search algorithm mapping scroll Y coordinates to exact path lengths for 60FPS synchronization.
    - Camera tracking lerp loop smoothing horizontal camera movement along the path.
 
-3. **Illuminated Editorial Chapter Content (`ChapterContent.jsx`)**:
+3. **Illuminated Editorial Chapter Content & Start Anchors (`ChapterContent.jsx` & `chapters.js`)**:
    - High-contrast editorial typography with dynamic illumination states (`isLit`) as the drawing head reaches each section.
+   - Dedicated structural start anchors (`chapter-XX-start`) and 1:1 journey-line animation synchronization.
    - 7 Core Chapters:
-     - **01**: EVERY JOURNEY BEGINS SOMEWHERE
-     - **02**: THE PROBLEM
-     - **03**: OUR BELIEF
-     - **04**: BUILD IN PUBLIC
-     - **05**: CURRENT MISSIONS
-     - **06**: FUTURE ECOSYSTEM
-     - **07**: MANIFESTO
+     - **01**: THE FIRST COMMIT (Start Y: 600px)
+     - **02**: THE PROBLEM (Start Y: 1250px)
+     - **03**: OUR BELIEF (Start Y: 1900px)
+     - **04**: BUILD IN PUBLIC (Start Y: 2550px)
+     - **05**: CURRENT MISSIONS (Start Y: 3200px)
+     - **06**: FUTURE ECOSYSTEM (Start Y: 3850px)
+     - **07**: MANIFESTO (Start Y: 4500px)
    - Bottom Call-to-Action: "YOUR DAY ZERO STARTS NOW".
 
-4. **Sticky Header Navigation & Film Chapter Selector (`Navigation.jsx`)**:
+4. **Sticky Header Navigation & Synchronized Chapter Jump (`Navigation.jsx`)**:
    - Animated vector brand mark logo.
-   - Segmented chapter pill navigator (`01` to `07`) with active scroll detection and smooth jump scrolling.
+   - Segmented chapter pill navigator (`01` to `07`) with dynamic Lenis smooth scroll targeting chapter `startY` entrances.
 
 5. **Gamified Workstation & macOS Terminal Overlay (`ContactSection.jsx`)**:
    - 60:40 viewport split overlay triggered from footer or chapter buttons.
@@ -95,6 +96,8 @@ export default function App() {
       touchMultiplier: 2,
     });
 
+    window.lenis = lenis;
+
     function raf(time) {
       lenis.raf(time);
       requestAnimationFrame(raf);
@@ -102,6 +105,7 @@ export default function App() {
     requestAnimationFrame(raf);
 
     return () => {
+      delete window.lenis;
       lenis.destroy();
     };
   }, []);
@@ -153,6 +157,8 @@ export default function App() {
     </div>
   );
 }
+
+
 ```
 
 ---
@@ -320,6 +326,7 @@ export default function CinematicHomepage({ onOpenContact }) {
     </div>
   );
 }
+
 ```
 
 ---
@@ -703,7 +710,7 @@ export default function BlueprintCanvas({ pathProgress, currentPoint, mainPathD 
                 "Knowledge Base",
                 "Documentary Archive"
               ].map((item, idx) => (
-                <text key={idx} x="10" y={34 + idx * 14} fill={lit.isLit ? 'rgba(255,255,255,0.9)' : 'rgba(255, 255, 255, 0.35)'} fontSize="8" fontFamily="Inter, sans-serif">
+                <text key={idx} x="10" y="34 + idx * 14" fill={lit.isLit ? 'rgba(255,255,255,0.9)' : 'rgba(255, 255, 255, 0.35)'} fontSize="8" fontFamily="Inter, sans-serif">
                   {item}
                 </text>
               ))}
@@ -747,7 +754,7 @@ export default function BlueprintCanvas({ pathProgress, currentPoint, mainPathD 
                 "Never stop.",
                 "This is Day Zero."
               ].map((lineText, idx) => (
-                <text key={idx} x="10" y={36 + idx * 15} fill={lit.isLit ? 'rgba(255,255,255,0.9)' : 'rgba(255, 255, 255, 0.4)'} fontSize="8" fontFamily="Inter, sans-serif">
+                <text key={idx} x="10" y="36 + idx * 15" fill={lit.isLit ? 'rgba(255,255,255,0.9)' : 'rgba(255, 255, 255, 0.4)'} fontSize="8" fontFamily="Inter, sans-serif">
                   {lineText}
                 </text>
               ))}
@@ -785,6 +792,7 @@ export default function BlueprintCanvas({ pathProgress, currentPoint, mainPathD 
     </svg>
   );
 }
+
 ```
 
 ---
@@ -792,6 +800,7 @@ export default function BlueprintCanvas({ pathProgress, currentPoint, mainPathD 
 ### File 4: `src/components/blueprint/ChapterContent.jsx`
 ```jsx
 import React from 'react';
+import { CHAPTERS_DATA } from '../../utils/chapters';
 
 /**
  * ChapterContent renders editorial typography for Hero and Chapters 01 to 07,
@@ -800,58 +809,6 @@ import React from 'react';
  */
 export default function ChapterContent({ currentPoint, onOpenContact }) {
   const headY = currentPoint?.y ?? 120;
-
-  const chapters = [
-    {
-      id: '01',
-      title: 'EVERY JOURNEY BEGINS SOMEWHERE',
-      subtitle: 'Before every success, there is a first step. Before every product, there is a Day Zero.',
-      yPos: 750,
-      topCss: '750px',
-    },
-    {
-      id: '02',
-      title: 'THE PROBLEM',
-      subtitle: 'We only see the highlight reel. The struggles. The failures. The uncertainty. These are rarely shown.',
-      yPos: 1400,
-      topCss: '1400px',
-    },
-    {
-      id: '03',
-      title: 'OUR BELIEF',
-      subtitle: 'Every meaningful journey has a Day Zero. We believe the beginning is the most valuable part.',
-      yPos: 2050,
-      topCss: '2050px',
-    },
-    {
-      id: '04',
-      title: 'BUILD IN PUBLIC',
-      subtitle: 'We build. We document. We share everything — the good, the bad, and the unfinished.',
-      yPos: 2700,
-      topCss: '2700px',
-    },
-    {
-      id: '05',
-      title: 'CURRENT MISSIONS',
-      subtitle: 'Real projects. Real progress. This is what we are building right now.',
-      yPos: 3350,
-      topCss: '3350px',
-    },
-    {
-      id: '06',
-      title: 'FUTURE ECOSYSTEM',
-      subtitle: 'An ecosystem that empowers others to start their own Day Zero.',
-      yPos: 4000,
-      topCss: '4000px',
-    },
-    {
-      id: '07',
-      title: 'MANIFESTO',
-      subtitle: 'This is our commitment to builders, creators, and dreamers everywhere.',
-      yPos: 4650,
-      topCss: '4650px',
-    },
-  ];
 
   return (
     <div className="relative w-full h-[5200px] pointer-events-auto">
@@ -874,59 +831,67 @@ export default function ChapterContent({ currentPoint, onOpenContact }) {
       {/* ========================================================================= */}
       {/* CHAPTER SECTIONS 01 TO 07 (Right Side with Dynamic Illumination)         */}
       {/* ========================================================================= */}
-      {chapters.map((ch) => {
-        const isLit = headY >= ch.yPos - 130;
+      {CHAPTERS_DATA.map((ch) => {
+        const isLit = headY >= ch.startY - 10;
         return (
-          <section
-            key={ch.id}
-            id={`chapter-${ch.id}`}
-            style={{ top: ch.topCss }}
-            className={`absolute right-[6%] sm:right-[8%] max-w-sm sm:max-w-md space-y-2.5 -translate-y-1/2 transition-all duration-400 ${
-              isLit ? 'opacity-100 scale-100' : 'opacity-30 scale-[0.98]'
-            }`}
-          >
-            {/* Chapter Number Badge */}
-            <div className="flex items-center gap-2 font-mono text-xs tracking-wider">
-              <span
-                className={`px-2 py-0.5 rounded text-xs sm:text-sm font-semibold transition-all ${
-                  isLit ? 'bg-white text-black shadow-lg shadow-white/20' : 'bg-white/10 text-white/50'
-                }`}
-              >
-                {ch.id}
-              </span>
-              <span className={`text-[10px] tracking-widest uppercase ${isLit ? 'text-white/80' : 'text-white/30'}`}>
-                CHAPTER
-              </span>
-            </div>
-
-            {/* Title */}
-            <h2
-              className={`font-display text-xl sm:text-3xl font-semibold tracking-tight leading-snug transition-all ${
-                isLit ? 'text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.6)]' : 'text-white/40'
+          <React.Fragment key={ch.id}>
+            {/* Dedicated structural start anchor at chapter entrance */}
+            <div
+              id={`chapter-${ch.id}-start`}
+              data-chapter-start={ch.id}
+              className="absolute left-0 right-0 pointer-events-none"
+              style={{ top: `${ch.startY}px` }}
+            />
+            <section
+              id={`chapter-${ch.id}`}
+              style={{ top: ch.topCss }}
+              className={`absolute right-[6%] sm:right-[8%] max-w-sm sm:max-w-md space-y-2.5 -translate-y-1/2 transition-all duration-400 ${
+                isLit ? 'opacity-100 scale-100' : 'opacity-30 scale-[0.98]'
               }`}
             >
-              {ch.title}
-            </h2>
+              {/* Chapter Number Badge */}
+              <div className="flex items-center gap-2 font-mono text-xs tracking-wider">
+                <span
+                  className={`px-2 py-0.5 rounded text-xs sm:text-sm font-semibold transition-all ${
+                    isLit ? 'bg-white text-black shadow-lg shadow-white/20' : 'bg-white/10 text-white/50'
+                  }`}
+                >
+                  {ch.id}
+                </span>
+                <span className={`text-[10px] tracking-widest uppercase ${isLit ? 'text-white/80' : 'text-white/30'}`}>
+                  CHAPTER
+                </span>
+              </div>
 
-            {/* Subtitle */}
-            <p className={`text-xs sm:text-sm leading-relaxed font-light transition-all ${isLit ? 'text-white/80' : 'text-white/30'}`}>
-              {ch.subtitle}
-            </p>
-
-            {/* View Chapter Action */}
-            <div className="pt-1">
-              <button
-                type="button"
-                onClick={onOpenContact}
-                className={`inline-flex items-center gap-2 text-xs font-mono tracking-wider group cursor-pointer transition-all ${
-                  isLit ? 'text-white hover:text-white/80 font-medium' : 'text-white/30'
+              {/* Title */}
+              <h2
+                className={`font-display text-xl sm:text-3xl font-semibold tracking-tight leading-snug transition-all ${
+                  isLit ? 'text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.6)]' : 'text-white/40'
                 }`}
               >
-                <span>VIEW CHAPTER</span>
-                <span className={`h-[1px] transition-all duration-300 ${isLit ? 'w-10 bg-white' : 'w-6 bg-white/20'}`} />
-              </button>
-            </div>
-          </section>
+                {ch.title}
+              </h2>
+
+              {/* Subtitle */}
+              <p className={`text-xs sm:text-sm leading-relaxed font-light transition-all ${isLit ? 'text-white/80' : 'text-white/30'}`}>
+                {ch.subtitle}
+              </p>
+
+              {/* View Chapter Action */}
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={onOpenContact}
+                  className={`inline-flex items-center gap-2 text-xs font-mono tracking-wider group cursor-pointer transition-all ${
+                    isLit ? 'text-white hover:text-white/80 font-medium' : 'text-white/30'
+                  }`}
+                >
+                  <span>VIEW CHAPTER</span>
+                  <span className={`h-[1px] transition-all duration-300 ${isLit ? 'w-10 bg-white' : 'w-6 bg-white/20'}`} />
+                </button>
+              </div>
+            </section>
+          </React.Fragment>
         );
       })}
 
@@ -963,6 +928,7 @@ export default function ChapterContent({ currentPoint, onOpenContact }) {
     </div>
   );
 }
+
 ```
 
 ---
@@ -970,8 +936,9 @@ export default function ChapterContent({ currentPoint, onOpenContact }) {
 ### File 5: `src/components/layout/Navigation.jsx`
 ```jsx
 import React, { useState, useEffect } from 'react';
+import { CHAPTERS_DATA, getScrollYForCanvasY, getCanvasYForScrollY } from '../../utils/chapters';
 
-const CHAPTERS = ['01', '02', '03', '04', '05', '06', '07'];
+const CHAPTERS = CHAPTERS_DATA.map((ch) => ch.id);
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
@@ -982,15 +949,15 @@ export default function Navigation() {
       const scrollY = window.scrollY;
       setScrolled(scrollY > 30);
 
-      // Track active chapter with equal medium pacing
-      if (scrollY < 300) {
+      // Track active chapter based on canvas Y coordinate
+      const canvasY = getCanvasYForScrollY(scrollY);
+      if (canvasY < CHAPTERS_DATA[0].startY - 30) {
         setActiveChapter(null); // Hero section
       } else {
-        const chapterPositions = [300, 950, 1600, 2250, 2900, 3550, 4200];
         let current = '01';
-        chapterPositions.forEach((pos, idx) => {
-          if (scrollY >= pos) {
-            current = CHAPTERS[idx];
+        CHAPTERS_DATA.forEach((ch) => {
+          if (canvasY >= ch.startY - 30) {
+            current = ch.id;
           }
         });
         setActiveChapter(current);
@@ -1003,14 +970,15 @@ export default function Navigation() {
   }, []);
 
   const scrollToChapter = (chNum) => {
-    const el = document.getElementById(`chapter-${chNum}`);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+    const ch = CHAPTERS_DATA.find((item) => item.id === chNum);
+    if (!ch) return;
+
+    const targetScrollY = getScrollYForCanvasY(ch.startY);
+
+    if (window.lenis) {
+      window.lenis.scrollTo(targetScrollY, { duration: 1.2 });
     } else {
-      const idx = CHAPTERS.indexOf(chNum);
-      if (idx !== -1) {
-        window.scrollTo({ top: 350 + idx * 650, behavior: 'smooth' });
-      }
+      window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
     }
   };
 
@@ -1072,6 +1040,7 @@ export default function Navigation() {
     </header>
   );
 }
+
 ```
 
 ---
@@ -1598,6 +1567,7 @@ export default function ContactSection({ onClose }) {
     </motion.div>
   );
 }
+
 ```
 
 ---
@@ -1657,6 +1627,7 @@ export default function Footer({ onReplayIntro, onOpenContact }) {
     </footer>
   );
 }
+
 ```
 
 ---
@@ -1694,6 +1665,7 @@ export default function BlueprintGrid() {
     </div>
   );
 }
+
 ```
 
 ---
@@ -2156,6 +2128,8 @@ export default function IntroSequence({ onComplete }) {
               DAY ZERO
             </h1>
           </div>
+
+
         </div>
       </div>
 
@@ -2166,11 +2140,112 @@ export default function IntroSequence({ onComplete }) {
     </div>
   );
 }
+
 ```
 
 ---
 
-### File 10: `src/index.css`
+### File 10: `src/utils/chapters.js`
+```javascript
+/**
+ * Chapter metadata and coordinate utility definitions for DAY ZERO documentary.
+ * Canvas total height: 5200px
+ * Hero path start Y: 120px
+ * CTA path end Y: 5050px
+ */
+
+export const CANVAS_HEIGHT = 5200;
+export const PATH_START_Y = 120;
+export const PATH_END_Y = 5050;
+export const PATH_RANGE_Y = PATH_END_Y - PATH_START_Y; // 4930px
+
+export const CHAPTERS_DATA = [
+  {
+    id: '01',
+    title: 'THE FIRST COMMIT',
+    subtitle: 'Before every success, there is a first step. Before every product, there is a Day Zero.',
+    yPos: 750,
+    startY: 600,
+    topCss: '750px',
+  },
+  {
+    id: '02',
+    title: 'THE PROBLEM',
+    subtitle: 'We only see the highlight reel. The struggles. The failures. The uncertainty. These are rarely shown.',
+    yPos: 1400,
+    startY: 1250,
+    topCss: '1400px',
+  },
+  {
+    id: '03',
+    title: 'OUR BELIEF',
+    subtitle: 'Every meaningful journey has a Day Zero. We believe the beginning is the most valuable part.',
+    yPos: 2050,
+    startY: 1900,
+    topCss: '2050px',
+  },
+  {
+    id: '04',
+    title: 'BUILD IN PUBLIC',
+    subtitle: 'We build. We document. We share everything — the good, the bad, and the unfinished.',
+    yPos: 2700,
+    startY: 2550,
+    topCss: '2700px',
+  },
+  {
+    id: '05',
+    title: 'CURRENT MISSIONS',
+    subtitle: 'Real projects. Real progress. This is what we are building right now.',
+    yPos: 3350,
+    startY: 3200,
+    topCss: '3350px',
+  },
+  {
+    id: '06',
+    title: 'FUTURE ECOSYSTEM',
+    subtitle: 'An ecosystem that empowers others to start their own Day Zero.',
+    yPos: 4000,
+    startY: 3850,
+    topCss: '4000px',
+  },
+  {
+    id: '07',
+    title: 'MANIFESTO',
+    subtitle: 'This is our commitment to builders, creators, and dreamers everywhere.',
+    yPos: 4650,
+    startY: 4500,
+    topCss: '4650px',
+  },
+];
+
+/**
+ * Converts a target Y position on the SVG canvas (e.g. chapter startY)
+ * to the exact target window scrollY based on current viewport height.
+ */
+export function getScrollYForCanvasY(canvasY, viewportHeight = window.innerHeight, canvasHeight = CANVAS_HEIGHT) {
+  const maxScroll = canvasHeight - viewportHeight;
+  if (maxScroll <= 0) return 0;
+  const ratio = (canvasY - PATH_START_Y) / PATH_RANGE_Y;
+  const clampedRatio = Math.max(0, Math.min(1, ratio));
+  return Math.round(clampedRatio * maxScroll);
+}
+
+/**
+ * Converts the current window scrollY to the corresponding drawing head Y coordinate
+ * on the SVG canvas based on current viewport height.
+ */
+export function getCanvasYForScrollY(scrollY, viewportHeight = window.innerHeight, canvasHeight = CANVAS_HEIGHT) {
+  const maxScroll = canvasHeight - viewportHeight;
+  if (maxScroll <= 0) return PATH_START_Y;
+  const ratio = Math.max(0, Math.min(1, scrollY / maxScroll));
+  return PATH_START_Y + ratio * PATH_RANGE_Y;
+}
+
+```
+
+---
+
+### File 11: `src/index.css`
 ```css
 @import "tailwindcss";
 
@@ -2273,11 +2348,12 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
 }
+
 ```
 
 ---
 
-### File 11: `src/main.jsx`
+### File 12: `src/main.jsx`
 ```jsx
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -2289,4 +2365,7 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>,
 )
+
 ```
+
+---

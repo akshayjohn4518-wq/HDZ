@@ -389,7 +389,7 @@ export default function IntroSequence({ onComplete }) {
                 d="M 85 300 L 515 300"
                 fill="none"
                 stroke="#ffffff"
-                strokeWidth="9"
+                strokeWidth="3.5"
                 strokeLinecap="round"
                 style={{
                   opacity: 0,

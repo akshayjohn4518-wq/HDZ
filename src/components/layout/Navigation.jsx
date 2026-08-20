@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { CHAPTERS_DATA, getScrollYForCanvasY, getCanvasYForScrollY } from '../../utils/chapters';
 
-const CHAPTERS = ['01', '02', '03', '04', '05', '06', '07'];
+const CHAPTERS = CHAPTERS_DATA.map((ch) => ch.id);
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
@@ -11,15 +12,15 @@ export default function Navigation() {
       const scrollY = window.scrollY;
       setScrolled(scrollY > 30);
 
-      // Track active chapter with equal medium pacing
-      if (scrollY < 300) {
+      // Track active chapter based on canvas Y coordinate
+      const canvasY = getCanvasYForScrollY(scrollY);
+      if (canvasY < CHAPTERS_DATA[0].startY - 30) {
         setActiveChapter(null); // Hero section
       } else {
-        const chapterPositions = [300, 950, 1600, 2250, 2900, 3550, 4200];
         let current = '01';
-        chapterPositions.forEach((pos, idx) => {
-          if (scrollY >= pos) {
-            current = CHAPTERS[idx];
+        CHAPTERS_DATA.forEach((ch) => {
+          if (canvasY >= ch.startY - 30) {
+            current = ch.id;
           }
         });
         setActiveChapter(current);
@@ -32,14 +33,15 @@ export default function Navigation() {
   }, []);
 
   const scrollToChapter = (chNum) => {
-    const el = document.getElementById(`chapter-${chNum}`);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+    const ch = CHAPTERS_DATA.find((item) => item.id === chNum);
+    if (!ch) return;
+
+    const targetScrollY = getScrollYForCanvasY(ch.startY);
+
+    if (window.lenis) {
+      window.lenis.scrollTo(targetScrollY, { duration: 1.2 });
     } else {
-      const idx = CHAPTERS.indexOf(chNum);
-      if (idx !== -1) {
-        window.scrollTo({ top: 350 + idx * 650, behavior: 'smooth' });
-      }
+      window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
     }
   };
 
@@ -57,7 +59,7 @@ export default function Navigation() {
           <div className="w-7 h-7 sm:w-8 sm:h-8 relative flex items-center justify-center">
             <svg viewBox="0 0 600 600" className="w-7 h-7 sm:w-8 sm:h-8 overflow-visible">
               <g>
-                <path d="M 85 300 L 515 300" fill="none" stroke="#ffffff" strokeWidth="18" strokeLinecap="round" />
+                <path d="M 85 300 L 515 300" fill="none" stroke="#ffffff" strokeWidth="7" strokeLinecap="round" />
                 <path d="M 470 300 A 170 170 0 1 0 433.96 404.66" fill="none" stroke="#ffffff" strokeWidth="18" strokeLinecap="round" strokeLinejoin="round" />
                 <g transform="translate(437.65, 399.93) rotate(-52.3)">
                   <path d="M 14 0 L -8 -9 L -2 0 L -8 9 Z" fill="#ffffff" stroke="#ffffff" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" />

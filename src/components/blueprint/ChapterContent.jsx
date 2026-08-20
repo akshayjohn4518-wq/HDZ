@@ -1,4 +1,5 @@
 import React from 'react';
+import { CHAPTERS_DATA } from '../../utils/chapters';
 
 /**
  * ChapterContent renders editorial typography for Hero and Chapters 01 to 07,
@@ -7,58 +8,6 @@ import React from 'react';
  */
 export default function ChapterContent({ currentPoint, onOpenContact }) {
   const headY = currentPoint?.y ?? 120;
-
-  const chapters = [
-    {
-      id: '01',
-      title: 'EVERY JOURNEY BEGINS SOMEWHERE',
-      subtitle: 'Before every success, there is a first step. Before every product, there is a Day Zero.',
-      yPos: 750,
-      topCss: '750px',
-    },
-    {
-      id: '02',
-      title: 'THE PROBLEM',
-      subtitle: 'We only see the highlight reel. The struggles. The failures. The uncertainty. These are rarely shown.',
-      yPos: 1400,
-      topCss: '1400px',
-    },
-    {
-      id: '03',
-      title: 'OUR BELIEF',
-      subtitle: 'Every meaningful journey has a Day Zero. We believe the beginning is the most valuable part.',
-      yPos: 2050,
-      topCss: '2050px',
-    },
-    {
-      id: '04',
-      title: 'BUILD IN PUBLIC',
-      subtitle: 'We build. We document. We share everything — the good, the bad, and the unfinished.',
-      yPos: 2700,
-      topCss: '2700px',
-    },
-    {
-      id: '05',
-      title: 'CURRENT MISSIONS',
-      subtitle: 'Real projects. Real progress. This is what we are building right now.',
-      yPos: 3350,
-      topCss: '3350px',
-    },
-    {
-      id: '06',
-      title: 'FUTURE ECOSYSTEM',
-      subtitle: 'An ecosystem that empowers others to start their own Day Zero.',
-      yPos: 4000,
-      topCss: '4000px',
-    },
-    {
-      id: '07',
-      title: 'MANIFESTO',
-      subtitle: 'This is our commitment to builders, creators, and dreamers everywhere.',
-      yPos: 4650,
-      topCss: '4650px',
-    },
-  ];
 
   return (
     <div className="relative w-full h-[5200px] pointer-events-auto">
@@ -81,59 +30,67 @@ export default function ChapterContent({ currentPoint, onOpenContact }) {
       {/* ========================================================================= */}
       {/* CHAPTER SECTIONS 01 TO 07 (Right Side with Dynamic Illumination)         */}
       {/* ========================================================================= */}
-      {chapters.map((ch) => {
-        const isLit = headY >= ch.yPos - 130;
+      {CHAPTERS_DATA.map((ch) => {
+        const isLit = headY >= ch.startY - 10;
         return (
-          <section
-            key={ch.id}
-            id={`chapter-${ch.id}`}
-            style={{ top: ch.topCss }}
-            className={`absolute right-[6%] sm:right-[8%] max-w-sm sm:max-w-md space-y-2.5 -translate-y-1/2 transition-all duration-400 ${
-              isLit ? 'opacity-100 scale-100' : 'opacity-30 scale-[0.98]'
-            }`}
-          >
-            {/* Chapter Number Badge */}
-            <div className="flex items-center gap-2 font-mono text-xs tracking-wider">
-              <span
-                className={`px-2 py-0.5 rounded text-xs sm:text-sm font-semibold transition-all ${
-                  isLit ? 'bg-white text-black shadow-lg shadow-white/20' : 'bg-white/10 text-white/50'
-                }`}
-              >
-                {ch.id}
-              </span>
-              <span className={`text-[10px] tracking-widest uppercase ${isLit ? 'text-white/80' : 'text-white/30'}`}>
-                CHAPTER
-              </span>
-            </div>
-
-            {/* Title */}
-            <h2
-              className={`font-display text-xl sm:text-3xl font-semibold tracking-tight leading-snug transition-all ${
-                isLit ? 'text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.6)]' : 'text-white/40'
+          <React.Fragment key={ch.id}>
+            {/* Dedicated structural start anchor at chapter entrance */}
+            <div
+              id={`chapter-${ch.id}-start`}
+              data-chapter-start={ch.id}
+              className="absolute left-0 right-0 pointer-events-none"
+              style={{ top: `${ch.startY}px` }}
+            />
+            <section
+              id={`chapter-${ch.id}`}
+              style={{ top: ch.topCss }}
+              className={`absolute right-[6%] sm:right-[8%] max-w-sm sm:max-w-md space-y-2.5 -translate-y-1/2 transition-all duration-400 ${
+                isLit ? 'opacity-100 scale-100' : 'opacity-30 scale-[0.98]'
               }`}
             >
-              {ch.title}
-            </h2>
+              {/* Chapter Number Badge */}
+              <div className="flex items-center gap-2 font-mono text-xs tracking-wider">
+                <span
+                  className={`px-2 py-0.5 rounded text-xs sm:text-sm font-semibold transition-all ${
+                    isLit ? 'bg-white text-black shadow-lg shadow-white/20' : 'bg-white/10 text-white/50'
+                  }`}
+                >
+                  {ch.id}
+                </span>
+                <span className={`text-[10px] tracking-widest uppercase ${isLit ? 'text-white/80' : 'text-white/30'}`}>
+                  CHAPTER
+                </span>
+              </div>
 
-            {/* Subtitle */}
-            <p className={`text-xs sm:text-sm leading-relaxed font-light transition-all ${isLit ? 'text-white/80' : 'text-white/30'}`}>
-              {ch.subtitle}
-            </p>
-
-            {/* View Chapter Action */}
-            <div className="pt-1">
-              <button
-                type="button"
-                onClick={onOpenContact}
-                className={`inline-flex items-center gap-2 text-xs font-mono tracking-wider group cursor-pointer transition-all ${
-                  isLit ? 'text-white hover:text-white/80 font-medium' : 'text-white/30'
+              {/* Title */}
+              <h2
+                className={`font-display text-xl sm:text-3xl font-semibold tracking-tight leading-snug transition-all ${
+                  isLit ? 'text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.6)]' : 'text-white/40'
                 }`}
               >
-                <span>VIEW CHAPTER</span>
-                <span className={`h-[1px] transition-all duration-300 ${isLit ? 'w-10 bg-white' : 'w-6 bg-white/20'}`} />
-              </button>
-            </div>
-          </section>
+                {ch.title}
+              </h2>
+
+              {/* Subtitle */}
+              <p className={`text-xs sm:text-sm leading-relaxed font-light transition-all ${isLit ? 'text-white/80' : 'text-white/30'}`}>
+                {ch.subtitle}
+              </p>
+
+              {/* View Chapter Action */}
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={onOpenContact}
+                  className={`inline-flex items-center gap-2 text-xs font-mono tracking-wider group cursor-pointer transition-all ${
+                    isLit ? 'text-white hover:text-white/80 font-medium' : 'text-white/30'
+                  }`}
+                >
+                  <span>VIEW CHAPTER</span>
+                  <span className={`h-[1px] transition-all duration-300 ${isLit ? 'w-10 bg-white' : 'w-6 bg-white/20'}`} />
+                </button>
+              </div>
+            </section>
+          </React.Fragment>
         );
       })}
 
