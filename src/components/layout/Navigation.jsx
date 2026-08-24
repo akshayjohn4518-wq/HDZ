@@ -3,7 +3,7 @@ import { CHAPTERS_DATA, getScrollYForCanvasY, getCanvasYForScrollY } from '../..
 
 const CHAPTERS = CHAPTERS_DATA.map((ch) => ch.id);
 
-export default function Navigation() {
+export default function Navigation({ onLogoClick, currentView = 'home', onNavigateView }) {
   const [scrolled, setScrolled] = useState(false);
   const [activeChapter, setActiveChapter] = useState(null);
 
@@ -11,6 +11,8 @@ export default function Navigation() {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       setScrolled(scrollY > 30);
+
+      if (currentView !== 'home') return;
 
       // Track active chapter based on canvas Y coordinate
       const canvasY = getCanvasYForScrollY(scrollY);
@@ -30,9 +32,25 @@ export default function Navigation() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [currentView]);
+
+  const handleLogoClick = (e) => {
+    e.preventDefault();
+    if (onLogoClick) {
+      onLogoClick();
+    } else if (window.lenis) {
+      window.lenis.scrollTo(0, { duration: 1.2 });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   const scrollToChapter = (chNum) => {
+    if (currentView !== 'home' && onNavigateView) {
+      onNavigateView('home', chNum);
+      return;
+    }
+
     const ch = CHAPTERS_DATA.find((item) => item.id === chNum);
     if (!ch) return;
 
@@ -55,7 +73,12 @@ export default function Navigation() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex items-center justify-between gap-2">
         {/* DAY ZERO Logo */}
-        <div className="flex items-center gap-2 sm:gap-3 group text-left shrink-0 select-none">
+        <button
+          type="button"
+          onClick={handleLogoClick}
+          className="flex items-center gap-2 sm:gap-3 group text-left shrink-0 select-none cursor-pointer hover:opacity-80 transition-opacity focus:outline-none"
+          title="Return to main page"
+        >
           <div className="w-7 h-7 sm:w-8 sm:h-8 relative flex items-center justify-center">
             <svg viewBox="0 0 600 600" className="w-7 h-7 sm:w-8 sm:h-8 overflow-visible">
               <g>
@@ -73,32 +96,50 @@ export default function Navigation() {
               DAY ZERO
             </span>
           </div>
-        </div>
+        </button>
 
-        {/* Film Chapter Selector (01 to 07) */}
-        <nav className="flex items-center gap-1 sm:gap-2 bg-[#0B0B0B]/90 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full border border-white/10 text-xs font-mono">
-          <span className="text-white/30 text-[10px] tracking-widest uppercase hidden md:inline px-1">
-            CHAPTER:
-          </span>
-          {CHAPTERS.map((num) => {
-            const isActive = num === activeChapter;
-            return (
-              <button
-                key={num}
-                type="button"
-                onClick={() => scrollToChapter(num)}
-                className={`px-1.5 sm:px-2 py-0.5 rounded transition-all cursor-pointer text-[10px] sm:text-[11px] font-mono ${
-                  isActive
-                    ? 'bg-white text-black font-semibold shadow-sm'
-                    : 'text-white/40 hover:text-white/80 hover:bg-white/5'
-                }`}
-                title={`Navigate to Chapter ${num}`}
-              >
-                {num}
-              </button>
-            );
-          })}
-        </nav>
+
+        {/* Film Chapter Selector & Products Switcher */}
+        <div className="flex items-center gap-2">
+          <nav className="flex items-center gap-1 sm:gap-2 bg-[#0B0B0B]/90 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full border border-white/10 text-xs font-mono">
+            <span className="text-white/30 text-[10px] tracking-widest uppercase hidden md:inline px-1">
+              CHAPTER:
+            </span>
+            {CHAPTERS.map((num) => {
+              const isActive = currentView === 'home' && num === activeChapter;
+              return (
+                <button
+                  key={num}
+                  type="button"
+                  onClick={() => scrollToChapter(num)}
+                  className={`px-1.5 sm:px-2 py-0.5 rounded transition-all cursor-pointer text-[10px] sm:text-[11px] font-mono ${
+                    isActive
+                      ? 'bg-white text-black font-semibold shadow-sm'
+                      : 'text-white/40 hover:text-white/80 hover:bg-white/5'
+                  }`}
+                  title={`Navigate to Chapter ${num}`}
+                >
+                  {num}
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Subtly Integrated Technical / PRODUCTS Destination */}
+          <button
+            type="button"
+            onClick={() => onNavigateView && onNavigateView(currentView === 'products' ? 'home' : 'products')}
+            className={`px-2.5 sm:px-3 py-1.5 rounded-full border font-mono text-[10px] sm:text-[11px] tracking-widest uppercase transition-all cursor-pointer flex items-center gap-1.5 ${
+              currentView === 'products'
+                ? 'bg-white text-black border-white font-bold shadow-[0_0_15px_rgba(255,255,255,0.3)]'
+                : 'bg-[#0B0B0B]/90 text-white/70 border-white/15 hover:border-white/40 hover:text-white'
+            }`}
+            title="Toggle Products Index System"
+          >
+            <span className={`w-1.5 h-1.5 rounded-full ${currentView === 'products' ? 'bg-black animate-pulse' : 'bg-white/60'}`} />
+            <span>/ PRODUCTS</span>
+          </button>
+        </div>
       </div>
     </header>
   );
