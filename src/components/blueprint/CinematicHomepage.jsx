@@ -6,7 +6,7 @@ import ChapterContent from './ChapterContent';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function CinematicHomepage({ onOpenContact }) {
+export default function CinematicHomepage({ onOpenContact, onNavigateChapter }) {
   const containerRef = useRef(null);
   const cameraRef = useRef(null);
   const [pathProgress, setPathProgress] = useState(0);
@@ -154,6 +154,7 @@ export default function CinematicHomepage({ onOpenContact }) {
         <ChapterContent
           currentPoint={currentPoint}
           onOpenContact={onOpenContact}
+          onNavigateChapter={onNavigateChapter}
         />
       </div>
     </div>

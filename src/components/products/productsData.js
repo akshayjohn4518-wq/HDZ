@@ -6,7 +6,7 @@ export const PRODUCTS_DATA = [
     shortDesc: 'The interactive documentary workstation and build engine that captures product creation from ground zero.',
     fullDesc: 'DAY ZERO Workstation is an experimental visual recording environment that tracks code commits, architectural decisions, and failure modes in real time. It renders software engineering as an interactive, live-updating spatial system.',
     category: 'SYSTEM',
-    status: 'ACTIVE',
+    status: 'VOID',
     year: '2026',
     featured: true,
     version: '01.0',

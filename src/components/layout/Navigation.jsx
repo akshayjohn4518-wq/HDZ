@@ -3,7 +3,7 @@ import { CHAPTERS_DATA, getScrollYForCanvasY, getCanvasYForScrollY } from '../..
 
 const CHAPTERS = CHAPTERS_DATA.map((ch) => ch.id);
 
-export default function Navigation({ onLogoClick, currentView = 'home', onNavigateView }) {
+export default function Navigation({ onLogoClick, currentView = 'home', activeChapterId = null, onNavigateView }) {
   const [scrolled, setScrolled] = useState(false);
   const [activeChapter, setActiveChapter] = useState(null);
 
@@ -46,6 +46,11 @@ export default function Navigation({ onLogoClick, currentView = 'home', onNaviga
   };
 
   const scrollToChapter = (chNum) => {
+    if (currentView === 'chapter') {
+      if (onNavigateView) onNavigateView('chapter', chNum);
+      return;
+    }
+
     if (currentView !== 'home' && onNavigateView) {
       onNavigateView('home', chNum);
       return;
@@ -106,7 +111,7 @@ export default function Navigation({ onLogoClick, currentView = 'home', onNaviga
               CHAPTER:
             </span>
             {CHAPTERS.map((num) => {
-              const isActive = currentView === 'home' && num === activeChapter;
+              const isActive = currentView === 'chapter' ? num === activeChapterId : (currentView === 'home' && num === activeChapter);
               return (
                 <button
                   key={num}

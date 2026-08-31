@@ -6,7 +6,7 @@ import { CHAPTERS_DATA } from '../../utils/chapters';
  * positioned with comfortable medium spacing (5200px canvas height) and dynamic
  * scroll lighting transitions when the drawing head reaches each chapter.
  */
-export default function ChapterContent({ currentPoint, onOpenContact }) {
+export default function ChapterContent({ currentPoint, onOpenContact, onNavigateChapter }) {
   const headY = currentPoint?.y ?? 120;
 
   return (
@@ -44,16 +44,14 @@ export default function ChapterContent({ currentPoint, onOpenContact }) {
             <section
               id={`chapter-${ch.id}`}
               style={{ top: ch.topCss }}
-              className={`absolute right-[6%] sm:right-[8%] max-w-sm sm:max-w-md space-y-2.5 -translate-y-1/2 transition-all duration-400 ${
-                isLit ? 'opacity-100 scale-100' : 'opacity-30 scale-[0.98]'
-              }`}
+              className={`absolute right-[6%] sm:right-[8%] max-w-sm sm:max-w-md space-y-2.5 -translate-y-1/2 transition-all duration-400 ${isLit ? 'opacity-100 scale-100' : 'opacity-30 scale-[0.98]'
+                }`}
             >
               {/* Chapter Number Badge */}
               <div className="flex items-center gap-2 font-mono text-xs tracking-wider">
                 <span
-                  className={`px-2 py-0.5 rounded text-xs sm:text-sm font-semibold transition-all ${
-                    isLit ? 'bg-white text-black shadow-lg shadow-white/20' : 'bg-white/10 text-white/50'
-                  }`}
+                  className={`px-2 py-0.5 rounded text-xs sm:text-sm font-semibold transition-all ${isLit ? 'bg-white text-black shadow-lg shadow-white/20' : 'bg-white/10 text-white/50'
+                    }`}
                 >
                   {ch.id}
                 </span>
@@ -64,9 +62,8 @@ export default function ChapterContent({ currentPoint, onOpenContact }) {
 
               {/* Title */}
               <h2
-                className={`font-display text-xl sm:text-3xl font-semibold tracking-tight leading-snug transition-all ${
-                  isLit ? 'text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.6)]' : 'text-white/40'
-                }`}
+                className={`font-display text-xl sm:text-3xl font-semibold tracking-tight leading-snug transition-all ${isLit ? 'text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.6)]' : 'text-white/40'
+                  }`}
               >
                 {ch.title}
               </h2>
@@ -80,10 +77,15 @@ export default function ChapterContent({ currentPoint, onOpenContact }) {
               <div className="pt-1">
                 <button
                   type="button"
-                  onClick={onOpenContact}
-                  className={`inline-flex items-center gap-2 text-xs font-mono tracking-wider group cursor-pointer transition-all ${
-                    isLit ? 'text-white hover:text-white/80 font-medium' : 'text-white/30'
-                  }`}
+                  onClick={() => {
+                    if (onNavigateChapter) {
+                      onNavigateChapter(ch.id);
+                    } else if (onOpenContact) {
+                      onOpenContact();
+                    }
+                  }}
+                  className={`inline-flex items-center gap-2 text-xs font-mono tracking-wider group cursor-pointer transition-all ${isLit ? 'text-white hover:text-white/80 font-medium' : 'text-white/30'
+                    }`}
                 >
                   <span>VIEW CHAPTER</span>
                   <span className={`h-[1px] transition-all duration-300 ${isLit ? 'w-10 bg-white' : 'w-6 bg-white/20'}`} />
@@ -101,9 +103,8 @@ export default function ChapterContent({ currentPoint, onOpenContact }) {
         const ctaLit = headY >= 4950;
         return (
           <section
-            className={`absolute top-[5020px] left-[6%] sm:left-[8%] right-[6%] sm:right-[8%] flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-16 border-t border-white/15 pt-10 transition-all duration-400 ${
-              ctaLit ? 'opacity-100' : 'opacity-40'
-            }`}
+            className={`absolute top-[5020px] left-[6%] sm:left-[8%] right-[6%] sm:right-[8%] flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-16 border-t border-white/15 pt-10 transition-all duration-400 ${ctaLit ? 'opacity-100' : 'opacity-40'
+              }`}
           >
             <div className="space-y-2">
               <h2 className="font-display text-2xl sm:text-4xl lg:text-5xl font-semibold text-white tracking-tight leading-tight">

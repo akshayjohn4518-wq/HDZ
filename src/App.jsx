@@ -7,25 +7,36 @@ import Navigation from './components/layout/Navigation';
 import Footer from './components/layout/Footer';
 import ContactSection from './components/layout/ContactSection';
 import CinematicHomepage from './components/blueprint/CinematicHomepage';
+import ChapterPage from './components/blueprint/ChapterPage';
 import ProductsPage from './components/products/ProductsPage';
 import { getScrollYForCanvasY, CHAPTERS_DATA } from './utils/chapters';
+
+const parseHashState = () => {
+  const hash = window.location.hash;
+  if (hash === '#products') {
+    return { view: 'products', chapterId: null };
+  }
+  const chapterMatch = hash.match(/^#chapter[-/](0[1-7]|[1-7])$/);
+  if (chapterMatch) {
+    const padded = chapterMatch[1].padStart(2, '0');
+    return { view: 'chapter', chapterId: padded };
+  }
+  return { view: 'home', chapterId: null };
+};
 
 export default function App() {
   const [showIntro, setShowIntro] = useState(true);
   const [replayKey, setReplayKey] = useState(0);
   const [showContact, setShowContact] = useState(false);
-  const [currentView, setCurrentView] = useState(() => {
-    return window.location.hash === '#products' ? 'products' : 'home';
-  });
+  const [viewState, setViewState] = useState(parseHashState);
+
+  const currentView = viewState.view;
+  const activeChapterId = viewState.chapterId;
 
   // Sync state with URL hash
   useEffect(() => {
     const handleHashChange = () => {
-      if (window.location.hash === '#products') {
-        setCurrentView('products');
-      } else {
-        setCurrentView('home');
-      }
+      setViewState(parseHashState());
     };
 
     window.addEventListener('hashchange', handleHashChange);
@@ -33,12 +44,18 @@ export default function App() {
   }, []);
 
   const handleNavigateView = (targetView, targetChapter) => {
-    setCurrentView(targetView);
     if (targetView === 'products') {
       window.location.hash = 'products';
+      setViewState({ view: 'products', chapterId: null });
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    } else if (targetView === 'chapter') {
+      const chId = String(targetChapter || '01').padStart(2, '0');
+      window.location.hash = `chapter-${chId}`;
+      setViewState({ view: 'chapter', chapterId: chId });
       window.scrollTo({ top: 0, behavior: 'instant' });
     } else {
       window.location.hash = '';
+      setViewState({ view: 'home', chapterId: null });
       if (targetChapter) {
         setTimeout(() => {
           const ch = CHAPTERS_DATA.find((item) => item.id === targetChapter);
@@ -119,17 +136,28 @@ export default function App() {
         <Navigation
           onLogoClick={handleGoHome}
           currentView={currentView}
+          activeChapterId={activeChapterId}
           onNavigateView={handleNavigateView}
         />
       )}
 
-      {/* Main Interactive Blueprint Section (Documentary Homepage OR Products Index) */}
+      {/* Main Interactive Blueprint Section (Documentary Homepage, Products Index, or Dedicated Chapter Page) */}
       {!showIntro && (
         <main className="relative z-10 flex-1">
           {currentView === 'products' ? (
             <ProductsPage onOpenContact={() => setShowContact(true)} />
+          ) : currentView === 'chapter' ? (
+            <ChapterPage
+              chapterId={activeChapterId}
+              onBackToHome={() => handleNavigateView('home')}
+              onNavigateChapter={(id) => handleNavigateView('chapter', id)}
+              onOpenContact={() => setShowContact(true)}
+            />
           ) : (
-            <CinematicHomepage onOpenContact={() => setShowContact(true)} />
+            <CinematicHomepage
+              onOpenContact={() => setShowContact(true)}
+              onNavigateChapter={(id) => handleNavigateView('chapter', id)}
+            />
           )}
         </main>
       )}
