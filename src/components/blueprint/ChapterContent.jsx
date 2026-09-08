@@ -87,7 +87,7 @@ export default function ChapterContent({ currentPoint, onOpenContact, onNavigate
                   className={`inline-flex items-center gap-2 text-xs font-mono tracking-wider group cursor-pointer transition-all ${isLit ? 'text-white hover:text-white/80 font-medium' : 'text-white/30'
                     }`}
                 >
-                  <span>VIEW CHAPTER</span>
+                  <span>{ch.ctaText || 'VIEW CHAPTER →'}</span>
                   <span className={`h-[1px] transition-all duration-300 ${isLit ? 'w-10 bg-white' : 'w-6 bg-white/20'}`} />
                 </button>
               </div>

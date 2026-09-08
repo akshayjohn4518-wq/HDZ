@@ -43,6 +43,29 @@ export default function App() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
+  // Synchronize top-level SEO for home and products (chapter SEO is handled in ChapterPage)
+  useEffect(() => {
+    if (currentView === 'home') {
+      document.title = 'DAY ZERO — The Interactive Documentary of Beginning';
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute(
+          'content',
+          'DAY ZERO celebrates the raw beginning of human endeavor, engineering, and creation. An interactive documentary inspiring visitors to start building.'
+        );
+      }
+    } else if (currentView === 'products') {
+      document.title = 'DAY ZERO — Products & Engineering Missions | Build in Public';
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute(
+          'content',
+          'Explore the products, engineering projects and experiments currently being built, tested and documented by DAY ZERO.'
+        );
+      }
+    }
+  }, [currentView]);
+
   const handleNavigateView = (targetView, targetChapter) => {
     if (targetView === 'products') {
       window.location.hash = 'products';
