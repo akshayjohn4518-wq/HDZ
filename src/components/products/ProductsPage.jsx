@@ -24,7 +24,7 @@ export default function ProductsPage({ onOpenContact }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-6">
         <div className="inline-flex items-center gap-3 px-3 py-1 border border-white/10 bg-[#0B0B0B] text-[10px] font-mono text-white/50 tracking-widest uppercase">
           <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-          <span>PRODUCT INDEX // SYSTEM 03</span>
+          <span>PRODUCT INDEX:SYSTEM 03</span>
         </div>
       </div>
 
@@ -34,7 +34,7 @@ export default function ProductsPage({ onOpenContact }) {
           {/* Hero Left Editorial */}
           <div className="lg:col-span-6 space-y-6">
             <div className="text-xs font-mono text-white/40 tracking-[0.25em] uppercase">
-              03 / PRODUCT ARCHIVE
+              PRODUCT ARCHIVE
             </div>
 
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-display font-extrabold tracking-tight text-white uppercase leading-[0.95]">

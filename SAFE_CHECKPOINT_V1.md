@@ -1,50 +1,35 @@
 # DAY ZERO (HDZ) — SAFE RESTORE POINT (SAFE_CHECKPOINT_V1)
 
-**Checkpoint Name**: `SAFE_CHECKPOINT_V1` (Complete 7-Chapter Editorial Documentary, Dynamic SEO & Contextual CTAs)  
+**Checkpoint Name**: `SAFE_CHECKPOINT_V1` (Cinematic Contact Portal, Editorial Chapters Cleanup, Clean Aesthetics & GitHub Remote Sync)  
 **Git Branch**: `main`  
-**Date**: 2026-09-08  
+**Date**: 2026-09-09  
 
 ---
 
 ## Overview of Implemented Features & Architecture
 
-This checkpoint preserves the complete, production-ready implementation of **DAY ZERO — Interactive Architectural Blueprint, Complete 7-Chapter Documentary System, Dynamic Chapter-Page SEO, and Products Archive System**.
+This checkpoint preserves the complete, production-ready implementation of **DAY ZERO — Interactive Architectural Blueprint, Complete 7-Chapter Documentary System, Dynamic Chapter-Page SEO, Products Archive System, and Rebuilt Cinematic Contact Experience**.
 
-1. **Complete 7-Chapter Interactive Documentary (`ChapterPage.jsx` & `chapters.js`)**:
-   - Every chapter has its full verbatim, bespoke editorial layout with dark architectural blueprint styling:
-     - **Chapter 01: EVERY JOURNEY BEGINS SOMEWHERE** — The Origin, The First Commit, The Significance of Day Zero.
-     - **Chapter 02: THE PROBLEM** — The Finished Version Hides the Process, The Missing Story, Failure is Information, The Invisible Work.
-     - **Chapter 03: OUR BELIEF** — Every Journey Has a Day Zero, The Learning Loop, Commitment, Discipline, Learning, Iteration, Growth, The Day Zero Rule.
-     - **Chapter 04: BUILD IN PUBLIC** — The Process is Part of the Product, Why Document, Not Performing, The Value, The Record, The Day Zero Rule.
-     - **Chapter 05: CURRENT MISSIONS** — The Work is Happening Now, Every Mission Starts with a Problem, From Idea to Mission, The Missions Matrix, No Artificial Progress.
-     - **Chapter 06: FUTURE ECOSYSTEM** — More Than a Website, Product Layer, Knowledge Layer, Documentation Layer, Community Layer, Media Layer, The Knowledge Loop, The Long-Term Idea.
-     - **Chapter 07: MANIFESTO** — This is Day Zero (8 Choices), We Build, We Document, We Learn, We Iterate, We Share, We Begin Again, The 9 Manifesto Creeds, Final Statement.
+1. **Rebuilt Cinematic Contact Experience (`ContactSection.jsx` & `contact-portal.png`)**:
+   - Replaced dual-panel terminal/quest with a full-screen, minimal monochrome DAY ZERO contact portal.
+   - Atmospheric background visual of the lone human silhouette approaching the illuminated cosmic architectural doorway, cleanly blended into deep black.
+   - Minimal header with only **DAY ZERO** (which navigates back home on click) and subtle divider.
+   - Asymmetric 3-zone layout:
+     - **Left**: Bold headline `LET’S BUILD WHAT’S NEXT.`, manifesto paragraph, and interactive markers (`COLLABORATE`, `INQUIRE`, `EXPLORE`).
+     - **Center**: Atmospheric doorway corridor.
+     - **Right**: Industrial thin-line contact form with live state and direct contact channels (email, Hyderabad, LinkedIn).
+   - Minimal baseline footer: `SAME PEOPLE. A BRIGHTER TOMORROW.` / `IDEAS TODAY. IMPACT TOMORROW.`.
 
-2. **Chapter-Page SEO Structure (`chapters.js`, `ChapterPage.jsx` & `App.jsx`)**:
-   - Unique search-facing titles, meta descriptions, and primary topic tagging for all 7 chapters.
-   - Dynamic injection of `document.title`, `meta[name="description"]`, OpenGraph tags, and topic keywords on chapter navigation.
-   - Clean restoration to homepage and products metadata when navigating back.
+2. **Refined Editorial Chapter Experience (`ChapterPage.jsx`)**:
+   - Cleaned up repetitive bottom timeline/view timeline and chapter navigation buttons.
+   - Simplified top breadcrumb to clean `BACK` and chapter title.
+   - Replaced all `//` aesthetic symbols with elegant `•` dividers across all chapter headings and sections.
+   - Cleaned up table of contents to `TABLE OF CONTENTS`.
 
-3. **Contextual Chapter CTAs (`ChapterPage.jsx` & `ChapterContent.jsx`)**:
-   - Distinct, purposeful closing CTAs replacing generic text:
-     - Chapter 01: `START THE JOURNEY →`
-     - Chapter 02: `SEE THE PROCESS →`
-     - Chapter 03: `EXPLORE THE PRINCIPLES →`
-     - Chapter 04: `ENTER THE BUILD LOG →`
-     - Chapter 05: `EXPLORE CURRENT MISSIONS →`
-     - Chapter 06: `EXPLORE THE ECOSYSTEM →`
-     - Chapter 07: `START YOUR DAY ZERO →`
-
-4. **Dynamic Sticky Navigation & Scrollspy (`ChapterPage.jsx`)**:
-   - Real-time scrollspy tracking active chapter sections in the sticky TOC.
-   - Smooth jump-to-section navigation with exact top offsets.
-   - Archival badges, coordinates, and verified log stamps.
-
-5. **Cinematic Homepage, Interactive SVG Stream & Products Catalog**:
-   - Continuous 5200px animated SVG blueprint stream with coordinate tracking head.
-   - Opening cinematic intro sequence with Web Audio API sound synthesis.
-   - Complete technical product directory with category filtering and interactive modal inspection.
-   - Gamified dual-panel macOS terminal and transmission workstation.
+3. **Global UI Cleanliness & Consistency**:
+   - Removed `//` symbols across the entire website (BlueprintCanvas, ProductDetailModal, ProductsHeroVisual, productsData).
+   - Capitalized footer action links (`GITHUB`, `CONTACT`, `REPLAY INTRO`).
+   - Cleaned up background imagery to eliminate ghosting and text shadows.
 
 ---
 
@@ -276,6 +261,7 @@ export default function App() {
 
 
 ```
+
 ---
 
 ### File 2: `src/main.jsx`
@@ -292,6 +278,7 @@ createRoot(document.getElementById('root')).render(
 )
 
 ```
+
 ---
 
 ### File 3: `src/index.css`
@@ -399,6 +386,7 @@ body {
 }
 
 ```
+
 ---
 
 ### File 4: `src/utils/chapters.js`
@@ -1469,6 +1457,7 @@ export const CHAPTERS_FULL_CONTENT = {
 
 
 ```
+
 ---
 
 ### File 5: `src/components/layout/Navigation.jsx`
@@ -1626,6 +1615,7 @@ export default function Navigation({ onLogoClick, currentView = 'home', activeCh
 }
 
 ```
+
 ---
 
 ### File 6: `src/components/layout/Footer.jsx`
@@ -1652,28 +1642,28 @@ export default function Footer({ onReplayIntro, onOpenContact }) {
         </div>
 
         {/* Right: Minimal Links & Copyright */}
-        <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-[10px] sm:text-[11px] text-white/40">
+        <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-[10px] sm:text-[11px] text-white/40 uppercase tracking-wider">
           <a
             href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition-colors"
           >
-            GitHub
+            GITHUB
           </a>
           <button
             type="button"
             onClick={onOpenContact}
-            className="hover:text-white transition-colors cursor-pointer text-left"
+            className="hover:text-white transition-colors cursor-pointer text-left uppercase"
           >
-            Contact
+            CONTACT
           </button>
           <button
             type="button"
             onClick={onReplayIntro}
-            className="hover:text-white transition-colors text-left cursor-pointer"
+            className="hover:text-white transition-colors text-left cursor-pointer uppercase"
           >
-            Replay Intro
+            REPLAY INTRO
           </button>
           <span className="text-white/20">
             © {new Date().getFullYear()} DAY ZERO
@@ -1685,6 +1675,7 @@ export default function Footer({ onReplayIntro, onOpenContact }) {
 }
 
 ```
+
 ---
 
 ### File 7: `src/components/layout/BlueprintGrid.jsx`
@@ -1722,111 +1713,34 @@ export default function BlueprintGrid() {
 }
 
 ```
+
 ---
 
 ### File 8: `src/components/layout/ContactSection.jsx`
 ```jsx
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Mail, MapPin, ArrowRight } from 'lucide-react';
 
-// Authentic developer setup & command sequence simulating building DAY ZERO
-const terminalSequence = [
-  { type: 'command', text: 'git init' },
-  { type: 'output', text: 'Initialized empty Git repository in /Users/dayzero/workspace/hdz/.git/' },
-  { type: 'command', text: 'git branch -M main' },
-  { type: 'command', text: 'git add .' },
-  { type: 'command', text: 'git commit -m "Initialize DAY ZERO"' },
-  {
-    type: 'output',
-    text: '[main (root-commit) 8f3a1d9] Initialize DAY ZERO\n 12 files changed, 480 insertions(+)\n create mode 100644 package.json\n create mode 100644 src/App.jsx',
-  },
-  { type: 'command', text: 'git remote add origin git@github.com:dayzero/hdz.git' },
-  { type: 'command', text: 'git push -u origin main' },
-  {
-    type: 'output',
-    text: "Enumerating objects: 12, done.\nCounting objects: 100% (12/12), done.\nWriting objects: 100% (12/12), 16.2 KiB | 3.24 MiB/s, done.\nTo github.com:dayzero/hdz.git\n * [new branch]      main -> main\nBranch 'main' set up to track remote branch 'main'.",
-  },
-  { type: 'command', text: 'npm create vite@latest' },
-  {
-    type: 'output',
-    text: 'Creating project in /Users/dayzero/workspace/hdz...\nDone. Now run:\n  cd day-zero && npm install && npm run dev',
-  },
-  { type: 'command', text: 'cd day-zero' },
-  { type: 'command', text: 'npm install' },
-  {
-    type: 'output',
-    text: 'added 42 packages in 620ms\nfound 0 vulnerabilities',
-  },
-  { type: 'command', text: 'npm run dev' },
-  {
-    type: 'output',
-    text: '  VITE v8.2.0  ready in 140 ms\n  ➜  Local:   http://localhost:5173/\n  ➜  press h + enter to show help',
-  },
-  { type: 'command', text: 'git status' },
-  {
-    type: 'output',
-    text: "On branch main\nYour branch is up to date with 'origin/main'.\n\nChanges to be committed:\n  modified:   src/components/layout/ContactSection.jsx",
-  },
-  { type: 'command', text: 'git add .' },
-  { type: 'command', text: 'git commit -m "Build Contact Experience"' },
-  {
-    type: 'output',
-    text: '[main e4f5g6h] Build Contact Experience\n 2 files changed, 220 insertions(+)',
-  },
-  { type: 'command', text: 'git push' },
-  {
-    type: 'output',
-    text: 'Everything up-to-date.\n# Workstation online. Connection established.',
-  },
-];
-
-const GOOGLE_FORM_URL = 'https://forms.google.com';
-
+/**
+ * Rebuilt Contact Experience for DAY ZERO
+ * - Asymmetric 3-zone cinematic editorial composition
+ * - Blended atmospheric portal visual with lone silhouette approaching illuminated doorway
+ * - Minimalist header (ONLY "DAY ZERO") with subtle divider
+ * - Industrial thin-line contact form with interaction tags & direct contact details
+ */
 export default function ContactSection({ onClose }) {
-  const [activeTab, setActiveTab] = useState('CONTACT'); // 'CONTACT' | 'QUEST'
-  const [terminalHistory, setTerminalHistory] = useState([]);
-  const [currentTypingText, setCurrentTypingText] = useState('');
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [isInView, setIsInView] = useState(true);
-
-  // Form State
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     subject: '',
     message: '',
   });
+  const [activeMarker, setActiveMarker] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const sectionRef = useRef(null);
-  const terminalBodyRef = useRef(null);
-
-  // Reset and restart animation when section enters viewport or is revisited
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          // Restart terminal sequence upon re-entering viewport
-          setTerminalHistory([]);
-          setCurrentTypingText('');
-          setCurrentStepIndex(0);
-        } else {
-          setIsInView(false);
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  // Keyboard accessibility: ESC key listener if closed as modal
+  // Keyboard accessibility: ESC listener
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && onClose) {
@@ -1836,62 +1750,6 @@ export default function ContactSection({ onClose }) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
-
-  // Terminal Typing Logic - Natural speed, realistic delays, auto restart loop
-  useEffect(() => {
-    if (!isInView) return;
-
-    if (currentStepIndex >= terminalSequence.length) {
-      // Pause at end of sequence before seamlessly restarting loop
-      const loopTimeout = setTimeout(() => {
-        setTerminalHistory([]);
-        setCurrentTypingText('');
-        setCurrentStepIndex(0);
-      }, 4000);
-      return () => clearTimeout(loopTimeout);
-    }
-
-    const currentItem = terminalSequence[currentStepIndex];
-
-    if (currentItem.type === 'output') {
-      const outputTimeout = setTimeout(() => {
-        setTerminalHistory((prev) => [...prev, currentItem]);
-        setCurrentStepIndex((prev) => prev + 1);
-      }, 280);
-      return () => clearTimeout(outputTimeout);
-    }
-
-    if (currentItem.type === 'command') {
-      if (currentTypingText.length < currentItem.text.length) {
-        // Natural human-like variable typing delay (20-45ms)
-        const randomTypingDelay = Math.floor(Math.random() * 25) + 20;
-        const typingTimeout = setTimeout(() => {
-          setCurrentTypingText(
-            currentItem.text.slice(0, currentTypingText.length + 1)
-          );
-        }, randomTypingDelay);
-        return () => clearTimeout(typingTimeout);
-      } else {
-        // Pause briefly after pressing Enter before executing next line
-        const finishTimeout = setTimeout(() => {
-          setTerminalHistory((prev) => [
-            ...prev,
-            { type: 'command', text: currentItem.text },
-          ]);
-          setCurrentTypingText('');
-          setCurrentStepIndex((prev) => prev + 1);
-        }, 220);
-        return () => clearTimeout(finishTimeout);
-      }
-    }
-  }, [currentStepIndex, currentTypingText, isInView]);
-
-  // Auto-scroll terminal container whenever terminal output changes
-  useEffect(() => {
-    if (terminalBodyRef.current) {
-      terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
-    }
-  }, [terminalHistory, currentTypingText]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -1911,343 +1769,330 @@ export default function ContactSection({ onClose }) {
 
   return (
     <motion.div
-      ref={sectionRef}
       id="contact"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.35 }}
-      className="fixed inset-0 z-50 bg-[#050505]/95 backdrop-blur-2xl overflow-y-auto flex flex-col justify-between p-4 sm:p-6 md:p-10 select-none"
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed inset-0 z-50 bg-[#050505] text-[#F3F4F6] overflow-y-auto overflow-x-hidden flex flex-col justify-between"
     >
-      {/* Top Header Status Bar */}
-      <div className="max-w-7xl w-full mx-auto flex items-center justify-between border-b border-white/10 pb-4 mb-6 shrink-0 z-10">
-        <div className="flex items-center gap-3">
-          <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-          <span className="text-[10px] sm:text-xs font-mono tracking-[0.25em] text-white/60 uppercase">
-            WORKSTATION-ENGINE v2.4
-          </span>
-        </div>
+      {/* ========================================================================= */}
+      {/* ATMOSPHERIC BACKGROUND VISUAL (Illuminated doorway, silhouette, cosmos)     */}
+      {/* ========================================================================= */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 flex items-center justify-center">
+        {/* Soft background dark tint */}
+        <div className="absolute inset-0 bg-[#050505]" />
 
-        <div className="flex items-center gap-4 text-[10px] font-mono text-white/40">
-          <span className="hidden sm:inline"></span>
-          {onClose && (
-            <button
-              onClick={onClose}
-              className="text-xs font-mono text-white/60 hover:text-white flex items-center gap-2 border border-white/20 hover:border-white/50 px-3 py-1 rounded-full transition-all cursor-pointer bg-white/5"
-            >
-              <span className="text-[10px] text-white/40">ESC</span>
-              <span className="tracking-wider uppercase font-semibold"></span>
-            </button>
-          )}
+        {/* Central portal visual blended with mask & opacity */}
+        <div className="relative w-full h-full max-w-[1500px] flex items-center justify-center">
+          <img
+            src="/contact-portal.png?v=2"
+            alt="DAY ZERO Portal"
+            className="w-full h-full object-cover object-center opacity-90 select-none"
+          />
+
+          {/* Vignette gradients to ensure absolute seamless blending into black */}
+          <div className="absolute inset-y-0 left-0 w-1/5 bg-gradient-to-r from-[#050505] to-transparent pointer-events-none" />
+          <div className="absolute inset-y-0 right-0 w-1/5 bg-gradient-to-l from-[#050505] to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#050505] to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#050505] to-transparent pointer-events-none" />
         </div>
       </div>
 
-      {/* Main Split Layout Container: 60% Left (Terminal, desktop only) / 40% Right (Editorial Form/Quest) */}
-      <div className="max-w-7xl w-full mx-auto flex-1 flex flex-col lg:flex-row items-stretch gap-6 lg:gap-10 my-auto z-10">
+      {/* ========================================================================= */}
+      {/* TOP MINIMAL BRAND HEADER                                                  */}
+      {/* ========================================================================= */}
+      <header className="relative w-full max-w-7xl mx-auto px-4 sm:px-8 md:px-12 pt-6 sm:pt-8 pb-4 flex items-center justify-between z-20">
+        <button
+          type="button"
+          onClick={() => {
+            if (onClose) onClose();
+            window.location.hash = '';
+            if (window.lenis) {
+              window.lenis.scrollTo(0, { duration: 1.2 });
+            } else {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
+          className="font-display text-xs sm:text-sm tracking-[0.25em] font-semibold text-white uppercase select-none hover:opacity-80 transition-opacity cursor-pointer text-left focus:outline-none"
+          title="Return to homepage"
+        >
+          DAY ZERO
+        </button>
 
-        {/* ================= LEFT PANEL (60%): macOS Light Theme Terminal (Desktop Only) ================= */}
-        <div className="hidden lg:flex w-full lg:w-[60%] flex-col justify-center">
-          <div className="bg-[#FFFFFF] rounded-xl border border-black/15 shadow-2xl shadow-black/90 flex flex-col overflow-hidden text-left font-mono transition-all">
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex items-center gap-2 text-xs font-mono text-white/50 hover:text-white transition-colors cursor-pointer border border-white/15 hover:border-white/40 px-3 py-1 bg-white/5 rounded-xs"
+            title="Close Contact (ESC)"
+          >
+            <span className="text-[10px] text-white/40 tracking-wider">ESC</span>
+          </button>
+        )}
+      </header>
 
-            {/* macOS Light Terminal Title Bar */}
-            <div className="bg-[#EAEAEA] border-b border-black/10 px-4 py-2.5 flex items-center justify-between shrink-0 select-none">
-              {/* macOS Traffic Light Buttons */}
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-[#FF5F56] border border-[#E0443E] inline-block shadow-xs" />
-                <span className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-[#DEA123] inline-block shadow-xs" />
-                <span className="w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29] inline-block shadow-xs" />
-              </div>
+      {/* Subtle Horizontal Divider underneath Header */}
+      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-8 md:px-12 z-20">
+        <div className="w-full h-[1px] bg-white/10" />
+      </div>
 
-              {/* Terminal Title */}
-              <div className="text-[11px] font-sans font-medium text-black/60 tracking-wide">
-                zsh — dayzero@macbook: ~/workspace/hdz — 80×24
-              </div>
+      {/* ========================================================================= */}
+      {/* MAIN CONTACT EXPERIENCE (Asymmetric 3-Zone Layout)                         */}
+      {/* ========================================================================= */}
+      <main className="relative w-full max-w-7xl mx-auto px-4 sm:px-8 md:px-12 py-8 sm:py-12 my-auto flex-1 flex flex-col lg:flex-row items-stretch justify-between gap-8 lg:gap-12 z-10">
 
-              <div className="w-12" />
+        {/* ------------------------------------------------------------------------- */}
+        {/* LEFT ZONE: Editorial Headline & Micro-Interaction Markers                */}
+        {/* ------------------------------------------------------------------------- */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="w-full lg:w-[38%] flex flex-col justify-between space-y-8"
+        >
+          <div className="space-y-4 sm:space-y-6">
+            <div className="text-[10px] sm:text-xs font-mono text-white/40 tracking-[0.25em] uppercase flex items-center gap-2">
+
+              <span>ESTABLISH CONNECTION</span>
             </div>
 
-            {/* Terminal Body */}
-            <div
-              ref={terminalBodyRef}
-              className="p-4 sm:p-6 overflow-y-auto text-[11px] sm:text-xs leading-relaxed text-[#24292E] font-mono space-y-2 h-[340px] sm:h-[400px] lg:h-[440px] scroll-smooth bg-white"
-            >
-              {/* Terminal Welcome Header */}
-              <div className="text-black/40 text-[10px] sm:text-[11px] pb-2 border-b border-black/10">
-                DAY ZERO GitHub Terminal v2.4.0 [main]
-                <br />
-                Executing live project initialization &amp; commit sequence...
-              </div>
+            <h1 className="font-display text-4xl sm:text-6xl xl:text-7xl font-bold tracking-tight text-white uppercase leading-[0.92] select-none">
+              LET’S<br />
+              BUILD<br />
+              WHAT’S<br />
+              NEXT.
+            </h1>
 
-              {/* Executed History Commands & Output Lines */}
-              {terminalHistory.map((item, idx) => (
-                <div key={idx} className="whitespace-pre-wrap break-words">
-                  {item.type === 'command' ? (
-                    <div className="flex items-center gap-2 text-[#005CC5] font-medium">
-                      <span className="text-black/40 select-none">dayzero@macbook hdz %</span>
-                      <span className="text-[#24292E] font-semibold">{item.text}</span>
-                    </div>
-                  ) : (
-                    <div className="text-[#57606A] font-mono text-[10px] sm:text-[11px] pl-2 border-l-2 border-black/10">
-                      {item.text}
-                    </div>
-                  )}
+            <p className="text-xs sm:text-sm md:text-base font-light text-white/65 max-w-md leading-relaxed">
+              Ideas, collaborations, or just a hello — we’re always open to conversations that push boundaries.
+            </p>
+          </div>
+
+          {/* Three Small Interaction Labels */}
+          <div className="pt-6 border-t border-white/10 grid grid-cols-3 gap-2.5 sm:gap-3">
+            {[
+              { id: 'COLLABORATE', label: 'COLLABORATE', sub: 'Build together' },
+              { id: 'INQUIRE', label: 'INQUIRE', sub: 'Ask anything' },
+              { id: 'EXPLORE', label: 'EXPLORE', sub: 'New possibilities' },
+            ].map((marker) => (
+              <button
+                key={marker.id}
+                type="button"
+                onClick={() => {
+                  setActiveMarker(marker.id);
+                  setFormData((prev) => ({
+                    ...prev,
+                    subject:
+                      marker.id === 'COLLABORATE'
+                        ? 'Project Collaboration'
+                        : marker.id === 'INQUIRE'
+                          ? 'General Inquiry'
+                          : 'Exploration & Concepts',
+                  }));
+                }}
+                className={`text-left p-2.5 transition-all duration-200 border-l cursor-pointer group ${activeMarker === marker.id
+                  ? 'border-white bg-white/10'
+                  : 'border-white/20 hover:border-white/50 hover:bg-white/[0.03]'
+                  }`}
+              >
+                <div className="text-[10px] font-mono tracking-wider text-white font-semibold group-hover:text-white">
+                  {marker.label}
                 </div>
-              ))}
-
-              {/* Active Character-by-Character Typing Line */}
-              {currentStepIndex < terminalSequence.length &&
-                terminalSequence[currentStepIndex].type === 'command' && (
-                  <div className="flex items-center gap-2 text-[#005CC5] font-medium">
-                    <span className="text-black/40 select-none">dayzero@macbook hdz %</span>
-                    <span className="text-[#24292E] font-semibold">{currentTypingText}</span>
-                    <span className="w-2 h-4 bg-[#24292E] inline-block animate-pulse ml-0.5" />
-                  </div>
-                )}
-
-              {/* Active Standby Cursor */}
-              {currentStepIndex >= terminalSequence.length && (
-                <div className="flex items-center gap-2 text-[#005CC5] font-medium pt-1">
-                  <span className="text-black/40 select-none">dayzero@macbook hdz %</span>
-                  <span className="w-2 h-4 bg-[#24292E] inline-block animate-pulse ml-0.5" />
+                <div className="text-[9px] font-mono text-white/40 mt-0.5 truncate">
+                  {marker.sub}
                 </div>
-              )}
-            </div>
+              </button>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* ------------------------------------------------------------------------- */}
+        {/* CENTER ZONE: Atmospheric Corridor / Space for Central Doorway Visual      */}
+        {/* ------------------------------------------------------------------------- */}
+        <div className="hidden lg:flex lg:w-[20%] xl:w-[24%] items-end justify-center pb-8 pointer-events-none select-none">
+          <div className="flex flex-col items-center gap-2 opacity-35">
+            <span className="w-[1px] h-12 bg-white/40" />
+            <span className="text-[9px] font-mono tracking-[0.3em] uppercase text-white/80">
+              DAY ZERO
+            </span>
+            <span className="w-[1px] h-12 bg-white/40" />
           </div>
         </div>
 
-        {/* ================= RIGHT PANEL (40%): Editorial Interface (QUEST | CONTACT) ================= */}
-        <div className="w-full lg:w-[40%] max-w-xl lg:max-w-none mx-auto flex flex-col justify-center">
-          <div className="bg-[#0B0B0D] border border-white/10 p-6 sm:p-8 rounded-xl flex flex-col justify-between min-h-[440px]">
-            <div>
-              {/* Segmented Navigation Header */}
-              <div className="flex items-center gap-8 border-b border-white/15 pb-3 mb-6 relative">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('CONTACT')}
-                  className={`text-xs font-mono tracking-[0.2em] uppercase transition-colors duration-200 pb-1 relative cursor-pointer ${activeTab === 'CONTACT'
-                    ? 'text-white font-bold'
-                    : 'text-white/40 hover:text-white/80 font-normal'
-                    }`}
-                >
-                  CONTACT
-                  {activeTab === 'CONTACT' && (
-                    <motion.div
-                      layoutId="editorialTabUnderline"
-                      className="absolute bottom-[-13px] left-0 right-0 h-[2px] bg-white"
-                      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                    />
-                  )}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('QUEST')}
-                  className={`text-xs font-mono tracking-[0.2em] uppercase transition-colors duration-200 pb-1 relative cursor-pointer ${activeTab === 'QUEST'
-                    ? 'text-white font-bold'
-                    : 'text-white/40 hover:text-white/80 font-normal'
-                    }`}
-                >
-                  QUEST
-                  {activeTab === 'QUEST' && (
-                    <motion.div
-                      layoutId="editorialTabUnderline"
-                      className="absolute bottom-[-13px] left-0 right-0 h-[2px] bg-white"
-                      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                    />
-                  )}
-                </button>
-              </div>
-
-              {/* Horizontal Sliding Tab Content */}
-              <div className="relative overflow-hidden min-h-[320px]">
-                <AnimatePresence mode="wait" initial={false}>
-                  {activeTab === 'CONTACT' ? (
-                    <motion.div
-                      key="CONTACT"
-                      initial={{ x: activeTab === 'CONTACT' ? -30 : 30, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      exit={{ x: -30, opacity: 0 }}
-                      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                      className="space-y-4"
-                    >
-                      {submitted ? (
-                        <div className="py-12 px-6 text-center border border-white/20 bg-white/5 space-y-4 rounded-lg">
-                          <div className="text-xs font-mono text-white/50 tracking-widest uppercase">
-                            STATUS: 200 OK
-                          </div>
-                          <h3 className="text-sm font-mono font-semibold text-white tracking-wide">
-                            TRANSMISSION RECEIVED
-                          </h3>
-                          <p className="text-xs font-mono text-white/60 max-w-xs mx-auto leading-relaxed">
-                            Thank you for reaching out. Our engineering team will review your inquiry shortly.
-                          </p>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setSubmitted(false);
-                              setFormData({ name: '', email: '', subject: '', message: '' });
-                            }}
-                            className="mt-4 text-[10px] font-mono tracking-widest uppercase text-white/50 hover:text-white underline cursor-pointer"
-                          >
-                            Send another transmission
-                          </button>
-                        </div>
-                      ) : (
-                        <form onSubmit={handleFormSubmit} className="space-y-3.5">
-                          {/* Name Field */}
-                          <div>
-                            <label
-                              htmlFor="contact-name"
-                              className="block text-[9px] font-mono text-white/40 uppercase tracking-widest mb-1.5"
-                            >
-                              [01] FULL NAME *
-                            </label>
-                            <input
-                              id="contact-name"
-                              type="text"
-                              name="name"
-                              required
-                              value={formData.name}
-                              onChange={handleInputChange}
-                              placeholder="Alex Rivera"
-                              className="w-full bg-[#050505] border border-white/15 focus:border-white focus:ring-1 focus:ring-white/20 text-white placeholder:text-white/20 px-3.5 py-2.5 text-xs font-mono outline-none transition-colors rounded-none"
-                            />
-                          </div>
-
-                          {/* Email Field */}
-                          <div>
-                            <label
-                              htmlFor="contact-email"
-                              className="block text-[9px] font-mono text-white/40 uppercase tracking-widest mb-1.5"
-                            >
-                              [02] EMAIL ADDRESS *
-                            </label>
-                            <input
-                              id="contact-email"
-                              type="email"
-                              name="email"
-                              required
-                              value={formData.email}
-                              onChange={handleInputChange}
-                              placeholder="alex@workstation.dev"
-                              className="w-full bg-[#050505] border border-white/15 focus:border-white focus:ring-1 focus:ring-white/20 text-white placeholder:text-white/20 px-3.5 py-2.5 text-xs font-mono outline-none transition-colors rounded-none"
-                            />
-                          </div>
-
-                          {/* Subject Field */}
-                          <div>
-                            <label
-                              htmlFor="contact-subject"
-                              className="block text-[9px] font-mono text-white/40 uppercase tracking-widest mb-1.5"
-                            >
-                              [03] TRANSMISSION SUBJECT
-                            </label>
-                            <input
-                              id="contact-subject"
-                              type="text"
-                              name="subject"
-                              value={formData.subject}
-                              onChange={handleInputChange}
-                              placeholder="Collaboration Inquiry"
-                              className="w-full bg-[#050505] border border-white/15 focus:border-white focus:ring-1 focus:ring-white/20 text-white placeholder:text-white/20 px-3.5 py-2.5 text-xs font-mono outline-none transition-colors rounded-none"
-                            />
-                          </div>
-
-                          {/* Message Field */}
-                          <div>
-                            <label
-                              htmlFor="contact-message"
-                              className="block text-[9px] font-mono text-white/40 uppercase tracking-widest mb-1.5"
-                            >
-                              [04] INTENT &amp; MESSAGE *
-                            </label>
-                            <textarea
-                              id="contact-message"
-                              name="message"
-                              required
-                              rows={3}
-                              value={formData.message}
-                              onChange={handleInputChange}
-                              placeholder="Describe your inquiry..."
-                              className="w-full bg-[#050505] border border-white/15 focus:border-white focus:ring-1 focus:ring-white/20 text-white placeholder:text-white/20 px-3.5 py-2.5 text-xs font-mono outline-none transition-colors resize-none rounded-none"
-                            />
-                          </div>
-
-                          {/* Submit Button */}
-                          <button
-                            type="submit"
-                            disabled={submitting}
-                            className="w-full bg-white text-black font-mono font-bold text-[11px] tracking-widest uppercase py-3 px-5 border border-white hover:bg-white/90 active:scale-[0.99] transition-all cursor-pointer disabled:opacity-50 mt-1"
-                          >
-                            {submitting ? 'EXECUTING TRANSMISSION...' : 'EXECUTE TRANSMISSION →'}
-                          </button>
-                        </form>
-                      )}
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="QUEST"
-                      initial={{ x: 30, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      exit={{ x: -30, opacity: 0 }}
-                      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                      className="space-y-6 py-2 flex flex-col justify-between h-full"
-                    >
-                      <div className="space-y-4">
-                        <span className="text-[9px] font-mono tracking-[0.25em] text-white/40 uppercase block">
-                          // INITIATIVE ZERO
-                        </span>
-                        <h3 className="font-display text-xl font-bold text-white tracking-tight uppercase">
-                          THE DAY ZERO QUEST
-                        </h3>
-                        <p className="text-xs font-mono text-white/70 leading-relaxed">
-                          An intentional engineering challenge for founders, builders, and visionaries.
-                        </p>
-                        <p className="text-xs font-mono text-white/50 leading-relaxed">
-                          Answer a few concise questions about your architectural vision to join our inner circle and collaborate from Day Zero.
-                        </p>
-                      </div>
-
-                      {/* Quest CTA Button */}
-                      <div className="pt-4 border-t border-white/10">
-                        <a
-                          href={GOOGLE_FORM_URL}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center justify-between w-full bg-white text-black font-mono font-bold text-[11px] tracking-widest uppercase py-3.5 px-5 border border-white hover:bg-white/90 active:scale-[0.99] transition-all cursor-pointer"
-                        >
-                          <span>BEGIN QUEST</span>
-                          <span className="text-sm">↗</span>
-                        </a>
-                        <span className="text-[9px] font-mono text-white/30 block mt-2 text-center">
-                          Opens external form in a new tab
-                        </span>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+        {/* ------------------------------------------------------------------------- */}
+        {/* RIGHT ZONE: Refined Industrial Form & Direct Contact Channels            */}
+        {/* ------------------------------------------------------------------------- */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="w-full lg:w-[42%] xl:w-[38%] flex flex-col justify-between space-y-6"
+        >
+          <div className="bg-[#0A0A0C]/85 border border-white/10 p-5 sm:p-7 rounded-xs space-y-5 backdrop-blur-md shadow-2xl">
+            {/* Form Eyebrow */}
+            <div className="flex items-center justify-between text-[10px] font-mono text-white/40 tracking-widest uppercase pb-2.5 border-b border-white/10">
+              <span className="text-white/80">[ SEND A MESSAGE ]</span>
+              <span className="hidden sm:inline text-white/40">WE’LL GET BACK SOON.</span>
             </div>
 
-            {/* Footer Bar */}
-            <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[9px] font-mono text-white/30">
-              <span>SYSTEM: ONLINE</span>
-              <span>LATENCY: 12ms</span>
-              <span>ENCRYPTED</span>
+            {submitted ? (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="py-12 text-center space-y-4 font-mono"
+              >
+                <div className="w-9 h-9 rounded-full border border-white/30 flex items-center justify-center mx-auto text-white">
+                  ✓
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-sm font-semibold tracking-wider uppercase text-white">
+                    MESSAGE TRANSMITTED
+                  </h3>
+                  <p className="text-xs text-white/50 max-w-xs mx-auto">
+                    Thank you, {formData.name}. Your connection request has been received.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSubmitted(false);
+                    setActiveMarker(null);
+                    setFormData({ name: '', email: '', subject: '', message: '' });
+                  }}
+                  className="mt-4 inline-flex items-center gap-2 text-xs text-white/70 hover:text-white underline cursor-pointer"
+                >
+                  Send another message
+                </button>
+              </motion.div>
+            ) : (
+              <form onSubmit={handleFormSubmit} className="space-y-3.5 font-mono text-xs">
+                {/* Name */}
+                <div className="space-y-1">
+                  <label className="block text-[10px] tracking-wider text-white/50 uppercase">
+                    YOUR NAME
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    required
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder="e.g. Alex Mercer"
+                    className="w-full px-3.5 py-2.5 bg-black/60 border border-white/15 focus:border-white text-white text-xs placeholder:text-white/20 outline-none transition-colors rounded-none"
+                  />
+                </div>
+
+                {/* Email */}
+                <div className="space-y-1">
+                  <label className="block text-[10px] tracking-wider text-white/50 uppercase">
+                    YOUR EMAIL
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="alex@domain.com"
+                    className="w-full px-3.5 py-2.5 bg-black/60 border border-white/15 focus:border-white text-white text-xs placeholder:text-white/20 outline-none transition-colors rounded-none"
+                  />
+                </div>
+
+                {/* Subject */}
+                <div className="space-y-1">
+                  <label className="block text-[10px] tracking-wider text-white/50 uppercase">
+                    SUBJECT
+                  </label>
+                  <input
+                    type="text"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleInputChange}
+                    placeholder="e.g. Project Collaboration"
+                    className="w-full px-3.5 py-2.5 bg-black/60 border border-white/15 focus:border-white text-white text-xs placeholder:text-white/20 outline-none transition-colors rounded-none"
+                  />
+                </div>
+
+                {/* Message */}
+                <div className="space-y-1">
+                  <label className="block text-[10px] tracking-wider text-white/50 uppercase">
+                    YOUR MESSAGE
+                  </label>
+                  <textarea
+                    name="message"
+                    required
+                    rows={4}
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    placeholder="Tell us about your idea, vision, or inquiry..."
+                    className="w-full px-3.5 py-2.5 bg-black/60 border border-white/15 focus:border-white text-white text-xs placeholder:text-white/20 outline-none transition-colors resize-none rounded-none"
+                  />
+                </div>
+
+                {/* CTA Button */}
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full py-3.5 px-6 bg-white text-black font-mono text-xs tracking-[0.2em] font-semibold uppercase flex items-center justify-center gap-3 hover:bg-white/90 hover:shadow-[0_0_22px_rgba(255,255,255,0.25)] transition-all cursor-pointer group disabled:opacity-50"
+                  >
+                    <span>{submitting ? 'TRANSMITTING...' : 'SEND MESSAGE'}</span>
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+
+          {/* Direct Contact Info */}
+          <div className="space-y-2 pt-1 font-mono text-xs">
+            <div className="text-[10px] text-white/40 tracking-widest uppercase">
+              [ OR REACH US DIRECTLY ]
+            </div>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] text-white/60">
+              <a
+                href="mailto:akshayjohn4518@gmail.com"
+                className="inline-flex items-center gap-2 hover:text-white transition-colors"
+              >
+                <Mail className="w-3.5 h-3.5 text-white/40" />
+                <span>akshayjohn4518@gmail.com</span>
+              </a>
+
+              <div className="inline-flex items-center gap-2 text-white/50">
+                <MapPin className="w-3.5 h-3.5 text-white/40" />
+                <span>HYDERBAD, India</span>
+              </div>
+
+              <a
+                href="https://linkedin.com/company/dayzero"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 hover:text-white transition-colors"
+              >
+                <span className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-[2px] bg-white/20 text-white text-[9px] font-bold">
+                  in
+                </span>
+                <span>/dayzero</span>
+              </a>
             </div>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </main>
 
-      {/* Section Bottom Footer note */}
-      <div className="max-w-7xl w-full mx-auto text-center pt-4 border-t border-white/10 text-[10px] font-mono text-white/30 shrink-0 z-10">
-        © {new Date().getFullYear()} DAY ZERO — WORKSTATION INTERFACE
-      </div>
+      {/* ========================================================================= */}
+      {/* BOTTOM MINIMAL EDITORIAL FOOTER                                           */}
+      {/* ========================================================================= */}
+      <footer className="relative w-full max-w-7xl mx-auto px-4 sm:px-8 md:px-12 py-5 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] font-mono text-white/35 uppercase tracking-widest z-20">
+        <div>SAME PEOPLE. A BRIGHTER TOMORROW.</div>
+        <div className="hidden sm:block">IDEAS TODAY. IMPACT TOMORROW.</div>
+      </footer>
     </motion.div>
   );
 }
 
 ```
+
 ---
 
 ### File 9: `src/components/motion/IntroSequence.jsx`
@@ -2722,6 +2567,7 @@ export default function IntroSequence({ onComplete }) {
 }
 
 ```
+
 ---
 
 ### File 10: `src/components/blueprint/BlueprintCanvas.jsx`
@@ -2814,7 +2660,7 @@ export default function BlueprintCanvas({ pathProgress, currentPoint, mainPathD 
           <g key={idx} style={lit.style}>
             <line x1="50" y1={yVal} x2="950" y2={yVal} stroke={lit.isLit ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.05)'} strokeWidth="1" strokeDasharray="2 6" />
             <text x="60" y={yVal - 8} fill={lit.isLit ? '#ffffff' : 'rgba(255, 255, 255, 0.25)'} fontSize="9" fontFamily="JetBrains Mono, monospace">
-              DATUM BASELINE H-{yVal} // SEC 0{idx + 1}
+              DATUM BASELINE H-{yVal} • SEC 0{idx + 1}
             </text>
           </g>
         );
@@ -3187,6 +3033,7 @@ export default function BlueprintCanvas({ pathProgress, currentPoint, mainPathD 
 }
 
 ```
+
 ---
 
 ### File 11: `src/components/blueprint/ChapterContent.jsx`
@@ -3323,6 +3170,7 @@ export default function ChapterContent({ currentPoint, onOpenContact, onNavigate
 }
 
 ```
+
 ---
 
 ### File 12: `src/components/blueprint/CinematicHomepage.jsx`
@@ -3491,6 +3339,7 @@ export default function CinematicHomepage({ onOpenContact, onNavigateChapter }) 
 }
 
 ```
+
 ---
 
 ### File 13: `src/components/blueprint/ChapterPage.jsx`
@@ -3611,15 +3460,11 @@ export default function ChapterPage({
             className="inline-flex items-center gap-2 text-xs font-mono text-white/50 hover:text-white transition-colors cursor-pointer group"
           >
             <span className="group-hover:-translate-x-1 transition-transform">←</span>
-            <span className="tracking-widest uppercase">BACK TO TIMELINE</span>
+            <span className="tracking-widest uppercase">BACK</span>
           </button>
 
           <div className="flex items-center gap-3 font-mono text-[11px] text-white/40">
-            <span className="px-2 py-0.5 rounded bg-white/10 text-white font-semibold tracking-wider">
-              CHAPTER {chapter.id}
-            </span>
-            <span className="hidden sm:inline text-white/20">/</span>
-            <span className="hidden sm:inline uppercase tracking-wider text-white/70">
+            <span className="uppercase tracking-wider text-white/70">
               {chapter.title}
             </span>
           </div>
@@ -3631,11 +3476,11 @@ export default function ChapterPage({
         <header className="max-w-4xl space-y-4 pt-2 sm:pt-6">
           <div className="flex flex-wrap items-center gap-3">
             <div className="inline-flex items-center gap-2 px-2.5 py-1 bg-[#0B0B0B] border border-white/15 text-[10px] font-mono text-white/70 tracking-widest uppercase">
-              <span>INDEX // 0{chapter.id}</span>
+              <span>INDEX • 0{chapter.id}</span>
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
             </div>
             <span className="text-[10px] font-mono text-white/40 tracking-widest uppercase border-l border-white/15 pl-3">
-              CHAPTER {chapter.id} • DOCUMENTARY ESSAY
+              DOCUMENTARY ESSAY
             </span>
             {chapter.primaryTopic && (
               <span className="text-[10px] font-mono text-white/50 tracking-widest uppercase border-l border-white/15 pl-3 hidden md:inline">
@@ -3666,8 +3511,8 @@ export default function ChapterPage({
             <aside className="hidden lg:block lg:col-span-3 sticky top-28 space-y-6">
               <div className="p-5 border border-white/10 rounded-lg bg-[#0B0B0B]/60 backdrop-blur-sm space-y-4">
                 <div className="text-[10px] font-mono text-white/40 tracking-widest uppercase pb-2 border-b border-white/10 flex items-center justify-between">
-                  <span>CHAPTER INDEX</span>
-                  <span>CH.{chapter.id}</span>
+                  <span>TABLE OF CONTENTS</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
                 </div>
                 <nav className="space-y-1.5 font-mono text-xs">
                   {fullContent.sections.map((sec) => (
@@ -3722,7 +3567,7 @@ export default function ChapterPage({
                         01
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // CONCEPTION
+                        PHASE • CONCEPTION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -3766,7 +3611,7 @@ export default function ChapterPage({
                         02
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // TANGIBLE MANIFESTATION
+                        PHASE • TANGIBLE MANIFESTATION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -3810,19 +3655,19 @@ export default function ChapterPage({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                       <div className="p-4 rounded border border-white/15 bg-white/[0.03]">
-                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">POSSIBILITY // 01</span>
+                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">POSSIBILITY • 01</span>
                         <p className="text-sm sm:text-base font-medium text-white">Something can be tested.</p>
                       </div>
                       <div className="p-4 rounded border border-white/15 bg-white/[0.03]">
-                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">POSSIBILITY // 02</span>
+                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">POSSIBILITY • 02</span>
                         <p className="text-sm sm:text-base font-medium text-white">Something can be questioned.</p>
                       </div>
                       <div className="p-4 rounded border border-white/15 bg-white/[0.03]">
-                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">POSSIBILITY // 03</span>
+                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">POSSIBILITY • 03</span>
                         <p className="text-sm sm:text-base font-medium text-white">Something can fail.</p>
                       </div>
                       <div className="p-4 rounded border border-white/15 bg-white/[0.03]">
-                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">POSSIBILITY // 04</span>
+                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">POSSIBILITY • 04</span>
                         <p className="text-sm sm:text-base font-medium text-white">And because it can fail, it can also improve.</p>
                       </div>
                     </div>
@@ -3840,7 +3685,7 @@ export default function ChapterPage({
                         03
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // PERSPECTIVE
+                        PHASE • PERSPECTIVE
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -3901,7 +3746,7 @@ export default function ChapterPage({
                         04
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // METHODOLOGY
+                        PHASE • METHODOLOGY
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -3955,7 +3800,7 @@ export default function ChapterPage({
                         05
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // ARCHIVAL PROTOCOL
+                        PHASE • ARCHIVAL PROTOCOL
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4011,7 +3856,7 @@ export default function ChapterPage({
                         06
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        FINALE // MANIFESTO
+                        FINALE • MANIFESTO
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4048,15 +3893,6 @@ export default function ChapterPage({
                         <span>INITIATE DAY ZERO</span>
                         <span>↗</span>
                       </button>
-
-                      <button
-                        type="button"
-                        onClick={onBackToHome}
-                        className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
-                      >
-                        <span>TIMELINE</span>
-                        <span>↑</span>
-                      </button>
                     </div>
                   </section>
                 </>
@@ -4074,7 +3910,7 @@ export default function ChapterPage({
                         01
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE ILLUSION
+                        PHASE • THE ILLUSION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4132,7 +3968,7 @@ export default function ChapterPage({
                         02
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE UNSEEN CONTEXT
+                        PHASE • THE UNSEEN CONTEXT
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4193,7 +4029,7 @@ export default function ChapterPage({
                         03
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // KNOWLEDGE EXTRACTION
+                        PHASE • KNOWLEDGE EXTRACTION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4269,7 +4105,7 @@ export default function ChapterPage({
                         04
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE DECEPTIVE MYTH
+                        PHASE • THE DECEPTIVE MYTH
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4321,7 +4157,7 @@ export default function ChapterPage({
                         05
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // RAW ARTIFACTS
+                        PHASE • RAW ARTIFACTS
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4371,7 +4207,7 @@ export default function ChapterPage({
                         06
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        FINALE // THE MISSION
+                        FINALE • THE MISSION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4405,16 +4241,6 @@ export default function ChapterPage({
 
                       <button
                         type="button"
-                        onClick={() => {
-                          if (onNavigateChapter) onNavigateChapter('01');
-                        }}
-                        className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
-                      >
-                        <span>← CHAPTER 01</span>
-                      </button>
-
-                      <button
-                        type="button"
                         onClick={onOpenContact}
                         className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
                       >
@@ -4438,7 +4264,7 @@ export default function ChapterPage({
                         01
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE BELIEF
+                        PHASE • THE BELIEF
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4469,7 +4295,7 @@ export default function ChapterPage({
                           className="p-4 rounded border border-white/15 bg-white/[0.03] space-y-1.5"
                         >
                           <span className="text-[10px] font-mono text-white/40 uppercase">
-                            ORIGIN // 0{idx + 1}
+                            ORIGIN • 0{idx + 1}
                           </span>
                           <p className="text-sm sm:text-base font-medium text-white/90 leading-relaxed">
                             {item}
@@ -4497,7 +4323,7 @@ export default function ChapterPage({
                         02
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE CONTINUOUS LOOP
+                        PHASE • THE CONTINUOUS LOOP
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4560,7 +4386,7 @@ export default function ChapterPage({
                         03
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // INITIATION
+                        PHASE • INITIATION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4595,7 +4421,7 @@ export default function ChapterPage({
                         04
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // SYSTEMATIZATION
+                        PHASE • SYSTEMATIZATION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4628,7 +4454,7 @@ export default function ChapterPage({
                         05
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // ABSORPTION
+                        PHASE • ABSORPTION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4644,11 +4470,11 @@ export default function ChapterPage({
                     {/* Binary Insights Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="p-4 rounded border border-white/15 bg-white/[0.03]">
-                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">OUTCOME // 01</span>
+                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">OUTCOME • 01</span>
                         <p className="text-sm sm:text-base font-medium text-white">Sometimes that knowledge confirms the direction.</p>
                       </div>
                       <div className="p-4 rounded border border-white/15 bg-white/[0.03]">
-                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">OUTCOME // 02</span>
+                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">OUTCOME • 02</span>
                         <p className="text-sm sm:text-base font-medium text-white">Sometimes it changes it.</p>
                       </div>
                     </div>
@@ -4675,7 +4501,7 @@ export default function ChapterPage({
                         06
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // EVOLUTION
+                        PHASE • EVOLUTION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4713,7 +4539,7 @@ export default function ChapterPage({
                         07
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // MATURATION
+                        PHASE • MATURATION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4765,7 +4591,7 @@ export default function ChapterPage({
                         08
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        FINALE // THE PRINCIPLE
+                        FINALE • THE PRINCIPLE
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4796,16 +4622,6 @@ export default function ChapterPage({
 
                       <button
                         type="button"
-                        onClick={() => {
-                          if (onNavigateChapter) onNavigateChapter('02');
-                        }}
-                        className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
-                      >
-                        <span>← CHAPTER 02</span>
-                      </button>
-
-                      <button
-                        type="button"
                         onClick={onOpenContact}
                         className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
                       >
@@ -4829,7 +4645,7 @@ export default function ChapterPage({
                         01
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // CORE PARADIGM
+                        PHASE • CORE PARADIGM
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4886,7 +4702,7 @@ export default function ChapterPage({
                         02
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE RECORD
+                        PHASE • THE RECORD
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -4942,7 +4758,7 @@ export default function ChapterPage({
                         03
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // HONESTY OVER THEATER
+                        PHASE • HONESTY OVER THEATER
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5001,7 +4817,7 @@ export default function ChapterPage({
                         04
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE OPERATIONAL LOOP
+                        PHASE • THE OPERATIONAL LOOP
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5077,7 +4893,7 @@ export default function ChapterPage({
                         05
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // ARCHIVAL TAXONOMY
+                        PHASE • ARCHIVAL TAXONOMY
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5130,7 +4946,7 @@ export default function ChapterPage({
                         06
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // IMPACT & INSPIRATION
+                        PHASE • IMPACT & INSPIRATION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5171,7 +4987,7 @@ export default function ChapterPage({
                         07
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        FINALE // THE RULE
+                        FINALE • THE RULE
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5202,16 +5018,6 @@ export default function ChapterPage({
 
                       <button
                         type="button"
-                        onClick={() => {
-                          if (onNavigateChapter) onNavigateChapter('03');
-                        }}
-                        className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
-                      >
-                        <span>← CHAPTER 03</span>
-                      </button>
-
-                      <button
-                        type="button"
                         onClick={onOpenContact}
                         className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
                       >
@@ -5235,7 +5041,7 @@ export default function ChapterPage({
                         01
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // ACTIVE INITIATIVES
+                        PHASE • ACTIVE INITIATIVES
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5290,7 +5096,7 @@ export default function ChapterPage({
                         02
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE ROOT PROBLEM
+                        PHASE • THE ROOT PROBLEM
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5339,7 +5145,7 @@ export default function ChapterPage({
                         03
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // NON-LINEAR STATES
+                        PHASE • NON-LINEAR STATES
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5401,7 +5207,7 @@ export default function ChapterPage({
                         04
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // DEFINING SUCCESS
+                        PHASE • DEFINING SUCCESS
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5453,7 +5259,7 @@ export default function ChapterPage({
                         05
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // ARCHIVAL SCHEMA
+                        PHASE • ARCHIVAL SCHEMA
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5481,7 +5287,7 @@ export default function ChapterPage({
                           className="p-4 rounded bg-[#0B0B0B] border border-white/10 space-y-1.5"
                         >
                           <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider block">
-                            FIELD // {schemaItem.field}
+                            FIELD • {schemaItem.field}
                           </span>
                           <p className="font-mono text-sm sm:text-base font-medium text-white">
                             {schemaItem.prompt}
@@ -5502,7 +5308,7 @@ export default function ChapterPage({
                         06
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        FINALE // THE MISSION LEDGER
+                        FINALE • THE MISSION LEDGER
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5564,23 +5370,11 @@ export default function ChapterPage({
 
                       <button
                         type="button"
-                        onClick={() => {
-                          if (onNavigateChapter) onNavigateChapter('04');
-                        }}
+                        onClick={onOpenContact}
                         className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
                       >
-                        <span>← CHAPTER 04</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (onNavigateChapter) onNavigateChapter('06');
-                        }}
-                        className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
-                      >
-                        <span>CHAPTER 06 (ECOSYSTEM)</span>
-                        <span>→</span>
+                        <span>INITIATE DAY ZERO</span>
+                        <span>↗</span>
                       </button>
                     </div>
                   </section>
@@ -5599,7 +5393,7 @@ export default function ChapterPage({
                         01
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE HORIZON
+                        PHASE • THE HORIZON
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5652,7 +5446,7 @@ export default function ChapterPage({
                         02
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        LAYER // 01 REAL WORK
+                        LAYER • 01 REAL WORK
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5695,7 +5489,7 @@ export default function ChapterPage({
                         03
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        LAYER // 02 INTELLECTUAL ASSETS
+                        LAYER • 02 INTELLECTUAL ASSETS
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5749,7 +5543,7 @@ export default function ChapterPage({
                         04
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        LAYER // 03 THE ARCHIVAL TRAIL
+                        LAYER • 03 THE ARCHIVAL TRAIL
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5805,7 +5599,7 @@ export default function ChapterPage({
                         05
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        LAYER // 04 THE BUILDER NETWORK
+                        LAYER • 04 THE BUILDER NETWORK
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5855,7 +5649,7 @@ export default function ChapterPage({
                         06
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        LAYER // 05 VISUAL REPOSITORIES
+                        LAYER • 05 VISUAL REPOSITORIES
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5900,7 +5694,7 @@ export default function ChapterPage({
                         07
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        SYSTEM // THE FEEDBACK ENGINE
+                        SYSTEM • THE FEEDBACK ENGINE
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5945,7 +5739,7 @@ export default function ChapterPage({
                         08
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        FINALE // ARCHITECTURAL SYNTHESIS
+                        FINALE • ARCHITECTURAL SYNTHESIS
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -5989,16 +5783,6 @@ export default function ChapterPage({
 
                       <button
                         type="button"
-                        onClick={() => {
-                          if (onNavigateChapter) onNavigateChapter('05');
-                        }}
-                        className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
-                      >
-                        <span>← CHAPTER 05</span>
-                      </button>
-
-                      <button
-                        type="button"
                         onClick={onOpenContact}
                         className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
                       >
@@ -6022,7 +5806,7 @@ export default function ChapterPage({
                         01
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        DECLARATION // CORE COMMITMENTS
+                        DECLARATION • CORE COMMITMENTS
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -6065,7 +5849,7 @@ export default function ChapterPage({
                         02
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PILLAR // TANGIBLE EXECUTION
+                        PILLAR • TANGIBLE EXECUTION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -6108,7 +5892,7 @@ export default function ChapterPage({
                         03
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PILLAR // CONTINUOUS RECORD
+                        PILLAR • CONTINUOUS RECORD
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -6152,7 +5936,7 @@ export default function ChapterPage({
                         04
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PILLAR // EPISTEMIC EVOLUTION
+                        PILLAR • EPISTEMIC EVOLUTION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -6201,7 +5985,7 @@ export default function ChapterPage({
                         05
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PILLAR // PERPETUAL REFINEMENT
+                        PILLAR • PERPETUAL REFINEMENT
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -6248,7 +6032,7 @@ export default function ChapterPage({
                         06
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PILLAR // RADICAL TRANSPARENCY
+                        PILLAR • RADICAL TRANSPARENCY
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -6300,7 +6084,7 @@ export default function ChapterPage({
                         07
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PILLAR // INFINITE RECURSION
+                        PILLAR • INFINITE RECURSION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -6344,7 +6128,7 @@ export default function ChapterPage({
                         08
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        THE CREEDS // CORE CODEX
+                        THE CREEDS • CORE CODEX
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -6371,7 +6155,7 @@ export default function ChapterPage({
                           className="p-5 rounded-lg bg-[#0B0B0B] border border-white/15 flex flex-col justify-between hover:border-white/40 transition-colors group"
                         >
                           <span className="text-[10px] font-mono text-white/40 mb-3 group-hover:text-white/70 transition-colors">
-                            CREED // 0{cIdx + 1}
+                            CREED • 0{cIdx + 1}
                           </span>
                           <span className="font-display text-base sm:text-lg font-bold tracking-tight text-white uppercase">
                             {creed}
@@ -6388,7 +6172,7 @@ export default function ChapterPage({
                         09
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        FINALE // ARCHIVAL CLIMAX
+                        FINALE • ARCHIVAL CLIMAX
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -6451,24 +6235,6 @@ export default function ChapterPage({
                         <span className="group-hover:translate-x-1 transition-transform">→</span>
                       </button>
 
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (onNavigateChapter) onNavigateChapter('06');
-                        }}
-                        className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
-                      >
-                        <span>← CHAPTER 06 (FUTURE ECOSYSTEM)</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={onBackToHome}
-                        className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
-                      >
-                        <span>RETURN TO TIMELINE</span>
-                        <span>↑</span>
-                      </button>
                     </div>
                   </section>
                 </>
@@ -6486,7 +6252,7 @@ export default function ChapterPage({
                 {chapter.id}
               </div>
               <p className="text-xs font-mono text-white/50 uppercase tracking-widest">
-                CHAPTER {chapter.id} ARCHIVE
+                ARCHIVE
               </p>
               <h3 className="font-display text-xl sm:text-2xl font-bold text-white uppercase">
                 {chapter.title}
@@ -6494,125 +6260,9 @@ export default function ChapterPage({
               <p className="text-xs sm:text-sm font-light text-white/50 leading-relaxed">
                 {chapter.subtitle}
               </p>
-              <div className="pt-2 flex flex-wrap justify-center gap-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onNavigateChapter) onNavigateChapter('01');
-                  }}
-                  className="inline-flex items-center gap-2 text-xs font-mono text-white underline hover:text-white/80 cursor-pointer"
-                >
-                  <span>Read Chapter 01</span>
-                  <span>→</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onNavigateChapter) onNavigateChapter('02');
-                  }}
-                  className="inline-flex items-center gap-2 text-xs font-mono text-white underline hover:text-white/80 cursor-pointer"
-                >
-                  <span>Read Chapter 02</span>
-                  <span>→</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onNavigateChapter) onNavigateChapter('03');
-                  }}
-                  className="inline-flex items-center gap-2 text-xs font-mono text-white underline hover:text-white/80 cursor-pointer"
-                >
-                  <span>Read Chapter 03</span>
-                  <span>→</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onNavigateChapter) onNavigateChapter('04');
-                  }}
-                  className="inline-flex items-center gap-2 text-xs font-mono text-white underline hover:text-white/80 cursor-pointer"
-                >
-                  <span>Read Chapter 04</span>
-                  <span>→</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onNavigateChapter) onNavigateChapter('05');
-                  }}
-                  className="inline-flex items-center gap-2 text-xs font-mono text-white underline hover:text-white/80 cursor-pointer"
-                >
-                  <span>Read Chapter 05</span>
-                  <span>→</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onNavigateChapter) onNavigateChapter('06');
-                  }}
-                  className="inline-flex items-center gap-2 text-xs font-mono text-white underline hover:text-white/80 cursor-pointer"
-                >
-                  <span>Read Chapter 06</span>
-                  <span>→</span>
-                </button>
-              </div>
             </div>
           </div>
         )}
-      </div>
-
-      {/* ========================================================================= */}
-      {/* CHAPTER PAGINATION / SWITCHER AT BOTTOM                                   */}
-      {/* ========================================================================= */}
-      <div className="max-w-7xl w-full mx-auto mt-20 pt-6 border-t border-white/10 flex items-center justify-between text-xs font-mono text-white/50">
-        <div>
-          {parseInt(chapter.id, 10) > 1 ? (
-            <button
-              type="button"
-              onClick={() => {
-                const prevId = String(parseInt(chapter.id, 10) - 1).padStart(2, '0');
-                if (onNavigateChapter) onNavigateChapter(prevId);
-              }}
-              className="hover:text-white transition-colors cursor-pointer flex items-center gap-2"
-            >
-              <span>←</span>
-              <span>CHAPTER {String(parseInt(chapter.id, 10) - 1).padStart(2, '0')}</span>
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={onBackToHome}
-              className="hover:text-white transition-colors cursor-pointer flex items-center gap-2"
-            >
-              <span>←</span>
-              <span>TIMELINE</span>
-            </button>
-          )}
-        </div>
-
-        <button
-          type="button"
-          onClick={onBackToHome}
-          className="text-white/40 hover:text-white transition-colors cursor-pointer uppercase tracking-wider text-[11px]"
-        >
-          VIEW TIMELINE
-        </button>
-
-        <div>
-          {parseInt(chapter.id, 10) < CHAPTERS_DATA.length && (
-            <button
-              type="button"
-              onClick={() => {
-                const nextId = String(parseInt(chapter.id, 10) + 1).padStart(2, '0');
-                if (onNavigateChapter) onNavigateChapter(nextId);
-              }}
-              className="hover:text-white transition-colors cursor-pointer flex items-center gap-2"
-            >
-              <span>CHAPTER {String(parseInt(chapter.id, 10) + 1).padStart(2, '0')}</span>
-              <span>→</span>
-            </button>
-          )}
-        </div>
       </div>
     </div>
   );
@@ -6620,6 +6270,7 @@ export default function ChapterPage({
 
 
 ```
+
 ---
 
 ### File 14: `src/components/products/ProductsPage.jsx`
@@ -6650,7 +6301,7 @@ export default function ProductsPage({ onOpenContact }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-6">
         <div className="inline-flex items-center gap-3 px-3 py-1 border border-white/10 bg-[#0B0B0B] text-[10px] font-mono text-white/50 tracking-widest uppercase">
           <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-          <span>PRODUCT INDEX // SYSTEM 03</span>
+          <span>PRODUCT INDEX:SYSTEM 03</span>
         </div>
       </div>
 
@@ -6660,7 +6311,7 @@ export default function ProductsPage({ onOpenContact }) {
           {/* Hero Left Editorial */}
           <div className="lg:col-span-6 space-y-6">
             <div className="text-xs font-mono text-white/40 tracking-[0.25em] uppercase">
-              03 / PRODUCT ARCHIVE
+              PRODUCT ARCHIVE
             </div>
 
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-display font-extrabold tracking-tight text-white uppercase leading-[0.95]">
@@ -6820,6 +6471,7 @@ export default function ProductsPage({ onOpenContact }) {
 }
 
 ```
+
 ---
 
 ### File 15: `src/components/products/ProductsHeroVisual.jsx`
@@ -6993,13 +6645,14 @@ export default function ProductsHeroVisual({ products, onSelectProduct }) {
       {/* Bottom Technical Status Bar */}
       <div className="absolute bottom-3 right-3 text-[9px] font-mono text-white/40 flex items-center gap-2">
         <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-        <span>SYS // ORBIT ACTIVE</span>
+        <span>SYS • ORBIT ACTIVE</span>
       </div>
     </div>
   );
 }
 
 ```
+
 ---
 
 ### File 16: `src/components/products/ProductArchiveItem.jsx`
@@ -7119,7 +6772,7 @@ export default function ProductArchiveItem({ product, onInspect }) {
                 <div className="w-2 h-2 rounded-full border border-white/30" />
               </div>
               <span className="tracking-widest uppercase text-[9px] text-white/30">
-                PROTOTYPE // {product.code}
+                PROTOTYPE • {product.code}
               </span>
               <span>SYS_OBSERVE</span>
             </div>
@@ -7162,6 +6815,7 @@ export default function ProductArchiveItem({ product, onInspect }) {
 }
 
 ```
+
 ---
 
 ### File 17: `src/components/products/ProductDetailModal.jsx`
@@ -7253,7 +6907,7 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
                   {product.id}
                 </span>
                 <span className="text-xs font-mono text-white/60 tracking-wider">
-                  {product.code} // {product.title}
+                  {product.code} • {product.title}
                 </span>
               </div>
 
@@ -7303,7 +6957,7 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
                         : 'text-white/40 hover:text-white/80'
                     }`}
                   >
-                    // {tab}
+                    {tab}
                   </button>
                 ))}
               </div>
@@ -7312,7 +6966,7 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
               {activeTab === 'SPECS' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
-                    <h4 className="text-xs text-white/40 uppercase tracking-widest">// SYSTEM METRICS</h4>
+                    <h4 className="text-xs text-white/40 uppercase tracking-widest">SYSTEM METRICS</h4>
                     <div className="space-y-2">
                       {product.metrics.map((m, idx) => (
                         <div key={idx} className="flex justify-between items-center p-3 bg-[#050505] border border-white/10 rounded">
@@ -7324,7 +6978,7 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
                   </div>
 
                   <div className="space-y-4">
-                    <h4 className="text-xs text-white/40 uppercase tracking-widest">// TECHNICAL STACK</h4>
+                    <h4 className="text-xs text-white/40 uppercase tracking-widest">TECHNICAL STACK</h4>
                     <div className="flex flex-wrap gap-2">
                       {product.stack.map((item, idx) => (
                         <span key={idx} className="px-3 py-1.5 bg-[#050505] border border-white/15 text-xs text-white/80 rounded">
@@ -7339,7 +6993,7 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
               {/* Tab View: ARCHITECTURE */}
               {activeTab === 'ARCHITECTURE' && (
                 <div className="space-y-4">
-                  <h4 className="text-xs text-white/40 uppercase tracking-widest">// INITIALIZATION CODE SNIPPET</h4>
+                  <h4 className="text-xs text-white/40 uppercase tracking-widest">INITIALIZATION CODE SNIPPET</h4>
                   <div className="bg-[#050505] p-4 rounded border border-white/20 text-xs overflow-x-auto">
                     <pre className="text-white/80">
                       <code>{product.codeSnippet}</code>
@@ -7351,7 +7005,7 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
               {/* Tab View: CHANGELOG */}
               {activeTab === 'CHANGELOG' && (
                 <div className="space-y-4">
-                  <h4 className="text-xs text-white/40 uppercase tracking-widest">// BUILD HISTORY LOG</h4>
+                  <h4 className="text-xs text-white/40 uppercase tracking-widest">BUILD HISTORY LOG</h4>
                   <div className="space-y-3">
                     {product.changelog.map((log, idx) => (
                       <div key={idx} className="flex items-start gap-4 p-3 bg-[#050505] border border-white/10 rounded text-xs">
@@ -7393,6 +7047,7 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
 }
 
 ```
+
 ---
 
 ### File 18: `src/components/products/productsData.js`
@@ -7400,10 +7055,10 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
 export const PRODUCTS_DATA = [
   {
     id: '01',
-    code: 'BUILD // 001',
-    title: 'DAY ZERO WORKSTATION',
-    shortDesc: 'The interactive documentary workstation and build engine that captures product creation from ground zero.',
-    fullDesc: 'DAY ZERO Workstation is an experimental visual recording environment that tracks code commits, architectural decisions, and failure modes in real time. It renders software engineering as an interactive, live-updating spatial system.',
+    code: 'BUILD 001',
+    title: 'DAY ZERO OS',
+    shortDesc: 'The interactive documentary OS and build engine that captures product creation from ground zero.',
+    fullDesc: 'DAY ZERO OS is an experimental visual recording environment that tracks code commits, architectural decisions, and failure modes in real time. It renders software engineering as an interactive, live-updating spatial system.',
     category: 'SYSTEM',
     status: 'VOID',
     year: '2026',
@@ -7424,7 +7079,7 @@ export const PRODUCTS_DATA = [
       { date: '2026-07-22', note: 'Optimized binary search SVG path tracking' },
       { date: '2026-06-10', note: 'Initial public alpha release' },
     ],
-    codeSnippet: `// DAY ZERO KERNEL INIT
+    codeSnippet: `/* DAY ZERO KERNEL INIT */
 const engine = new BuildEngine({
   mode: "DOCUMENTARY",
   telemetry: true,
@@ -7436,4 +7091,5 @@ engine.bootSequence();`,
 ];
 
 ```
+
 ---

@@ -86,7 +86,7 @@ export default function BlueprintCanvas({ pathProgress, currentPoint, mainPathD 
           <g key={idx} style={lit.style}>
             <line x1="50" y1={yVal} x2="950" y2={yVal} stroke={lit.isLit ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.05)'} strokeWidth="1" strokeDasharray="2 6" />
             <text x="60" y={yVal - 8} fill={lit.isLit ? '#ffffff' : 'rgba(255, 255, 255, 0.25)'} fontSize="9" fontFamily="JetBrains Mono, monospace">
-              DATUM BASELINE H-{yVal} // SEC 0{idx + 1}
+              DATUM BASELINE H-{yVal} • SEC 0{idx + 1}
             </text>
           </g>
         );

@@ -85,7 +85,7 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
                   {product.id}
                 </span>
                 <span className="text-xs font-mono text-white/60 tracking-wider">
-                  {product.code} // {product.title}
+                  {product.code} • {product.title}
                 </span>
               </div>
 
@@ -135,7 +135,7 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
                         : 'text-white/40 hover:text-white/80'
                     }`}
                   >
-                    // {tab}
+                    {tab}
                   </button>
                 ))}
               </div>
@@ -144,7 +144,7 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
               {activeTab === 'SPECS' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
-                    <h4 className="text-xs text-white/40 uppercase tracking-widest">// SYSTEM METRICS</h4>
+                    <h4 className="text-xs text-white/40 uppercase tracking-widest">SYSTEM METRICS</h4>
                     <div className="space-y-2">
                       {product.metrics.map((m, idx) => (
                         <div key={idx} className="flex justify-between items-center p-3 bg-[#050505] border border-white/10 rounded">
@@ -156,7 +156,7 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
                   </div>
 
                   <div className="space-y-4">
-                    <h4 className="text-xs text-white/40 uppercase tracking-widest">// TECHNICAL STACK</h4>
+                    <h4 className="text-xs text-white/40 uppercase tracking-widest">TECHNICAL STACK</h4>
                     <div className="flex flex-wrap gap-2">
                       {product.stack.map((item, idx) => (
                         <span key={idx} className="px-3 py-1.5 bg-[#050505] border border-white/15 text-xs text-white/80 rounded">
@@ -171,7 +171,7 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
               {/* Tab View: ARCHITECTURE */}
               {activeTab === 'ARCHITECTURE' && (
                 <div className="space-y-4">
-                  <h4 className="text-xs text-white/40 uppercase tracking-widest">// INITIALIZATION CODE SNIPPET</h4>
+                  <h4 className="text-xs text-white/40 uppercase tracking-widest">INITIALIZATION CODE SNIPPET</h4>
                   <div className="bg-[#050505] p-4 rounded border border-white/20 text-xs overflow-x-auto">
                     <pre className="text-white/80">
                       <code>{product.codeSnippet}</code>
@@ -183,7 +183,7 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
               {/* Tab View: CHANGELOG */}
               {activeTab === 'CHANGELOG' && (
                 <div className="space-y-4">
-                  <h4 className="text-xs text-white/40 uppercase tracking-widest">// BUILD HISTORY LOG</h4>
+                  <h4 className="text-xs text-white/40 uppercase tracking-widest">BUILD HISTORY LOG</h4>
                   <div className="space-y-3">
                     {product.changelog.map((log, idx) => (
                       <div key={idx} className="flex items-start gap-4 p-3 bg-[#050505] border border-white/10 rounded text-xs">

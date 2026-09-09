@@ -113,7 +113,7 @@ export default function ProductArchiveItem({ product, onInspect }) {
                 <div className="w-2 h-2 rounded-full border border-white/30" />
               </div>
               <span className="tracking-widest uppercase text-[9px] text-white/30">
-                PROTOTYPE // {product.code}
+                PROTOTYPE • {product.code}
               </span>
               <span>SYS_OBSERVE</span>
             </div>

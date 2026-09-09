@@ -20,28 +20,28 @@ export default function Footer({ onReplayIntro, onOpenContact }) {
         </div>
 
         {/* Right: Minimal Links & Copyright */}
-        <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-[10px] sm:text-[11px] text-white/40">
+        <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-[10px] sm:text-[11px] text-white/40 uppercase tracking-wider">
           <a
             href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition-colors"
           >
-            GitHub
+            GITHUB
           </a>
           <button
             type="button"
             onClick={onOpenContact}
-            className="hover:text-white transition-colors cursor-pointer text-left"
+            className="hover:text-white transition-colors cursor-pointer text-left uppercase"
           >
-            Contact
+            CONTACT
           </button>
           <button
             type="button"
             onClick={onReplayIntro}
-            className="hover:text-white transition-colors text-left cursor-pointer"
+            className="hover:text-white transition-colors text-left cursor-pointer uppercase"
           >
-            Replay Intro
+            REPLAY INTRO
           </button>
           <span className="text-white/20">
             © {new Date().getFullYear()} DAY ZERO

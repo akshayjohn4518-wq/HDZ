@@ -167,7 +167,7 @@ export default function ProductsHeroVisual({ products, onSelectProduct }) {
       {/* Bottom Technical Status Bar */}
       <div className="absolute bottom-3 right-3 text-[9px] font-mono text-white/40 flex items-center gap-2">
         <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-        <span>SYS // ORBIT ACTIVE</span>
+        <span>SYS • ORBIT ACTIVE</span>
       </div>
     </div>
   );

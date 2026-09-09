@@ -1,10 +1,10 @@
 export const PRODUCTS_DATA = [
   {
     id: '01',
-    code: 'BUILD // 001',
-    title: 'DAY ZERO WORKSTATION',
-    shortDesc: 'The interactive documentary workstation and build engine that captures product creation from ground zero.',
-    fullDesc: 'DAY ZERO Workstation is an experimental visual recording environment that tracks code commits, architectural decisions, and failure modes in real time. It renders software engineering as an interactive, live-updating spatial system.',
+    code: 'BUILD 001',
+    title: 'DAY ZERO OS',
+    shortDesc: 'The interactive documentary OS and build engine that captures product creation from ground zero.',
+    fullDesc: 'DAY ZERO OS is an experimental visual recording environment that tracks code commits, architectural decisions, and failure modes in real time. It renders software engineering as an interactive, live-updating spatial system.',
     category: 'SYSTEM',
     status: 'VOID',
     year: '2026',
@@ -25,7 +25,7 @@ export const PRODUCTS_DATA = [
       { date: '2026-07-22', note: 'Optimized binary search SVG path tracking' },
       { date: '2026-06-10', note: 'Initial public alpha release' },
     ],
-    codeSnippet: `// DAY ZERO KERNEL INIT
+    codeSnippet: `/* DAY ZERO KERNEL INIT */
 const engine = new BuildEngine({
   mode: "DOCUMENTARY",
   telemetry: true,

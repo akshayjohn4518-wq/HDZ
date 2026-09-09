@@ -114,15 +114,11 @@ export default function ChapterPage({
             className="inline-flex items-center gap-2 text-xs font-mono text-white/50 hover:text-white transition-colors cursor-pointer group"
           >
             <span className="group-hover:-translate-x-1 transition-transform">←</span>
-            <span className="tracking-widest uppercase">BACK TO TIMELINE</span>
+            <span className="tracking-widest uppercase">BACK</span>
           </button>
 
           <div className="flex items-center gap-3 font-mono text-[11px] text-white/40">
-            <span className="px-2 py-0.5 rounded bg-white/10 text-white font-semibold tracking-wider">
-              CHAPTER {chapter.id}
-            </span>
-            <span className="hidden sm:inline text-white/20">/</span>
-            <span className="hidden sm:inline uppercase tracking-wider text-white/70">
+            <span className="uppercase tracking-wider text-white/70">
               {chapter.title}
             </span>
           </div>
@@ -134,11 +130,11 @@ export default function ChapterPage({
         <header className="max-w-4xl space-y-4 pt-2 sm:pt-6">
           <div className="flex flex-wrap items-center gap-3">
             <div className="inline-flex items-center gap-2 px-2.5 py-1 bg-[#0B0B0B] border border-white/15 text-[10px] font-mono text-white/70 tracking-widest uppercase">
-              <span>INDEX // 0{chapter.id}</span>
+              <span>INDEX • 0{chapter.id}</span>
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
             </div>
             <span className="text-[10px] font-mono text-white/40 tracking-widest uppercase border-l border-white/15 pl-3">
-              CHAPTER {chapter.id} • DOCUMENTARY ESSAY
+              DOCUMENTARY ESSAY
             </span>
             {chapter.primaryTopic && (
               <span className="text-[10px] font-mono text-white/50 tracking-widest uppercase border-l border-white/15 pl-3 hidden md:inline">
@@ -169,8 +165,8 @@ export default function ChapterPage({
             <aside className="hidden lg:block lg:col-span-3 sticky top-28 space-y-6">
               <div className="p-5 border border-white/10 rounded-lg bg-[#0B0B0B]/60 backdrop-blur-sm space-y-4">
                 <div className="text-[10px] font-mono text-white/40 tracking-widest uppercase pb-2 border-b border-white/10 flex items-center justify-between">
-                  <span>CHAPTER INDEX</span>
-                  <span>CH.{chapter.id}</span>
+                  <span>TABLE OF CONTENTS</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
                 </div>
                 <nav className="space-y-1.5 font-mono text-xs">
                   {fullContent.sections.map((sec) => (
@@ -225,7 +221,7 @@ export default function ChapterPage({
                         01
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // CONCEPTION
+                        PHASE • CONCEPTION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -269,7 +265,7 @@ export default function ChapterPage({
                         02
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // TANGIBLE MANIFESTATION
+                        PHASE • TANGIBLE MANIFESTATION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -313,19 +309,19 @@ export default function ChapterPage({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                       <div className="p-4 rounded border border-white/15 bg-white/[0.03]">
-                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">POSSIBILITY // 01</span>
+                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">POSSIBILITY • 01</span>
                         <p className="text-sm sm:text-base font-medium text-white">Something can be tested.</p>
                       </div>
                       <div className="p-4 rounded border border-white/15 bg-white/[0.03]">
-                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">POSSIBILITY // 02</span>
+                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">POSSIBILITY • 02</span>
                         <p className="text-sm sm:text-base font-medium text-white">Something can be questioned.</p>
                       </div>
                       <div className="p-4 rounded border border-white/15 bg-white/[0.03]">
-                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">POSSIBILITY // 03</span>
+                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">POSSIBILITY • 03</span>
                         <p className="text-sm sm:text-base font-medium text-white">Something can fail.</p>
                       </div>
                       <div className="p-4 rounded border border-white/15 bg-white/[0.03]">
-                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">POSSIBILITY // 04</span>
+                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">POSSIBILITY • 04</span>
                         <p className="text-sm sm:text-base font-medium text-white">And because it can fail, it can also improve.</p>
                       </div>
                     </div>
@@ -343,7 +339,7 @@ export default function ChapterPage({
                         03
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // PERSPECTIVE
+                        PHASE • PERSPECTIVE
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -404,7 +400,7 @@ export default function ChapterPage({
                         04
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // METHODOLOGY
+                        PHASE • METHODOLOGY
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -458,7 +454,7 @@ export default function ChapterPage({
                         05
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // ARCHIVAL PROTOCOL
+                        PHASE • ARCHIVAL PROTOCOL
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -514,7 +510,7 @@ export default function ChapterPage({
                         06
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        FINALE // MANIFESTO
+                        FINALE • MANIFESTO
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -551,15 +547,6 @@ export default function ChapterPage({
                         <span>INITIATE DAY ZERO</span>
                         <span>↗</span>
                       </button>
-
-                      <button
-                        type="button"
-                        onClick={onBackToHome}
-                        className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
-                      >
-                        <span>TIMELINE</span>
-                        <span>↑</span>
-                      </button>
                     </div>
                   </section>
                 </>
@@ -577,7 +564,7 @@ export default function ChapterPage({
                         01
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE ILLUSION
+                        PHASE • THE ILLUSION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -635,7 +622,7 @@ export default function ChapterPage({
                         02
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE UNSEEN CONTEXT
+                        PHASE • THE UNSEEN CONTEXT
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -696,7 +683,7 @@ export default function ChapterPage({
                         03
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // KNOWLEDGE EXTRACTION
+                        PHASE • KNOWLEDGE EXTRACTION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -772,7 +759,7 @@ export default function ChapterPage({
                         04
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE DECEPTIVE MYTH
+                        PHASE • THE DECEPTIVE MYTH
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -824,7 +811,7 @@ export default function ChapterPage({
                         05
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // RAW ARTIFACTS
+                        PHASE • RAW ARTIFACTS
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -874,7 +861,7 @@ export default function ChapterPage({
                         06
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        FINALE // THE MISSION
+                        FINALE • THE MISSION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -908,16 +895,6 @@ export default function ChapterPage({
 
                       <button
                         type="button"
-                        onClick={() => {
-                          if (onNavigateChapter) onNavigateChapter('01');
-                        }}
-                        className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
-                      >
-                        <span>← CHAPTER 01</span>
-                      </button>
-
-                      <button
-                        type="button"
                         onClick={onOpenContact}
                         className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
                       >
@@ -941,7 +918,7 @@ export default function ChapterPage({
                         01
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE BELIEF
+                        PHASE • THE BELIEF
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -972,7 +949,7 @@ export default function ChapterPage({
                           className="p-4 rounded border border-white/15 bg-white/[0.03] space-y-1.5"
                         >
                           <span className="text-[10px] font-mono text-white/40 uppercase">
-                            ORIGIN // 0{idx + 1}
+                            ORIGIN • 0{idx + 1}
                           </span>
                           <p className="text-sm sm:text-base font-medium text-white/90 leading-relaxed">
                             {item}
@@ -1000,7 +977,7 @@ export default function ChapterPage({
                         02
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE CONTINUOUS LOOP
+                        PHASE • THE CONTINUOUS LOOP
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1063,7 +1040,7 @@ export default function ChapterPage({
                         03
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // INITIATION
+                        PHASE • INITIATION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1098,7 +1075,7 @@ export default function ChapterPage({
                         04
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // SYSTEMATIZATION
+                        PHASE • SYSTEMATIZATION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1131,7 +1108,7 @@ export default function ChapterPage({
                         05
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // ABSORPTION
+                        PHASE • ABSORPTION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1147,11 +1124,11 @@ export default function ChapterPage({
                     {/* Binary Insights Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="p-4 rounded border border-white/15 bg-white/[0.03]">
-                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">OUTCOME // 01</span>
+                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">OUTCOME • 01</span>
                         <p className="text-sm sm:text-base font-medium text-white">Sometimes that knowledge confirms the direction.</p>
                       </div>
                       <div className="p-4 rounded border border-white/15 bg-white/[0.03]">
-                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">OUTCOME // 02</span>
+                        <span className="text-[10px] font-mono text-white/40 uppercase block mb-1">OUTCOME • 02</span>
                         <p className="text-sm sm:text-base font-medium text-white">Sometimes it changes it.</p>
                       </div>
                     </div>
@@ -1178,7 +1155,7 @@ export default function ChapterPage({
                         06
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // EVOLUTION
+                        PHASE • EVOLUTION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1216,7 +1193,7 @@ export default function ChapterPage({
                         07
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // MATURATION
+                        PHASE • MATURATION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1268,7 +1245,7 @@ export default function ChapterPage({
                         08
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        FINALE // THE PRINCIPLE
+                        FINALE • THE PRINCIPLE
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1299,16 +1276,6 @@ export default function ChapterPage({
 
                       <button
                         type="button"
-                        onClick={() => {
-                          if (onNavigateChapter) onNavigateChapter('02');
-                        }}
-                        className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
-                      >
-                        <span>← CHAPTER 02</span>
-                      </button>
-
-                      <button
-                        type="button"
                         onClick={onOpenContact}
                         className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
                       >
@@ -1332,7 +1299,7 @@ export default function ChapterPage({
                         01
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // CORE PARADIGM
+                        PHASE • CORE PARADIGM
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1389,7 +1356,7 @@ export default function ChapterPage({
                         02
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE RECORD
+                        PHASE • THE RECORD
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1445,7 +1412,7 @@ export default function ChapterPage({
                         03
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // HONESTY OVER THEATER
+                        PHASE • HONESTY OVER THEATER
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1504,7 +1471,7 @@ export default function ChapterPage({
                         04
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE OPERATIONAL LOOP
+                        PHASE • THE OPERATIONAL LOOP
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1580,7 +1547,7 @@ export default function ChapterPage({
                         05
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // ARCHIVAL TAXONOMY
+                        PHASE • ARCHIVAL TAXONOMY
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1633,7 +1600,7 @@ export default function ChapterPage({
                         06
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // IMPACT & INSPIRATION
+                        PHASE • IMPACT & INSPIRATION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1674,7 +1641,7 @@ export default function ChapterPage({
                         07
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        FINALE // THE RULE
+                        FINALE • THE RULE
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1705,16 +1672,6 @@ export default function ChapterPage({
 
                       <button
                         type="button"
-                        onClick={() => {
-                          if (onNavigateChapter) onNavigateChapter('03');
-                        }}
-                        className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
-                      >
-                        <span>← CHAPTER 03</span>
-                      </button>
-
-                      <button
-                        type="button"
                         onClick={onOpenContact}
                         className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
                       >
@@ -1738,7 +1695,7 @@ export default function ChapterPage({
                         01
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // ACTIVE INITIATIVES
+                        PHASE • ACTIVE INITIATIVES
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1793,7 +1750,7 @@ export default function ChapterPage({
                         02
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE ROOT PROBLEM
+                        PHASE • THE ROOT PROBLEM
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1842,7 +1799,7 @@ export default function ChapterPage({
                         03
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // NON-LINEAR STATES
+                        PHASE • NON-LINEAR STATES
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1904,7 +1861,7 @@ export default function ChapterPage({
                         04
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // DEFINING SUCCESS
+                        PHASE • DEFINING SUCCESS
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1956,7 +1913,7 @@ export default function ChapterPage({
                         05
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // ARCHIVAL SCHEMA
+                        PHASE • ARCHIVAL SCHEMA
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -1984,7 +1941,7 @@ export default function ChapterPage({
                           className="p-4 rounded bg-[#0B0B0B] border border-white/10 space-y-1.5"
                         >
                           <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider block">
-                            FIELD // {schemaItem.field}
+                            FIELD • {schemaItem.field}
                           </span>
                           <p className="font-mono text-sm sm:text-base font-medium text-white">
                             {schemaItem.prompt}
@@ -2005,7 +1962,7 @@ export default function ChapterPage({
                         06
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        FINALE // THE MISSION LEDGER
+                        FINALE • THE MISSION LEDGER
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2067,23 +2024,11 @@ export default function ChapterPage({
 
                       <button
                         type="button"
-                        onClick={() => {
-                          if (onNavigateChapter) onNavigateChapter('04');
-                        }}
+                        onClick={onOpenContact}
                         className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
                       >
-                        <span>← CHAPTER 04</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (onNavigateChapter) onNavigateChapter('06');
-                        }}
-                        className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
-                      >
-                        <span>CHAPTER 06 (ECOSYSTEM)</span>
-                        <span>→</span>
+                        <span>INITIATE DAY ZERO</span>
+                        <span>↗</span>
                       </button>
                     </div>
                   </section>
@@ -2102,7 +2047,7 @@ export default function ChapterPage({
                         01
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PHASE // THE HORIZON
+                        PHASE • THE HORIZON
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2155,7 +2100,7 @@ export default function ChapterPage({
                         02
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        LAYER // 01 REAL WORK
+                        LAYER • 01 REAL WORK
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2198,7 +2143,7 @@ export default function ChapterPage({
                         03
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        LAYER // 02 INTELLECTUAL ASSETS
+                        LAYER • 02 INTELLECTUAL ASSETS
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2252,7 +2197,7 @@ export default function ChapterPage({
                         04
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        LAYER // 03 THE ARCHIVAL TRAIL
+                        LAYER • 03 THE ARCHIVAL TRAIL
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2308,7 +2253,7 @@ export default function ChapterPage({
                         05
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        LAYER // 04 THE BUILDER NETWORK
+                        LAYER • 04 THE BUILDER NETWORK
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2358,7 +2303,7 @@ export default function ChapterPage({
                         06
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        LAYER // 05 VISUAL REPOSITORIES
+                        LAYER • 05 VISUAL REPOSITORIES
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2403,7 +2348,7 @@ export default function ChapterPage({
                         07
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        SYSTEM // THE FEEDBACK ENGINE
+                        SYSTEM • THE FEEDBACK ENGINE
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2448,7 +2393,7 @@ export default function ChapterPage({
                         08
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        FINALE // ARCHITECTURAL SYNTHESIS
+                        FINALE • ARCHITECTURAL SYNTHESIS
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2492,16 +2437,6 @@ export default function ChapterPage({
 
                       <button
                         type="button"
-                        onClick={() => {
-                          if (onNavigateChapter) onNavigateChapter('05');
-                        }}
-                        className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
-                      >
-                        <span>← CHAPTER 05</span>
-                      </button>
-
-                      <button
-                        type="button"
                         onClick={onOpenContact}
                         className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
                       >
@@ -2525,7 +2460,7 @@ export default function ChapterPage({
                         01
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        DECLARATION // CORE COMMITMENTS
+                        DECLARATION • CORE COMMITMENTS
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2568,7 +2503,7 @@ export default function ChapterPage({
                         02
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PILLAR // TANGIBLE EXECUTION
+                        PILLAR • TANGIBLE EXECUTION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2611,7 +2546,7 @@ export default function ChapterPage({
                         03
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PILLAR // CONTINUOUS RECORD
+                        PILLAR • CONTINUOUS RECORD
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2655,7 +2590,7 @@ export default function ChapterPage({
                         04
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PILLAR // EPISTEMIC EVOLUTION
+                        PILLAR • EPISTEMIC EVOLUTION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2704,7 +2639,7 @@ export default function ChapterPage({
                         05
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PILLAR // PERPETUAL REFINEMENT
+                        PILLAR • PERPETUAL REFINEMENT
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2751,7 +2686,7 @@ export default function ChapterPage({
                         06
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PILLAR // RADICAL TRANSPARENCY
+                        PILLAR • RADICAL TRANSPARENCY
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2803,7 +2738,7 @@ export default function ChapterPage({
                         07
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        PILLAR // INFINITE RECURSION
+                        PILLAR • INFINITE RECURSION
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2847,7 +2782,7 @@ export default function ChapterPage({
                         08
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        THE CREEDS // CORE CODEX
+                        THE CREEDS • CORE CODEX
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2874,7 +2809,7 @@ export default function ChapterPage({
                           className="p-5 rounded-lg bg-[#0B0B0B] border border-white/15 flex flex-col justify-between hover:border-white/40 transition-colors group"
                         >
                           <span className="text-[10px] font-mono text-white/40 mb-3 group-hover:text-white/70 transition-colors">
-                            CREED // 0{cIdx + 1}
+                            CREED • 0{cIdx + 1}
                           </span>
                           <span className="font-display text-base sm:text-lg font-bold tracking-tight text-white uppercase">
                             {creed}
@@ -2891,7 +2826,7 @@ export default function ChapterPage({
                         09
                       </span>
                       <span className="text-[11px] font-mono tracking-widest uppercase text-white/40">
-                        FINALE // ARCHIVAL CLIMAX
+                        FINALE • ARCHIVAL CLIMAX
                       </span>
                       <div className="h-[1px] flex-1 bg-white/10" />
                     </div>
@@ -2954,24 +2889,6 @@ export default function ChapterPage({
                         <span className="group-hover:translate-x-1 transition-transform">→</span>
                       </button>
 
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (onNavigateChapter) onNavigateChapter('06');
-                        }}
-                        className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
-                      >
-                        <span>← CHAPTER 06 (FUTURE ECOSYSTEM)</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={onBackToHome}
-                        className="inline-flex items-center gap-2 border border-white/20 text-white/70 hover:text-white hover:border-white/40 font-mono text-xs sm:text-sm px-6 py-3.5 transition-all cursor-pointer"
-                      >
-                        <span>RETURN TO TIMELINE</span>
-                        <span>↑</span>
-                      </button>
                     </div>
                   </section>
                 </>
@@ -2989,7 +2906,7 @@ export default function ChapterPage({
                 {chapter.id}
               </div>
               <p className="text-xs font-mono text-white/50 uppercase tracking-widest">
-                CHAPTER {chapter.id} ARCHIVE
+                ARCHIVE
               </p>
               <h3 className="font-display text-xl sm:text-2xl font-bold text-white uppercase">
                 {chapter.title}
@@ -2997,125 +2914,9 @@ export default function ChapterPage({
               <p className="text-xs sm:text-sm font-light text-white/50 leading-relaxed">
                 {chapter.subtitle}
               </p>
-              <div className="pt-2 flex flex-wrap justify-center gap-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onNavigateChapter) onNavigateChapter('01');
-                  }}
-                  className="inline-flex items-center gap-2 text-xs font-mono text-white underline hover:text-white/80 cursor-pointer"
-                >
-                  <span>Read Chapter 01</span>
-                  <span>→</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onNavigateChapter) onNavigateChapter('02');
-                  }}
-                  className="inline-flex items-center gap-2 text-xs font-mono text-white underline hover:text-white/80 cursor-pointer"
-                >
-                  <span>Read Chapter 02</span>
-                  <span>→</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onNavigateChapter) onNavigateChapter('03');
-                  }}
-                  className="inline-flex items-center gap-2 text-xs font-mono text-white underline hover:text-white/80 cursor-pointer"
-                >
-                  <span>Read Chapter 03</span>
-                  <span>→</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onNavigateChapter) onNavigateChapter('04');
-                  }}
-                  className="inline-flex items-center gap-2 text-xs font-mono text-white underline hover:text-white/80 cursor-pointer"
-                >
-                  <span>Read Chapter 04</span>
-                  <span>→</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onNavigateChapter) onNavigateChapter('05');
-                  }}
-                  className="inline-flex items-center gap-2 text-xs font-mono text-white underline hover:text-white/80 cursor-pointer"
-                >
-                  <span>Read Chapter 05</span>
-                  <span>→</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onNavigateChapter) onNavigateChapter('06');
-                  }}
-                  className="inline-flex items-center gap-2 text-xs font-mono text-white underline hover:text-white/80 cursor-pointer"
-                >
-                  <span>Read Chapter 06</span>
-                  <span>→</span>
-                </button>
-              </div>
             </div>
           </div>
         )}
-      </div>
-
-      {/* ========================================================================= */}
-      {/* CHAPTER PAGINATION / SWITCHER AT BOTTOM                                   */}
-      {/* ========================================================================= */}
-      <div className="max-w-7xl w-full mx-auto mt-20 pt-6 border-t border-white/10 flex items-center justify-between text-xs font-mono text-white/50">
-        <div>
-          {parseInt(chapter.id, 10) > 1 ? (
-            <button
-              type="button"
-              onClick={() => {
-                const prevId = String(parseInt(chapter.id, 10) - 1).padStart(2, '0');
-                if (onNavigateChapter) onNavigateChapter(prevId);
-              }}
-              className="hover:text-white transition-colors cursor-pointer flex items-center gap-2"
-            >
-              <span>←</span>
-              <span>CHAPTER {String(parseInt(chapter.id, 10) - 1).padStart(2, '0')}</span>
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={onBackToHome}
-              className="hover:text-white transition-colors cursor-pointer flex items-center gap-2"
-            >
-              <span>←</span>
-              <span>TIMELINE</span>
-            </button>
-          )}
-        </div>
-
-        <button
-          type="button"
-          onClick={onBackToHome}
-          className="text-white/40 hover:text-white transition-colors cursor-pointer uppercase tracking-wider text-[11px]"
-        >
-          VIEW TIMELINE
-        </button>
-
-        <div>
-          {parseInt(chapter.id, 10) < CHAPTERS_DATA.length && (
-            <button
-              type="button"
-              onClick={() => {
-                const nextId = String(parseInt(chapter.id, 10) + 1).padStart(2, '0');
-                if (onNavigateChapter) onNavigateChapter(nextId);
-              }}
-              className="hover:text-white transition-colors cursor-pointer flex items-center gap-2"
-            >
-              <span>CHAPTER {String(parseInt(chapter.id, 10) + 1).padStart(2, '0')}</span>
-              <span>→</span>
-            </button>
-          )}
-        </div>
       </div>
     </div>
   );
