@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CHAPTERS_DATA, CHAPTERS_FULL_CONTENT } from '../../utils/chapters';
+import ChapterStickySidebar from './ChapterStickySidebar';
 
 /**
  * ChapterPage represents an isolated, dedicated editorial view for chapters.
@@ -65,44 +66,140 @@ export default function ChapterPage({
   }, [chapter]);
 
   useEffect(() => {
+    if (window.lenis) {
+      window.lenis.scrollTo(0, { immediate: true });
+    }
     window.scrollTo({ top: 0, behavior: 'instant' });
     if (fullContent && fullContent.sections?.length > 0) {
       setActiveSection(fullContent.sections[0].id);
     }
   }, [chapterId, fullContent]);
 
-  // Section observer to update sticky navigation highlight
+  // Performant scroll-synchronized section tracking using IntersectionObserver
   useEffect(() => {
-    if (!fullContent) return;
+    if (!fullContent || !fullContent.sections || fullContent.sections.length === 0) return;
     const sectionIds = fullContent.sections.map((s) => s.id);
-    const handleScroll = () => {
-      for (const sId of sectionIds) {
+
+    if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
+      const visibleEntries = new Map();
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            visibleEntries.set(entry.target.id, entry);
+          });
+
+          // If near top of page, lock to first section
+          if (window.scrollY < 200) {
+            setActiveSection(sectionIds[0]);
+            return;
+          }
+
+          // Detect currently active section within the viewport reading zone (offset below top navbar)
+          let currentBest = null;
+          for (const sId of sectionIds) {
+            const entry = visibleEntries.get(sId);
+            if (entry && entry.isIntersecting) {
+              const rect = entry.boundingClientRect;
+              if (rect.top <= 260 && rect.bottom >= 80) {
+                currentBest = sId;
+              }
+            }
+          }
+
+          if (currentBest) {
+            setActiveSection(currentBest);
+          }
+        },
+        {
+          rootMargin: '-90px 0px -40% 0px',
+          threshold: [0, 0.1, 0.25, 0.5, 0.75, 1.0]
+        }
+      );
+
+      sectionIds.forEach((sId) => {
         const el = document.getElementById(sId);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 220 && rect.bottom >= 100) {
-            setActiveSection(sId);
-            break;
+        if (el) observer.observe(el);
+      });
+
+      // Smooth RAF scroll fallback for rapid jumps and edge boundaries (top/bottom)
+      let ticking = false;
+      const handleScrollFallback = () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            // Top of page: activate first section
+            if (window.scrollY < 200) {
+              setActiveSection(sectionIds[0]);
+              ticking = false;
+              return;
+            }
+
+            const scrollBottom = window.innerHeight + window.scrollY;
+            const docHeight = document.documentElement.scrollHeight;
+
+            // Bottom of page: activate last section only when genuinely scrolled deep
+            if (window.scrollY > 300 && docHeight - scrollBottom < 80) {
+              setActiveSection(sectionIds[sectionIds.length - 1]);
+              ticking = false;
+              return;
+            }
+
+            // Proximity scan
+            for (let i = sectionIds.length - 1; i >= 0; i--) {
+              const el = document.getElementById(sectionIds[i]);
+              if (el) {
+                const rect = el.getBoundingClientRect();
+                if (rect.top <= 240) {
+                  setActiveSection(sectionIds[i]);
+                  break;
+                }
+              }
+            }
+            ticking = false;
+          });
+          ticking = true;
+        }
+      };
+
+      window.addEventListener('scroll', handleScrollFallback, { passive: true });
+
+      return () => {
+        observer.disconnect();
+        window.removeEventListener('scroll', handleScrollFallback);
+      };
+    } else {
+      const handleScroll = () => {
+        for (const sId of sectionIds) {
+          const el = document.getElementById(sId);
+          if (el) {
+            const rect = el.getBoundingClientRect();
+            if (rect.top <= 240 && rect.bottom >= 80) {
+              setActiveSection(sId);
+              break;
+            }
           }
         }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+      };
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
   }, [chapterId, fullContent]);
 
   const scrollToSection = (id) => {
+    setActiveSection(id);
     const el = document.getElementById(id);
-    if (el) {
+    if (!el) return;
+
+    if (window.lenis) {
+      window.lenis.scrollTo(el, { offset: -100, duration: 1.0 });
+    } else {
       const top = el.getBoundingClientRect().top + window.scrollY - 100;
       window.scrollTo({ top, behavior: 'smooth' });
     }
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-[#050505] text-[#F3F4F6] pt-24 sm:pt-28 pb-24 px-4 sm:px-6 md:px-12 flex flex-col justify-between overflow-x-hidden selection:bg-white selection:text-black">
-      
+    <div className="relative w-full min-h-screen bg-[#050505] text-[#F3F4F6] pt-24 sm:pt-28 pb-24 px-4 sm:px-6 md:px-12 flex flex-col justify-between overflow-x-clip selection:bg-white selection:text-black">
+
       {/* ========================================================================= */}
       {/* TOP BREADCRUMB / BACK BAR                                                 */}
       {/* ========================================================================= */}
@@ -160,51 +257,14 @@ export default function ChapterPage({
         {/* ========================================================================= */}
         {fullContent ? (
           <div className="mt-12 sm:mt-16 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
-            
+
             {/* Desktop Sticky Index / Table of Contents */}
-            <aside className="hidden lg:block lg:col-span-3 sticky top-28 space-y-6">
-              <div className="p-5 border border-white/10 rounded-lg bg-[#0B0B0B]/60 backdrop-blur-sm space-y-4">
-                <div className="text-[10px] font-mono text-white/40 tracking-widest uppercase pb-2 border-b border-white/10 flex items-center justify-between">
-                  <span>TABLE OF CONTENTS</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
-                </div>
-                <nav className="space-y-1.5 font-mono text-xs">
-                  {fullContent.sections.map((sec) => (
-                    <button
-                      key={sec.id}
-                      type="button"
-                      onClick={() => scrollToSection(sec.id)}
-                      className={`w-full text-left py-1.5 px-2 rounded transition-all flex items-center justify-between cursor-pointer ${
-                        activeSection === sec.id
-                          ? 'bg-white text-black font-semibold'
-                          : 'text-white/50 hover:text-white hover:bg-white/5'
-                      }`}
-                    >
-                      <span className="truncate">{sec.index}. {sec.title}</span>
-                      <span className="text-[10px] opacity-60">→</span>
-                    </button>
-                  ))}
-                </nav>
-
-                <div className="pt-3 border-t border-white/10 text-[10px] font-mono text-white/30 space-y-1">
-                  <p>COORDINATE: {chapter.id === '01' ? '500.750' : chapter.id === '02' ? '450.1400' : `${chapter.yPos}.000`}</p>
-                  {chapter.primaryTopic && (
-                    <p className="text-white/50">TOPIC: {chapter.primaryTopic}</p>
-                  )}
-                  <p>STATUS: VERIFIED FIELD LOG</p>
-                </div>
-              </div>
-
-              <div className="p-4 border border-white/10 rounded-lg bg-[#0B0B0B]/30 text-xs font-mono text-white/40 space-y-2">
-                <div className="flex items-center gap-2 text-white/80">
-                  <span className="w-2 h-2 rounded-full bg-white/80" />
-                  <span className="text-[11px] font-semibold uppercase tracking-wider">THE DAY ZERO LOG</span>
-                </div>
-                <p className="text-[11px] leading-relaxed text-white/40">
-                  Documenting the messy, honest, raw beginning of products and builders before the spotlight arrives.
-                </p>
-              </div>
-            </aside>
+            <ChapterStickySidebar
+              chapter={chapter}
+              sections={fullContent.sections}
+              activeSection={activeSection}
+              onSelectSection={scrollToSection}
+            />
 
             {/* Main Editorial Reading Column */}
             <div className="lg:col-span-9 space-y-16 sm:space-y-20 max-w-3xl">
@@ -288,9 +348,8 @@ export default function ChapterPage({
                       ].map((item, idx) => (
                         <div
                           key={idx}
-                          className={`p-3.5 rounded border border-white/10 bg-[#0B0B0B]/50 font-mono text-xs text-white/70 flex items-start gap-3 ${
-                            idx === 4 ? 'sm:col-span-2' : ''
-                          }`}
+                          className={`p-3.5 rounded border border-white/10 bg-[#0B0B0B]/50 font-mono text-xs text-white/70 flex items-start gap-3 ${idx === 4 ? 'sm:col-span-2' : ''
+                            }`}
                         >
                           <span className="text-white/40 font-semibold">0{idx + 1}.</span>
                           <span>{item}</span>
@@ -481,9 +540,8 @@ export default function ChapterPage({
                       ].map((docItem, docIdx) => (
                         <div
                           key={docIdx}
-                          className={`p-3.5 rounded bg-[#0B0B0B] border border-white/10 flex items-center gap-3 font-mono text-xs sm:text-sm text-white/85 ${
-                            docIdx === 8 ? 'sm:col-span-2' : ''
-                          }`}
+                          className={`p-3.5 rounded bg-[#0B0B0B] border border-white/10 flex items-center gap-3 font-mono text-xs sm:text-sm text-white/85 ${docIdx === 8 ? 'sm:col-span-2' : ''
+                            }`}
                         >
                           <span className="w-4 h-4 rounded-full border border-white/30 flex items-center justify-center text-[9px] text-white/50 shrink-0">
                             ✓
@@ -590,9 +648,8 @@ export default function ChapterPage({
                       ].map((item, idx) => (
                         <div
                           key={idx}
-                          className={`p-3.5 rounded border border-white/10 bg-[#0B0B0B]/50 font-mono text-xs text-white/70 flex items-center gap-3 ${
-                            idx === 4 ? 'sm:col-span-2' : ''
-                          }`}
+                          className={`p-3.5 rounded border border-white/10 bg-[#0B0B0B]/50 font-mono text-xs text-white/70 flex items-center gap-3 ${idx === 4 ? 'sm:col-span-2' : ''
+                            }`}
                         >
                           <span className="text-white/40 font-semibold">0{idx + 1}.</span>
                           <span>{item}</span>
@@ -712,9 +769,8 @@ export default function ChapterPage({
                       ].map((item, idx) => (
                         <div
                           key={idx}
-                          className={`p-4 rounded border border-white/15 bg-white/[0.03] flex items-start gap-3 ${
-                            idx === 4 ? 'sm:col-span-2' : ''
-                          }`}
+                          className={`p-4 rounded border border-white/15 bg-white/[0.03] flex items-start gap-3 ${idx === 4 ? 'sm:col-span-2' : ''
+                            }`}
                         >
                           <span className="text-[10px] font-mono text-white/40 px-1.5 py-0.5 rounded bg-white/10 shrink-0">
                             P0{idx + 1}
@@ -1623,9 +1679,8 @@ export default function ChapterPage({
                       ].map((st, sIdx) => (
                         <div
                           key={sIdx}
-                          className={`p-4 rounded border border-white/10 bg-[#0B0B0B]/60 font-mono text-xs sm:text-sm text-white/85 flex items-center gap-3 ${
-                            sIdx === 3 ? 'border-white/30 bg-white/[0.04] text-white font-semibold' : ''
-                          }`}
+                          className={`p-4 rounded border border-white/10 bg-[#0B0B0B]/60 font-mono text-xs sm:text-sm text-white/85 flex items-center gap-3 ${sIdx === 3 ? 'border-white/30 bg-white/[0.04] text-white font-semibold' : ''
+                            }`}
                         >
                           <span className="text-white/40 font-semibold">0{sIdx + 1}.</span>
                           <span>{st}</span>
@@ -2014,11 +2069,11 @@ export default function ChapterPage({
                       <button
                         type="button"
                         onClick={() => {
-                          window.location.hash = 'products';
+                          if (onNavigateChapter) onNavigateChapter('06');
                         }}
                         className="inline-flex items-center gap-3 bg-white text-black font-mono text-xs sm:text-sm font-medium px-6 py-3.5 hover:bg-white/90 transition-all cursor-pointer shadow-lg shadow-white/10 group"
                       >
-                        <span className="tracking-widest uppercase">EXPLORE CURRENT MISSIONS</span>
+                        <span className="tracking-widest uppercase">EXPLORE FUTURE ECOSYSTEM</span>
                         <span className="group-hover:translate-x-1 transition-transform">→</span>
                       </button>
 
@@ -2900,7 +2955,7 @@ export default function ChapterPage({
           /* Dedicated Workspace for Chapter 07 (Ready for future chapters) */
           <div className="mt-12 sm:mt-16 w-full min-h-[420px] sm:min-h-[500px] border border-white/10 rounded-lg bg-[#0B0B0B]/40 flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-blueprint-dense opacity-40 pointer-events-none" />
-            
+
             <div className="relative z-10 space-y-4 max-w-md">
               <div className="w-10 h-10 mx-auto rounded-full border border-white/20 flex items-center justify-center text-xs font-mono text-white/60">
                 {chapter.id}

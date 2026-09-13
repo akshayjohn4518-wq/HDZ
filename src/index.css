@@ -1,9 +1,18 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Dune Rise';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Dune Rise'), url('/fonts/Dune_Rise.woff') format('woff'), url('https://fonts.cdnfonts.com/s/84958/Dune_Rise.woff') format('woff');
+  font-display: swap;
+}
+
 @theme {
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+  --font-dune: 'Dune Rise', sans-serif;
 
   --color-brand-bg: #050505;
   --color-brand-surface: #0B0B0B;
@@ -11,6 +20,11 @@
   --color-brand-border-glow: rgba(255, 255, 255, 0.2);
   --color-brand-muted: #8E8E93;
 }
+
+.font-dune {
+  font-family: 'Dune Rise', sans-serif;
+}
+
 
 :root {
   color-scheme: dark;
@@ -67,6 +81,125 @@ body {
 
 .animate-pulse-glow {
   animation: pulse-glow 3s infinite ease-in-out;
+}
+
+/* Whitish-Golden Incandescent Light Bulb Glow Animation */
+@keyframes contact-bulb-glow {
+  0%, 100% {
+    color: rgba(210, 195, 175, 0.22);
+    text-shadow: none;
+    opacity: 0.25;
+    filter: drop-shadow(0 0 0px transparent);
+  }
+  12% {
+    /* Soft warm ambient filament start */
+    color: rgba(230, 210, 175, 0.38);
+    text-shadow: 0 0 4px rgba(255, 220, 130, 0.25);
+    opacity: 0.42;
+  }
+  24% {
+    /* Subtle pre-ignition filament spark */
+    color: #FFE6B0;
+    text-shadow: 0 0 8px rgba(255, 230, 150, 0.6), 0 0 16px rgba(245, 195, 80, 0.35);
+    opacity: 0.72;
+  }
+  27% {
+    /* Quick filament resistance dip */
+    color: rgba(235, 215, 180, 0.45);
+    text-shadow: 0 0 3px rgba(255, 210, 120, 0.2);
+    opacity: 0.48;
+  }
+  34%, 66% {
+    /* FULL ON: Brilliant Whitish-Golden incandescent bloom */
+    color: #FFFDF8;
+    text-shadow: 
+      0 0 4px #FFFFFF,
+      0 0 10px #FFF3D1,
+      0 0 20px rgba(255, 225, 135, 0.95),
+      0 0 38px rgba(250, 195, 75, 0.75),
+      0 0 65px rgba(235, 155, 30, 0.5),
+      0 0 100px rgba(210, 125, 10, 0.3);
+    opacity: 1;
+    filter: drop-shadow(0 0 15px rgba(255, 230, 150, 0.6));
+  }
+  48% {
+    /* Subtle organic warm breath while ON */
+    color: #FFF9EB;
+    text-shadow: 
+      0 0 3px #FFFFFF,
+      0 0 8px #FFF0C2,
+      0 0 16px rgba(255, 220, 125, 0.9),
+      0 0 32px rgba(245, 185, 65, 0.7),
+      0 0 55px rgba(230, 145, 20, 0.45);
+    opacity: 0.93;
+    filter: drop-shadow(0 0 12px rgba(255, 220, 130, 0.5));
+  }
+  78% {
+    /* Smooth warm golden dimming */
+    color: rgba(250, 225, 175, 0.55);
+    text-shadow: 0 0 8px rgba(255, 210, 110, 0.4), 0 0 20px rgba(240, 165, 45, 0.25);
+    opacity: 0.6;
+    filter: drop-shadow(0 0 4px rgba(255, 200, 90, 0.2));
+  }
+  90% {
+    /* Filament cooling down */
+    color: rgba(215, 200, 180, 0.25);
+    text-shadow: 0 0 2px rgba(255, 200, 100, 0.1);
+    opacity: 0.3;
+    filter: none;
+  }
+}
+
+@keyframes contact-line-glow {
+  0%, 100% {
+    opacity: 0.15;
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+  }
+  24% {
+    opacity: 0.5;
+    background-color: rgba(255, 235, 170, 0.6);
+    box-shadow: 0 0 6px rgba(255, 220, 130, 0.4);
+  }
+  27% {
+    opacity: 0.3;
+    background-color: rgba(255, 220, 150, 0.3);
+    box-shadow: none;
+  }
+  34%, 66% {
+    opacity: 0.95;
+    background-color: #FFFDF5;
+    box-shadow: 
+      0 0 4px #FFFFFF,
+      0 0 12px rgba(255, 225, 130, 0.85),
+      0 0 24px rgba(245, 185, 60, 0.55);
+  }
+  48% {
+    opacity: 0.88;
+    background-color: #FFF7DE;
+    box-shadow: 
+      0 0 3px #FFFFFF,
+      0 0 10px rgba(255, 225, 130, 0.75),
+      0 0 20px rgba(245, 175, 50, 0.45);
+  }
+  78% {
+    opacity: 0.4;
+    background-color: rgba(255, 225, 150, 0.5);
+    box-shadow: 0 0 6px rgba(255, 200, 90, 0.3);
+  }
+  90% {
+    opacity: 0.2;
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+  }
+}
+
+.animate-contact-bulb {
+  animation: contact-bulb-glow 4.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-contact-line {
+  animation: contact-line-glow 4.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 /* Scan line overlay */

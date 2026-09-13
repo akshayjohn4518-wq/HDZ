@@ -1,35 +1,31 @@
 # DAY ZERO (HDZ) — SAFE RESTORE POINT (SAFE_CHECKPOINT_V1)
 
-**Checkpoint Name**: `SAFE_CHECKPOINT_V1` (Cinematic Contact Portal, Editorial Chapters Cleanup, Clean Aesthetics & GitHub Remote Sync)  
+**Checkpoint Name**: `SAFE_CHECKPOINT_V1` (Unified Document Flow, Chapter Navigation & Transition Fix, Dune Font Contact Corridor, Vercel Production Build)  
 **Git Branch**: `main`  
-**Date**: 2026-09-09  
+**Date**: 2026-09-13  
 
 ---
 
 ## Overview of Implemented Features & Architecture
 
-This checkpoint preserves the complete, production-ready implementation of **DAY ZERO — Interactive Architectural Blueprint, Complete 7-Chapter Documentary System, Dynamic Chapter-Page SEO, Products Archive System, and Rebuilt Cinematic Contact Experience**.
+This checkpoint preserves the complete, production-ready implementation of **DAY ZERO — Interactive Architectural Blueprint, Complete 7-Chapter Documentary System, Dynamic Chapter-Page SEO, Products Archive System, Unified Document Scroll, and Refined Contact Workstation**:
 
-1. **Rebuilt Cinematic Contact Experience (`ContactSection.jsx` & `contact-portal.png`)**:
-   - Replaced dual-panel terminal/quest with a full-screen, minimal monochrome DAY ZERO contact portal.
-   - Atmospheric background visual of the lone human silhouette approaching the illuminated cosmic architectural doorway, cleanly blended into deep black.
-   - Minimal header with only **DAY ZERO** (which navigates back home on click) and subtle divider.
-   - Asymmetric 3-zone layout:
-     - **Left**: Bold headline `LET’S BUILD WHAT’S NEXT.`, manifesto paragraph, and interactive markers (`COLLABORATE`, `INQUIRE`, `EXPLORE`).
-     - **Center**: Atmospheric doorway corridor.
-     - **Right**: Industrial thin-line contact form with live state and direct contact channels (email, Hyderabad, LinkedIn).
-   - Minimal baseline footer: `SAME PEOPLE. A BRIGHTER TOMORROW.` / `IDEAS TODAY. IMPACT TOMORROW.`.
+1. **Chapter Navigation & Transition System**:
+   - Direct navbar routing: clicking chapter indicators `01` through `07` from Products (or any view) navigates directly to the corresponding chapter page (`/#chapter-01` through `/#chapter-07`).
+   - Clean chapter entry: each new chapter resets scroll position to 0 natively and in Lenis smooth scroll, remounts fresh via `key={activeChapterId}`, and initializes at **Module 01** without retaining prior module positions.
+   - Chapter 05 to Chapter 06 progression: Chapter 05 completion CTA routes directly to Chapter 06 (`EXPLORE FUTURE ECOSYSTEM →`) instead of falling back to products.
 
-2. **Refined Editorial Chapter Experience (`ChapterPage.jsx`)**:
-   - Cleaned up repetitive bottom timeline/view timeline and chapter navigation buttons.
-   - Simplified top breadcrumb to clean `BACK` and chapter title.
-   - Replaced all `//` aesthetic symbols with elegant `•` dividers across all chapter headings and sections.
-   - Cleaned up table of contents to `TABLE OF CONTENTS`.
+2. **Single Continuous Document Flow Architecture**:
+   - Single source of truth navbar: original DAY ZERO navbar preserved cleanly without secondary floating headers or duplicate metrics.
+   - Unified document scroll: natural document flow from top to bottom with standard scrollbar; footer renders naturally at the end of content.
 
-3. **Global UI Cleanliness & Consistency**:
-   - Removed `//` symbols across the entire website (BlueprintCanvas, ProductDetailModal, ProductsHeroVisual, productsData).
-   - Capitalized footer action links (`GITHUB`, `CONTACT`, `REPLAY INTRO`).
-   - Cleaned up background imagery to eliminate ghosting and text shadows.
+3. **Contact Workstation Experience & Dune Font Corridor**:
+   - Clean deep-space background without photo overlay.
+   - Compass crosshair assembly with synchronized incandescent whitish-golden light bulb glow (`contact-bulb-glow` and `contact-line-glow`).
+   - Central `DAY ZERO` typography rendered in authentic **Dune Rise** font (`public/fonts/Dune_Rise.woff`).
+   - Minimalist brand logo mark icon in the contact header without redundant text.
+   - 3-zone asymmetrical layout: editorial headline, glowing crosshair corridor, and industrial message form.
+
 
 ---
 

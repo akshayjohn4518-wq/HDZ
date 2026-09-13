@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import DayZeroOsExperience from './DayZeroOsExperience';
 
 export default function ProductDetailModal({ product, onClose, onOpenContact }) {
   const [initStage, setInitStage] = useState(0); // 0: index, 1: id, 2: name, 3: loading, 4: ready
   const [activeTab, setActiveTab] = useState('SPECS');
 
-  const isVoidProduct = product?.status === 'VOID' || product?.id === '01';
+  const isDayZeroOs = product?.id === '01' || product?.title === 'DAY ZERO OS';
+  const isVoidProduct = (product?.status === 'VOID') && !isDayZeroOs;
 
   // Handle ESC key listener to exit modal / pitch black view
   useEffect(() => {
@@ -69,9 +71,11 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
         </div>
       )}
 
-      {/* FULL SYSTEM DEEP DIVE DRAWER / MODAL OR PITCH BLACK VOID */}
+      {/* FULL SYSTEM DEEP DIVE DRAWER / MODAL OR NEW DAY ZERO OS EXPERIENCE */}
       {initStage === 4 && (
-        isVoidProduct ? (
+        isDayZeroOs ? (
+          <DayZeroOsExperience onClose={onClose} onOpenContact={onOpenContact} />
+        ) : isVoidProduct ? (
           <div
             onClick={onClose}
             className="fixed inset-0 z-50 bg-black w-screen h-screen cursor-pointer select-none"
@@ -129,11 +133,10 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
                     key={tab}
                     type="button"
                     onClick={() => setActiveTab(tab)}
-                    className={`pb-3 transition-colors cursor-pointer tracking-wider ${
-                      activeTab === tab
-                        ? 'text-white border-b-2 border-white font-bold'
-                        : 'text-white/40 hover:text-white/80'
-                    }`}
+                    className={`pb-3 transition-colors cursor-pointer tracking-wider ${activeTab === tab
+                      ? 'text-white border-b-2 border-white font-bold'
+                      : 'text-white/40 hover:text-white/80'
+                      }`}
                   >
                     {tab}
                   </button>

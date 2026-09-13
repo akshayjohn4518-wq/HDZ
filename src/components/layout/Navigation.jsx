@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CHAPTERS_DATA, getScrollYForCanvasY, getCanvasYForScrollY } from '../../utils/chapters';
+import { CHAPTERS_DATA, getCanvasYForScrollY } from '../../utils/chapters';
 
 const CHAPTERS = CHAPTERS_DATA.map((ch) => ch.id);
 
@@ -45,36 +45,18 @@ export default function Navigation({ onLogoClick, currentView = 'home', activeCh
     }
   };
 
-  const scrollToChapter = (chNum) => {
-    if (currentView === 'chapter') {
-      if (onNavigateView) onNavigateView('chapter', chNum);
-      return;
-    }
-
-    if (currentView !== 'home' && onNavigateView) {
-      onNavigateView('home', chNum);
-      return;
-    }
-
-    const ch = CHAPTERS_DATA.find((item) => item.id === chNum);
-    if (!ch) return;
-
-    const targetScrollY = getScrollYForCanvasY(ch.startY);
-
-    if (window.lenis) {
-      window.lenis.scrollTo(targetScrollY, { duration: 1.2 });
-    } else {
-      window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
+  const handleChapterClick = (chNum) => {
+    if (onNavigateView) {
+      onNavigateView('chapter', chNum);
     }
   };
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
-        scrolled
-          ? 'bg-[#050505]/85 backdrop-blur-md border-b border-white/10 py-3 sm:py-4'
-          : 'bg-transparent py-4 sm:py-6'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${scrolled
+        ? 'bg-[#050505]/85 backdrop-blur-md border-b border-white/10 py-3 sm:py-4'
+        : 'bg-transparent py-4 sm:py-6'
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex items-center justify-between gap-2">
         {/* DAY ZERO Logo */}
@@ -116,12 +98,11 @@ export default function Navigation({ onLogoClick, currentView = 'home', activeCh
                 <button
                   key={num}
                   type="button"
-                  onClick={() => scrollToChapter(num)}
-                  className={`px-1.5 sm:px-2 py-0.5 rounded transition-all cursor-pointer text-[10px] sm:text-[11px] font-mono ${
-                    isActive
-                      ? 'bg-white text-black font-semibold shadow-sm'
-                      : 'text-white/40 hover:text-white/80 hover:bg-white/5'
-                  }`}
+                  onClick={() => handleChapterClick(num)}
+                  className={`px-1.5 sm:px-2 py-0.5 rounded transition-all cursor-pointer text-[10px] sm:text-[11px] font-mono ${isActive
+                    ? 'bg-white text-black font-semibold shadow-sm'
+                    : 'text-white/40 hover:text-white/80 hover:bg-white/5'
+                    }`}
                   title={`Navigate to Chapter ${num}`}
                 >
                   {num}
@@ -134,11 +115,10 @@ export default function Navigation({ onLogoClick, currentView = 'home', activeCh
           <button
             type="button"
             onClick={() => onNavigateView && onNavigateView(currentView === 'products' ? 'home' : 'products')}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-full border font-mono text-[10px] sm:text-[11px] tracking-widest uppercase transition-all cursor-pointer flex items-center gap-1.5 ${
-              currentView === 'products'
-                ? 'bg-white text-black border-white font-bold shadow-[0_0_15px_rgba(255,255,255,0.3)]'
-                : 'bg-[#0B0B0B]/90 text-white/70 border-white/15 hover:border-white/40 hover:text-white'
-            }`}
+            className={`px-2.5 sm:px-3 py-1.5 rounded-full border font-mono text-[10px] sm:text-[11px] tracking-widest uppercase transition-all cursor-pointer flex items-center gap-1.5 ${currentView === 'products'
+              ? 'bg-white text-black border-white font-bold shadow-[0_0_15px_rgba(255,255,255,0.3)]'
+              : 'bg-[#0B0B0B]/90 text-white/70 border-white/15 hover:border-white/40 hover:text-white'
+              }`}
             title="Toggle Products Index System"
           >
             <span className={`w-1.5 h-1.5 rounded-full ${currentView === 'products' ? 'bg-black animate-pulse' : 'bg-white/60'}`} />

@@ -56,28 +56,8 @@ export default function ContactSection({ onClose }) {
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       className="fixed inset-0 z-50 bg-[#050505] text-[#F3F4F6] overflow-y-auto overflow-x-hidden flex flex-col justify-between"
     >
-      {/* ========================================================================= */}
-      {/* ATMOSPHERIC BACKGROUND VISUAL (Illuminated doorway, silhouette, cosmos)     */}
-      {/* ========================================================================= */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 flex items-center justify-center">
-        {/* Soft background dark tint */}
-        <div className="absolute inset-0 bg-[#050505]" />
-
-        {/* Central portal visual blended with mask & opacity */}
-        <div className="relative w-full h-full max-w-[1500px] flex items-center justify-center">
-          <img
-            src="/contact-portal.png?v=2"
-            alt="DAY ZERO Portal"
-            className="w-full h-full object-cover object-center opacity-90 select-none"
-          />
-
-          {/* Vignette gradients to ensure absolute seamless blending into black */}
-          <div className="absolute inset-y-0 left-0 w-1/5 bg-gradient-to-r from-[#050505] to-transparent pointer-events-none" />
-          <div className="absolute inset-y-0 right-0 w-1/5 bg-gradient-to-l from-[#050505] to-transparent pointer-events-none" />
-          <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#050505] to-transparent pointer-events-none" />
-          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#050505] to-transparent pointer-events-none" />
-        </div>
-      </div>
+      {/* Clean Dark Background */}
+      <div className="absolute inset-0 bg-[#050505] pointer-events-none z-0" />
 
       {/* ========================================================================= */}
       {/* TOP MINIMAL BRAND HEADER                                                  */}
@@ -94,10 +74,20 @@ export default function ContactSection({ onClose }) {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }
           }}
-          className="font-display text-xs sm:text-sm tracking-[0.25em] font-semibold text-white uppercase select-none hover:opacity-80 transition-opacity cursor-pointer text-left focus:outline-none"
+          className="flex items-center gap-2 sm:gap-3 group select-none hover:opacity-80 transition-opacity cursor-pointer text-left focus:outline-none"
           title="Return to homepage"
         >
-          DAY ZERO
+          <div className="w-6 h-6 sm:w-7 sm:h-7 relative flex items-center justify-center shrink-0">
+            <svg viewBox="0 0 600 600" className="w-6 h-6 sm:w-7 sm:h-7 overflow-visible">
+              <g>
+                <path d="M 85 300 L 515 300" fill="none" stroke="#ffffff" strokeWidth="7" strokeLinecap="round" />
+                <path d="M 470 300 A 170 170 0 1 0 433.96 404.66" fill="none" stroke="#ffffff" strokeWidth="18" strokeLinecap="round" strokeLinejoin="round" />
+                <g transform="translate(437.65, 399.93) rotate(-52.3)">
+                  <path d="M 14 0 L -8 -9 L -2 0 L -8 9 Z" fill="#ffffff" stroke="#ffffff" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" />
+                </g>
+              </g>
+            </svg>
+          </div>
         </button>
 
         {onClose && (
@@ -188,15 +178,28 @@ export default function ContactSection({ onClose }) {
         </motion.div>
 
         {/* ------------------------------------------------------------------------- */}
-        {/* CENTER ZONE: Atmospheric Corridor / Space for Central Doorway Visual      */}
+        {/* CENTER ZONE: Minimalist Glowing Compass Crosshair (No letters, refined)   */}
         {/* ------------------------------------------------------------------------- */}
-        <div className="hidden lg:flex lg:w-[20%] xl:w-[24%] items-end justify-center pb-8 pointer-events-none select-none">
-          <div className="flex flex-col items-center gap-2 opacity-35">
-            <span className="w-[1px] h-12 bg-white/40" />
-            <span className="text-[9px] font-mono tracking-[0.3em] uppercase text-white/80">
-              DAY ZERO
-            </span>
-            <span className="w-[1px] h-12 bg-white/40" />
+        <div className="hidden lg:flex lg:w-[18%] xl:w-[22%] relative items-center justify-center py-6 pointer-events-none select-none">
+          {/* Subtle warm ambient radial bloom */}
+          <div className="absolute w-40 h-40 rounded-full bg-amber-400/[0.035] blur-2xl pointer-events-none" />
+
+          {/* Compass Crosshair Assembly */}
+          <div className="relative z-10 flex flex-col items-center">
+            {/* North Vertical Line */}
+            <span className="w-[1px] h-8 sm:h-10 animate-contact-line" />
+
+            {/* West Line — DAY ZERO — East Line */}
+            <div className="flex items-center gap-2 sm:gap-2.5 my-1.5">
+              <span className="h-[1px] w-6 sm:w-8 animate-contact-line" />
+              <span className="text-[8.5px] sm:text-[10px] font-dune tracking-[0.22em] uppercase animate-contact-bulb whitespace-nowrap px-1">
+                DAY ZERO
+              </span>
+              <span className="h-[1px] w-6 sm:w-8 animate-contact-line" />
+            </div>
+
+            {/* South Vertical Line */}
+            <span className="w-[1px] h-8 sm:h-10 animate-contact-line" />
           </div>
         </div>
 

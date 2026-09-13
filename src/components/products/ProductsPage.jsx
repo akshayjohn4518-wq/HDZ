@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import ProductsHeroVisual from './ProductsHeroVisual';
 import ProductArchiveItem from './ProductArchiveItem';
 import ProductDetailModal from './ProductDetailModal';
+import DayZeroOsExperience from './DayZeroOsExperience';
 import { PRODUCTS_DATA } from './productsData';
 
 export default function ProductsPage({ onOpenContact }) {
@@ -18,8 +19,20 @@ export default function ProductsPage({ onOpenContact }) {
     return PRODUCTS_DATA;
   }, [activeFilter]);
 
+  // Seamless in-flow document rendering for Day Zero OS experience
+  if (selectedProduct && (selectedProduct.id === '01' || selectedProduct.title === 'DAY ZERO OS')) {
+    return (
+      <div className="relative w-full flex-1 flex flex-col pt-16 select-none">
+        <DayZeroOsExperience
+          onClose={() => setSelectedProduct(null)}
+          onOpenContact={onOpenContact}
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="relative w-full bg-[#050505] text-[#F3F4F6] min-h-screen pt-24 pb-20 select-none overflow-x-hidden">
+    <div className="relative w-full bg-[#050505] text-[#F3F4F6] flex-1 pt-24 pb-12 select-none overflow-x-hidden">
       {/* 03 / HEADER TECHNICAL IDENTIFIER */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-6">
         <div className="inline-flex items-center gap-3 px-3 py-1 border border-white/10 bg-[#0B0B0B] text-[10px] font-mono text-white/50 tracking-widest uppercase">
