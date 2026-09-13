@@ -55,6 +55,7 @@ export default function App() {
   const [showIntro, setShowIntro] = useState(() => parseRouteState().view !== 'notFound');
   const [replayKey, setReplayKey] = useState(0);
   const [showContact, setShowContact] = useState(false);
+  const [isOsLoading, setIsOsLoading] = useState(false);
 
   const currentView = viewState.view;
   const activeChapterId = viewState.chapterId;
@@ -238,7 +239,10 @@ export default function App() {
           {!showIntro && (
             <main className="relative z-10 flex-1">
               {currentView === 'products' ? (
-                <ProductsPage onOpenContact={() => setShowContact(true)} />
+                <ProductsPage
+                  onOpenContact={() => setShowContact(true)}
+                  onLoadingChange={setIsOsLoading}
+                />
               ) : currentView === 'chapter' ? (
                 <ChapterPage
                   key={activeChapterId}
@@ -263,8 +267,8 @@ export default function App() {
             )}
           </AnimatePresence>
 
-          {/* Minimal Editorial Footer */}
-          {!showIntro && (
+          {/* Minimal Editorial Footer (Hidden during Day Zero OS animation loading) */}
+          {!showIntro && !isOsLoading && (
             <Footer
               onReplayIntro={handleReplayIntro}
               onOpenContact={() => setShowContact(true)}

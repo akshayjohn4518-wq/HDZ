@@ -5,7 +5,7 @@ import ProductDetailModal from './ProductDetailModal';
 import DayZeroOsExperience from './DayZeroOsExperience';
 import { PRODUCTS_DATA } from './productsData';
 
-export default function ProductsPage({ onOpenContact }) {
+export default function ProductsPage({ onOpenContact, onLoadingChange }) {
   const [activeFilter, setActiveFilter] = useState('ALL');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [initStage, setInitStage] = useState(0); // 0: index, 1: id, 2: name, 3: loading, 4: ready
@@ -16,15 +16,19 @@ export default function ProductsPage({ onOpenContact }) {
   useEffect(() => {
     if (!isDayZeroOs) {
       setInitStage(0);
+      if (onLoadingChange) onLoadingChange(false);
       return;
     }
 
     setInitStage(0);
+    if (onLoadingChange) onLoadingChange(true);
+
     const t1 = setTimeout(() => setInitStage(1), 250);
     const t2 = setTimeout(() => setInitStage(2), 500);
     const t3 = setTimeout(() => setInitStage(3), 850);
     const t4 = setTimeout(() => {
       setInitStage(4);
+      if (onLoadingChange) onLoadingChange(false);
       window.scrollTo({ top: 0, behavior: 'instant' });
       if (window.lenis) {
         window.lenis.scrollTo(0, { immediate: true });
@@ -37,7 +41,7 @@ export default function ProductsPage({ onOpenContact }) {
       clearTimeout(t3);
       clearTimeout(t4);
     };
-  }, [isDayZeroOs]);
+  }, [isDayZeroOs, onLoadingChange]);
 
   // Filter logic
   const filteredProducts = useMemo(() => {
@@ -53,7 +57,7 @@ export default function ProductsPage({ onOpenContact }) {
   if (isDayZeroOs) {
     if (initStage < 4) {
       return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black font-mono text-white select-none">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black font-mono text-white select-none">
           <div className="flex flex-col items-center justify-center space-y-4 p-8 text-center animate-in fade-in duration-300">
             <div className="text-xs font-mono text-white/40 tracking-[0.3em] uppercase">
               PRODUCT INDEX
@@ -88,6 +92,7 @@ export default function ProductsPage({ onOpenContact }) {
           onClose={() => {
             setSelectedProduct(null);
             setInitStage(0);
+            if (onLoadingChange) onLoadingChange(false);
           }}
           onOpenContact={onOpenContact}
         />

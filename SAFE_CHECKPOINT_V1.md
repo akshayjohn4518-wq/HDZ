@@ -19,6 +19,7 @@ This checkpoint preserves the complete, production-ready implementation of **DAY
    - Single source of truth navbar: original DAY ZERO navbar preserved cleanly without secondary floating headers or duplicate metrics.
    - Unified document scroll: natural document flow from top to bottom with standard scrollbar; footer renders naturally at the end of content.
    - Cinematic entry boot sequence: restored the original 4-stage transition sequence (`PRODUCT INDEX` → `01` → `DAY ZERO OS` → `INITIALIZING BUILD SYSTEM...`) whenever entering Day Zero OS from either the orbit visual or the archive item, smoothly revealing the in-flow document content upon completion.
+   - Footer removed during loading: the editorial footer is dynamically hidden while the Day Zero OS boot animation is loading, ensuring an immersive full-screen black transition.
 
 3. **Contact Workstation Experience & Dune Font Corridor**:
    - Clean deep-space background without photo overlay.
