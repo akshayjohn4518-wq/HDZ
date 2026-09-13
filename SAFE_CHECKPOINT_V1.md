@@ -18,6 +18,7 @@ This checkpoint preserves the complete, production-ready implementation of **DAY
 2. **Single Continuous Document Flow Architecture**:
    - Single source of truth navbar: original DAY ZERO navbar preserved cleanly without secondary floating headers or duplicate metrics.
    - Unified document scroll: natural document flow from top to bottom with standard scrollbar; footer renders naturally at the end of content.
+   - Cinematic entry boot sequence: restored the original 4-stage transition sequence (`PRODUCT INDEX` → `01` → `DAY ZERO OS` → `INITIALIZING BUILD SYSTEM...`) whenever entering Day Zero OS from either the orbit visual or the archive item, smoothly revealing the in-flow document content upon completion.
 
 3. **Contact Workstation Experience & Dune Font Corridor**:
    - Clean deep-space background without photo overlay.

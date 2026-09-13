@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import ProductsHeroVisual from './ProductsHeroVisual';
 import ProductArchiveItem from './ProductArchiveItem';
 import ProductDetailModal from './ProductDetailModal';
@@ -8,6 +8,36 @@ import { PRODUCTS_DATA } from './productsData';
 export default function ProductsPage({ onOpenContact }) {
   const [activeFilter, setActiveFilter] = useState('ALL');
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [initStage, setInitStage] = useState(0); // 0: index, 1: id, 2: name, 3: loading, 4: ready
+
+  const isDayZeroOs = selectedProduct && (selectedProduct.id === '01' || selectedProduct.title === 'DAY ZERO OS');
+
+  // Cinematic step initialization timeline sequence when entering Day Zero OS
+  useEffect(() => {
+    if (!isDayZeroOs) {
+      setInitStage(0);
+      return;
+    }
+
+    setInitStage(0);
+    const t1 = setTimeout(() => setInitStage(1), 250);
+    const t2 = setTimeout(() => setInitStage(2), 500);
+    const t3 = setTimeout(() => setInitStage(3), 850);
+    const t4 = setTimeout(() => {
+      setInitStage(4);
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      if (window.lenis) {
+        window.lenis.scrollTo(0, { immediate: true });
+      }
+    }, 1300);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
+    };
+  }, [isDayZeroOs]);
 
   // Filter logic
   const filteredProducts = useMemo(() => {
@@ -19,12 +49,46 @@ export default function ProductsPage({ onOpenContact }) {
     return PRODUCTS_DATA;
   }, [activeFilter]);
 
-  // Seamless in-flow document rendering for Day Zero OS experience
-  if (selectedProduct && (selectedProduct.id === '01' || selectedProduct.title === 'DAY ZERO OS')) {
+  // Seamless in-flow document rendering for Day Zero OS experience with cinematic entry animation
+  if (isDayZeroOs) {
+    if (initStage < 4) {
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black font-mono text-white select-none">
+          <div className="flex flex-col items-center justify-center space-y-4 p-8 text-center animate-in fade-in duration-300">
+            <div className="text-xs font-mono text-white/40 tracking-[0.3em] uppercase">
+              PRODUCT INDEX
+            </div>
+
+            {initStage >= 1 && (
+              <div className="text-3xl font-mono font-bold text-white/70 animate-in zoom-in-95 duration-200">
+                {selectedProduct.id}
+              </div>
+            )}
+
+            {initStage >= 2 && (
+              <div className="text-2xl sm:text-4xl font-display font-bold text-white uppercase tracking-widest animate-in fade-in slide-in-from-bottom-2 duration-200">
+                {selectedProduct.title}
+              </div>
+            )}
+
+            {initStage >= 3 && (
+              <div className="flex items-center gap-3 text-xs font-mono text-white/50 tracking-widest pt-4">
+                <span className="w-2 h-2 bg-white rounded-full animate-ping" />
+                <span>INITIALIZING BUILD SYSTEM...</span>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="relative w-full flex-1 flex flex-col pt-16 select-none">
         <DayZeroOsExperience
-          onClose={() => setSelectedProduct(null)}
+          onClose={() => {
+            setSelectedProduct(null);
+            setInitStage(0);
+          }}
           onOpenContact={onOpenContact}
         />
       </div>
@@ -195,7 +259,7 @@ export default function ProductsPage({ onOpenContact }) {
       </section>
 
       {/* 09 / PRODUCT DETAIL TRANSITION MODAL */}
-      {selectedProduct && (
+      {selectedProduct && !isDayZeroOs && (
         <ProductDetailModal
           product={selectedProduct}
           onClose={() => setSelectedProduct(null)}
