@@ -50,8 +50,8 @@ Below are the complete source code files for this working state. You can copy an
 
 ---
 
-### File 1: `src/App.jsx`
-```jsx
+### File 1: src/App.jsx
+`jsx
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import Lenis from 'lenis';
@@ -63,10 +63,34 @@ import ContactSection from './components/layout/ContactSection';
 import CinematicHomepage from './components/blueprint/CinematicHomepage';
 import ChapterPage from './components/blueprint/ChapterPage';
 import ProductsPage from './components/products/ProductsPage';
+import NotFoundPage from './components/notFound/NotFoundPage';
 import { getScrollYForCanvasY, CHAPTERS_DATA } from './utils/chapters';
 
-const parseHashState = () => {
+const parseRouteState = () => {
+  const pathname = (window.location.pathname || '/').replace(/\/$/, '') || '/';
   const hash = window.location.hash;
+
+  // Path-based products route
+  if (pathname === '/products') {
+    return { view: 'products', chapterId: null };
+  }
+
+  // Path-based chapter route
+  const pathChapterMatch = pathname.match(/^\/chapter[-/](0[1-7]|[1-7])$/);
+  if (pathChapterMatch) {
+    const padded = pathChapterMatch[1].padStart(2, '0');
+    return { view: 'chapter', chapterId: padded };
+  }
+
+  // If pathname is not root or index.html, it's an unrecognized route
+  if (pathname !== '/' && pathname !== '/index.html') {
+    return { view: 'notFound', chapterId: null };
+  }
+
+  // Evaluate hash on root pathname
+  if (!hash || hash === '#' || hash === '#home') {
+    return { view: 'home', chapterId: null };
+  }
   if (hash === '#products') {
     return { view: 'products', chapterId: null };
   }
@@ -75,29 +99,36 @@ const parseHashState = () => {
     const padded = chapterMatch[1].padStart(2, '0');
     return { view: 'chapter', chapterId: padded };
   }
-  return { view: 'home', chapterId: null };
+
+  // Unrecognized hash (e.g. #unknown, #404)
+  return { view: 'notFound', chapterId: null };
 };
 
 export default function App() {
-  const [showIntro, setShowIntro] = useState(true);
+  const [viewState, setViewState] = useState(parseRouteState);
+  const [showIntro, setShowIntro] = useState(() => parseRouteState().view !== 'notFound');
   const [replayKey, setReplayKey] = useState(0);
   const [showContact, setShowContact] = useState(false);
-  const [viewState, setViewState] = useState(parseHashState);
+  const [isOsLoading, setIsOsLoading] = useState(false);
 
   const currentView = viewState.view;
   const activeChapterId = viewState.chapterId;
 
-  // Sync state with URL hash
+  // Sync state with URL hash and browser navigation events
   useEffect(() => {
-    const handleHashChange = () => {
-      setViewState(parseHashState());
+    const handleRouteChange = () => {
+      setViewState(parseRouteState());
     };
 
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('hashchange', handleRouteChange);
+    window.addEventListener('popstate', handleRouteChange);
+    return () => {
+      window.removeEventListener('hashchange', handleRouteChange);
+      window.removeEventListener('popstate', handleRouteChange);
+    };
   }, []);
 
-  // Synchronize top-level SEO for home and products (chapter SEO is handled in ChapterPage)
+  // Synchronize top-level SEO for home, products, and 404 (chapter SEO is handled in ChapterPage)
   useEffect(() => {
     if (currentView === 'home') {
       document.title = 'DAY ZERO — The Interactive Documentary of Beginning';
@@ -117,21 +148,45 @@ export default function App() {
           'Explore the products, engineering projects and experiments currently being built, tested and documented by DAY ZERO.'
         );
       }
+    } else if (currentView === 'notFound') {
+      document.title = 'DAY ZERO — 404 // Space Not Found';
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute(
+          'content',
+          'You have reached an unallocated sector of the Day Zero operating system.'
+        );
+      }
     }
   }, [currentView]);
 
   const handleNavigateView = (targetView, targetChapter) => {
     if (targetView === 'products') {
-      window.location.hash = 'products';
+      if (window.location.pathname !== '/' && window.location.pathname !== '/index.html') {
+        window.history.pushState(null, '', '/#products');
+      } else {
+        window.location.hash = 'products';
+      }
       setViewState({ view: 'products', chapterId: null });
       window.scrollTo({ top: 0, behavior: 'instant' });
     } else if (targetView === 'chapter') {
       const chId = String(targetChapter || '01').padStart(2, '0');
-      window.location.hash = `chapter-${chId}`;
+      if (window.location.pathname !== '/' && window.location.pathname !== '/index.html') {
+        window.history.pushState(null, '', `/#chapter-${chId}`);
+      } else {
+        window.location.hash = `chapter-${chId}`;
+      }
       setViewState({ view: 'chapter', chapterId: chId });
+      if (window.lenis) {
+        window.lenis.scrollTo(0, { immediate: true });
+      }
       window.scrollTo({ top: 0, behavior: 'instant' });
     } else {
-      window.location.hash = '';
+      if (window.location.pathname !== '/' && window.location.pathname !== '/index.html') {
+        window.history.pushState(null, '', '/');
+      } else {
+        window.location.hash = '';
+      }
       setViewState({ view: 'home', chapterId: null });
       if (targetChapter) {
         setTimeout(() => {
@@ -195,75 +250,97 @@ export default function App() {
     }
   };
 
+  const handleGoBack = () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      handleGoHome();
+    }
+  };
+
   return (
     <div className="relative min-h-screen bg-[#050505] text-[#F3F4F6] selection:bg-white selection:text-black flex flex-col justify-between">
-      {/* Background Architectural Blueprint Grid & Film Grain */}
-      <BlueprintGrid />
+      {/* Background Architectural Blueprint Grid & Film Grain (homepage & docs only) */}
+      {currentView !== 'notFound' && <BlueprintGrid />}
 
-      {/* Opening Cinematic Logo Stroke Intro Sequence */}
-      {showIntro && (
-        <IntroSequence
-          key={replayKey}
-          onComplete={() => setShowIntro(false)}
+      {/* 404 View: Dedicated System Screen */}
+      {currentView === 'notFound' ? (
+        <NotFoundPage
+          onGoHome={handleGoHome}
+          onGoBack={handleGoBack}
         />
-      )}
-
-      {/* Fixed Sticky Header Navigation */}
-      {!showIntro && (
-        <Navigation
-          onLogoClick={handleGoHome}
-          currentView={currentView}
-          activeChapterId={activeChapterId}
-          onNavigateView={handleNavigateView}
-        />
-      )}
-
-      {/* Main Interactive Blueprint Section (Documentary Homepage, Products Index, or Dedicated Chapter Page) */}
-      {!showIntro && (
-        <main className="relative z-10 flex-1">
-          {currentView === 'products' ? (
-            <ProductsPage onOpenContact={() => setShowContact(true)} />
-          ) : currentView === 'chapter' ? (
-            <ChapterPage
-              chapterId={activeChapterId}
-              onBackToHome={() => handleNavigateView('home')}
-              onNavigateChapter={(id) => handleNavigateView('chapter', id)}
-              onOpenContact={() => setShowContact(true)}
-            />
-          ) : (
-            <CinematicHomepage
-              onOpenContact={() => setShowContact(true)}
-              onNavigateChapter={(id) => handleNavigateView('chapter', id)}
+      ) : (
+        <>
+          {/* Opening Cinematic Logo Stroke Intro Sequence */}
+          {showIntro && (
+            <IntroSequence
+              key={replayKey}
+              onComplete={() => setShowIntro(false)}
             />
           )}
-        </main>
-      )}
 
-      {/* Contact Workstation Overlay - Triggered from Footer or Homepage CTAs */}
-      <AnimatePresence>
-        {!showIntro && showContact && (
-          <ContactSection onClose={() => setShowContact(false)} />
-        )}
-      </AnimatePresence>
+          {/* Fixed Sticky Header Navigation */}
+          {!showIntro && (
+            <Navigation
+              onLogoClick={handleGoHome}
+              currentView={currentView}
+              activeChapterId={activeChapterId}
+              onNavigateView={handleNavigateView}
+            />
+          )}
 
-      {/* Minimal Editorial Footer */}
-      {!showIntro && (
-        <Footer
-          onReplayIntro={handleReplayIntro}
-          onOpenContact={() => setShowContact(true)}
-        />
+          {/* Main Interactive Blueprint Section (Documentary Homepage, Products Index, or Dedicated Chapter Page) */}
+          {!showIntro && (
+            <main className="relative z-10 flex-1">
+              {currentView === 'products' ? (
+                <ProductsPage
+                  onOpenContact={() => setShowContact(true)}
+                  onLoadingChange={setIsOsLoading}
+                />
+              ) : currentView === 'chapter' ? (
+                <ChapterPage
+                  key={activeChapterId}
+                  chapterId={activeChapterId}
+                  onBackToHome={() => handleNavigateView('home')}
+                  onNavigateChapter={(id) => handleNavigateView('chapter', id)}
+                  onOpenContact={() => setShowContact(true)}
+                />
+              ) : (
+                <CinematicHomepage
+                  onOpenContact={() => setShowContact(true)}
+                  onNavigateChapter={(id) => handleNavigateView('chapter', id)}
+                />
+              )}
+            </main>
+          )}
+
+          {/* Contact Workstation Overlay - Triggered from Footer or Homepage CTAs */}
+          <AnimatePresence>
+            {!showIntro && showContact && (
+              <ContactSection onClose={() => setShowContact(false)} />
+            )}
+          </AnimatePresence>
+
+          {/* Minimal Editorial Footer (Hidden during Day Zero OS animation loading) */}
+          {!showIntro && !isOsLoading && (
+            <Footer
+              onReplayIntro={handleReplayIntro}
+              onOpenContact={() => setShowContact(true)}
+            />
+          )}
+        </>
       )}
     </div>
   );
 }
 
 
-```
+`
 
 ---
 
-### File 2: `src/main.jsx`
-```jsx
+### File 2: src/main.jsx
+`jsx
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
@@ -275,18 +352,27 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-```
+`
 
 ---
 
-### File 3: `src/index.css`
-```css
+### File 3: src/index.css
+`css
 @import "tailwindcss";
+
+@font-face {
+  font-family: 'Dune Rise';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Dune Rise'), url('/fonts/Dune_Rise.woff') format('woff'), url('https://fonts.cdnfonts.com/s/84958/Dune_Rise.woff') format('woff');
+  font-display: swap;
+}
 
 @theme {
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+  --font-dune: 'Dune Rise', sans-serif;
 
   --color-brand-bg: #050505;
   --color-brand-surface: #0B0B0B;
@@ -294,6 +380,11 @@ createRoot(document.getElementById('root')).render(
   --color-brand-border-glow: rgba(255, 255, 255, 0.2);
   --color-brand-muted: #8E8E93;
 }
+
+.font-dune {
+  font-family: 'Dune Rise', sans-serif;
+}
+
 
 :root {
   color-scheme: dark;
@@ -352,6 +443,125 @@ body {
   animation: pulse-glow 3s infinite ease-in-out;
 }
 
+/* Whitish-Golden Incandescent Light Bulb Glow Animation */
+@keyframes contact-bulb-glow {
+  0%, 100% {
+    color: rgba(210, 195, 175, 0.22);
+    text-shadow: none;
+    opacity: 0.25;
+    filter: drop-shadow(0 0 0px transparent);
+  }
+  12% {
+    /* Soft warm ambient filament start */
+    color: rgba(230, 210, 175, 0.38);
+    text-shadow: 0 0 4px rgba(255, 220, 130, 0.25);
+    opacity: 0.42;
+  }
+  24% {
+    /* Subtle pre-ignition filament spark */
+    color: #FFE6B0;
+    text-shadow: 0 0 8px rgba(255, 230, 150, 0.6), 0 0 16px rgba(245, 195, 80, 0.35);
+    opacity: 0.72;
+  }
+  27% {
+    /* Quick filament resistance dip */
+    color: rgba(235, 215, 180, 0.45);
+    text-shadow: 0 0 3px rgba(255, 210, 120, 0.2);
+    opacity: 0.48;
+  }
+  34%, 66% {
+    /* FULL ON: Brilliant Whitish-Golden incandescent bloom */
+    color: #FFFDF8;
+    text-shadow: 
+      0 0 4px #FFFFFF,
+      0 0 10px #FFF3D1,
+      0 0 20px rgba(255, 225, 135, 0.95),
+      0 0 38px rgba(250, 195, 75, 0.75),
+      0 0 65px rgba(235, 155, 30, 0.5),
+      0 0 100px rgba(210, 125, 10, 0.3);
+    opacity: 1;
+    filter: drop-shadow(0 0 15px rgba(255, 230, 150, 0.6));
+  }
+  48% {
+    /* Subtle organic warm breath while ON */
+    color: #FFF9EB;
+    text-shadow: 
+      0 0 3px #FFFFFF,
+      0 0 8px #FFF0C2,
+      0 0 16px rgba(255, 220, 125, 0.9),
+      0 0 32px rgba(245, 185, 65, 0.7),
+      0 0 55px rgba(230, 145, 20, 0.45);
+    opacity: 0.93;
+    filter: drop-shadow(0 0 12px rgba(255, 220, 130, 0.5));
+  }
+  78% {
+    /* Smooth warm golden dimming */
+    color: rgba(250, 225, 175, 0.55);
+    text-shadow: 0 0 8px rgba(255, 210, 110, 0.4), 0 0 20px rgba(240, 165, 45, 0.25);
+    opacity: 0.6;
+    filter: drop-shadow(0 0 4px rgba(255, 200, 90, 0.2));
+  }
+  90% {
+    /* Filament cooling down */
+    color: rgba(215, 200, 180, 0.25);
+    text-shadow: 0 0 2px rgba(255, 200, 100, 0.1);
+    opacity: 0.3;
+    filter: none;
+  }
+}
+
+@keyframes contact-line-glow {
+  0%, 100% {
+    opacity: 0.15;
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+  }
+  24% {
+    opacity: 0.5;
+    background-color: rgba(255, 235, 170, 0.6);
+    box-shadow: 0 0 6px rgba(255, 220, 130, 0.4);
+  }
+  27% {
+    opacity: 0.3;
+    background-color: rgba(255, 220, 150, 0.3);
+    box-shadow: none;
+  }
+  34%, 66% {
+    opacity: 0.95;
+    background-color: #FFFDF5;
+    box-shadow: 
+      0 0 4px #FFFFFF,
+      0 0 12px rgba(255, 225, 130, 0.85),
+      0 0 24px rgba(245, 185, 60, 0.55);
+  }
+  48% {
+    opacity: 0.88;
+    background-color: #FFF7DE;
+    box-shadow: 
+      0 0 3px #FFFFFF,
+      0 0 10px rgba(255, 225, 130, 0.75),
+      0 0 20px rgba(245, 175, 50, 0.45);
+  }
+  78% {
+    opacity: 0.4;
+    background-color: rgba(255, 225, 150, 0.5);
+    box-shadow: 0 0 6px rgba(255, 200, 90, 0.3);
+  }
+  90% {
+    opacity: 0.2;
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+  }
+}
+
+.animate-contact-bulb {
+  animation: contact-bulb-glow 4.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-contact-line {
+  animation: contact-line-glow 4.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
 /* Scan line overlay */
 .scan-line {
   background: linear-gradient(
@@ -383,12 +593,12 @@ body {
   background: rgba(255, 255, 255, 0.3);
 }
 
-```
+`
 
 ---
 
-### File 4: `src/utils/chapters.js`
-```javascript
+### File 4: src/utils/chapters.js
+`jsx
 /**
  * Chapter metadata and coordinate utility definitions for DAY ZERO documentary.
  * Canvas total height: 5200px
@@ -1454,14 +1664,14 @@ export const CHAPTERS_FULL_CONTENT = {
 
 
 
-```
+`
 
 ---
 
-### File 5: `src/components/layout/Navigation.jsx`
-```jsx
+### File 5: src/components/layout/Navigation.jsx
+`jsx
 import React, { useState, useEffect } from 'react';
-import { CHAPTERS_DATA, getScrollYForCanvasY, getCanvasYForScrollY } from '../../utils/chapters';
+import { CHAPTERS_DATA, getCanvasYForScrollY } from '../../utils/chapters';
 
 const CHAPTERS = CHAPTERS_DATA.map((ch) => ch.id);
 
@@ -1507,36 +1717,18 @@ export default function Navigation({ onLogoClick, currentView = 'home', activeCh
     }
   };
 
-  const scrollToChapter = (chNum) => {
-    if (currentView === 'chapter') {
-      if (onNavigateView) onNavigateView('chapter', chNum);
-      return;
-    }
-
-    if (currentView !== 'home' && onNavigateView) {
-      onNavigateView('home', chNum);
-      return;
-    }
-
-    const ch = CHAPTERS_DATA.find((item) => item.id === chNum);
-    if (!ch) return;
-
-    const targetScrollY = getScrollYForCanvasY(ch.startY);
-
-    if (window.lenis) {
-      window.lenis.scrollTo(targetScrollY, { duration: 1.2 });
-    } else {
-      window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
+  const handleChapterClick = (chNum) => {
+    if (onNavigateView) {
+      onNavigateView('chapter', chNum);
     }
   };
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
-        scrolled
-          ? 'bg-[#050505]/85 backdrop-blur-md border-b border-white/10 py-3 sm:py-4'
-          : 'bg-transparent py-4 sm:py-6'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${scrolled
+        ? 'bg-[#050505]/85 backdrop-blur-md border-b border-white/10 py-3 sm:py-4'
+        : 'bg-transparent py-4 sm:py-6'
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex items-center justify-between gap-2">
         {/* DAY ZERO Logo */}
@@ -1578,12 +1770,11 @@ export default function Navigation({ onLogoClick, currentView = 'home', activeCh
                 <button
                   key={num}
                   type="button"
-                  onClick={() => scrollToChapter(num)}
-                  className={`px-1.5 sm:px-2 py-0.5 rounded transition-all cursor-pointer text-[10px] sm:text-[11px] font-mono ${
-                    isActive
-                      ? 'bg-white text-black font-semibold shadow-sm'
-                      : 'text-white/40 hover:text-white/80 hover:bg-white/5'
-                  }`}
+                  onClick={() => handleChapterClick(num)}
+                  className={`px-1.5 sm:px-2 py-0.5 rounded transition-all cursor-pointer text-[10px] sm:text-[11px] font-mono ${isActive
+                    ? 'bg-white text-black font-semibold shadow-sm'
+                    : 'text-white/40 hover:text-white/80 hover:bg-white/5'
+                    }`}
                   title={`Navigate to Chapter ${num}`}
                 >
                   {num}
@@ -1596,11 +1787,10 @@ export default function Navigation({ onLogoClick, currentView = 'home', activeCh
           <button
             type="button"
             onClick={() => onNavigateView && onNavigateView(currentView === 'products' ? 'home' : 'products')}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-full border font-mono text-[10px] sm:text-[11px] tracking-widest uppercase transition-all cursor-pointer flex items-center gap-1.5 ${
-              currentView === 'products'
-                ? 'bg-white text-black border-white font-bold shadow-[0_0_15px_rgba(255,255,255,0.3)]'
-                : 'bg-[#0B0B0B]/90 text-white/70 border-white/15 hover:border-white/40 hover:text-white'
-            }`}
+            className={`px-2.5 sm:px-3 py-1.5 rounded-full border font-mono text-[10px] sm:text-[11px] tracking-widest uppercase transition-all cursor-pointer flex items-center gap-1.5 ${currentView === 'products'
+              ? 'bg-white text-black border-white font-bold shadow-[0_0_15px_rgba(255,255,255,0.3)]'
+              : 'bg-[#0B0B0B]/90 text-white/70 border-white/15 hover:border-white/40 hover:text-white'
+              }`}
             title="Toggle Products Index System"
           >
             <span className={`w-1.5 h-1.5 rounded-full ${currentView === 'products' ? 'bg-black animate-pulse' : 'bg-white/60'}`} />
@@ -1612,12 +1802,12 @@ export default function Navigation({ onLogoClick, currentView = 'home', activeCh
   );
 }
 
-```
+`
 
 ---
 
-### File 6: `src/components/layout/Footer.jsx`
-```jsx
+### File 6: src/components/layout/Footer.jsx
+`jsx
 import React from 'react';
 
 export default function Footer({ onReplayIntro, onOpenContact }) {
@@ -1672,12 +1862,12 @@ export default function Footer({ onReplayIntro, onOpenContact }) {
   );
 }
 
-```
+`
 
 ---
 
-### File 7: `src/components/layout/BlueprintGrid.jsx`
-```jsx
+### File 7: src/components/layout/BlueprintGrid.jsx
+`jsx
 export default function BlueprintGrid() {
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none">
@@ -1710,12 +1900,12 @@ export default function BlueprintGrid() {
   );
 }
 
-```
+`
 
 ---
 
-### File 8: `src/components/layout/ContactSection.jsx`
-```jsx
+### File 8: src/components/layout/ContactSection.jsx
+`jsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, MapPin, ArrowRight } from 'lucide-react';
@@ -1774,28 +1964,8 @@ export default function ContactSection({ onClose }) {
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       className="fixed inset-0 z-50 bg-[#050505] text-[#F3F4F6] overflow-y-auto overflow-x-hidden flex flex-col justify-between"
     >
-      {/* ========================================================================= */}
-      {/* ATMOSPHERIC BACKGROUND VISUAL (Illuminated doorway, silhouette, cosmos)     */}
-      {/* ========================================================================= */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 flex items-center justify-center">
-        {/* Soft background dark tint */}
-        <div className="absolute inset-0 bg-[#050505]" />
-
-        {/* Central portal visual blended with mask & opacity */}
-        <div className="relative w-full h-full max-w-[1500px] flex items-center justify-center">
-          <img
-            src="/contact-portal.png?v=2"
-            alt="DAY ZERO Portal"
-            className="w-full h-full object-cover object-center opacity-90 select-none"
-          />
-
-          {/* Vignette gradients to ensure absolute seamless blending into black */}
-          <div className="absolute inset-y-0 left-0 w-1/5 bg-gradient-to-r from-[#050505] to-transparent pointer-events-none" />
-          <div className="absolute inset-y-0 right-0 w-1/5 bg-gradient-to-l from-[#050505] to-transparent pointer-events-none" />
-          <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#050505] to-transparent pointer-events-none" />
-          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#050505] to-transparent pointer-events-none" />
-        </div>
-      </div>
+      {/* Clean Dark Background */}
+      <div className="absolute inset-0 bg-[#050505] pointer-events-none z-0" />
 
       {/* ========================================================================= */}
       {/* TOP MINIMAL BRAND HEADER                                                  */}
@@ -1812,10 +1982,20 @@ export default function ContactSection({ onClose }) {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }
           }}
-          className="font-display text-xs sm:text-sm tracking-[0.25em] font-semibold text-white uppercase select-none hover:opacity-80 transition-opacity cursor-pointer text-left focus:outline-none"
+          className="flex items-center gap-2 sm:gap-3 group select-none hover:opacity-80 transition-opacity cursor-pointer text-left focus:outline-none"
           title="Return to homepage"
         >
-          DAY ZERO
+          <div className="w-6 h-6 sm:w-7 sm:h-7 relative flex items-center justify-center shrink-0">
+            <svg viewBox="0 0 600 600" className="w-6 h-6 sm:w-7 sm:h-7 overflow-visible">
+              <g>
+                <path d="M 85 300 L 515 300" fill="none" stroke="#ffffff" strokeWidth="7" strokeLinecap="round" />
+                <path d="M 470 300 A 170 170 0 1 0 433.96 404.66" fill="none" stroke="#ffffff" strokeWidth="18" strokeLinecap="round" strokeLinejoin="round" />
+                <g transform="translate(437.65, 399.93) rotate(-52.3)">
+                  <path d="M 14 0 L -8 -9 L -2 0 L -8 9 Z" fill="#ffffff" stroke="#ffffff" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" />
+                </g>
+              </g>
+            </svg>
+          </div>
         </button>
 
         {onClose && (
@@ -1906,15 +2086,28 @@ export default function ContactSection({ onClose }) {
         </motion.div>
 
         {/* ------------------------------------------------------------------------- */}
-        {/* CENTER ZONE: Atmospheric Corridor / Space for Central Doorway Visual      */}
+        {/* CENTER ZONE: Minimalist Glowing Compass Crosshair (No letters, refined)   */}
         {/* ------------------------------------------------------------------------- */}
-        <div className="hidden lg:flex lg:w-[20%] xl:w-[24%] items-end justify-center pb-8 pointer-events-none select-none">
-          <div className="flex flex-col items-center gap-2 opacity-35">
-            <span className="w-[1px] h-12 bg-white/40" />
-            <span className="text-[9px] font-mono tracking-[0.3em] uppercase text-white/80">
-              DAY ZERO
-            </span>
-            <span className="w-[1px] h-12 bg-white/40" />
+        <div className="hidden lg:flex lg:w-[18%] xl:w-[22%] relative items-center justify-center py-6 pointer-events-none select-none">
+          {/* Subtle warm ambient radial bloom */}
+          <div className="absolute w-40 h-40 rounded-full bg-amber-400/[0.035] blur-2xl pointer-events-none" />
+
+          {/* Compass Crosshair Assembly */}
+          <div className="relative z-10 flex flex-col items-center">
+            {/* North Vertical Line */}
+            <span className="w-[1px] h-8 sm:h-10 animate-contact-line" />
+
+            {/* West Line — DAY ZERO — East Line */}
+            <div className="flex items-center gap-2 sm:gap-2.5 my-1.5">
+              <span className="h-[1px] w-6 sm:w-8 animate-contact-line" />
+              <span className="text-[8.5px] sm:text-[10px] font-dune tracking-[0.22em] uppercase animate-contact-bulb whitespace-nowrap px-1">
+                DAY ZERO
+              </span>
+              <span className="h-[1px] w-6 sm:w-8 animate-contact-line" />
+            </div>
+
+            {/* South Vertical Line */}
+            <span className="w-[1px] h-8 sm:h-10 animate-contact-line" />
           </div>
         </div>
 
@@ -2089,12 +2282,12 @@ export default function ContactSection({ onClose }) {
   );
 }
 
-```
+`
 
 ---
 
-### File 9: `src/components/motion/IntroSequence.jsx`
-```jsx
+### File 9: src/components/motion/IntroSequence.jsx
+`jsx
 /*  */import React, { useEffect, useLayoutEffect, useRef, useCallback, useState } from 'react';
 
 // Geometry Constants
@@ -2564,12 +2757,12 @@ export default function IntroSequence({ onComplete }) {
   );
 }
 
-```
+`
 
 ---
 
-### File 10: `src/components/blueprint/BlueprintCanvas.jsx`
-```jsx
+### File 10: src/components/blueprint/BlueprintCanvas.jsx
+`jsx
 import React from 'react';
 
 /**
@@ -3030,12 +3223,12 @@ export default function BlueprintCanvas({ pathProgress, currentPoint, mainPathD 
   );
 }
 
-```
+`
 
 ---
 
-### File 11: `src/components/blueprint/ChapterContent.jsx`
-```jsx
+### File 11: src/components/blueprint/ChapterContent.jsx
+`jsx
 import React from 'react';
 import { CHAPTERS_DATA } from '../../utils/chapters';
 
@@ -3167,12 +3360,12 @@ export default function ChapterContent({ currentPoint, onOpenContact, onNavigate
   );
 }
 
-```
+`
 
 ---
 
-### File 12: `src/components/blueprint/CinematicHomepage.jsx`
-```jsx
+### File 12: src/components/blueprint/CinematicHomepage.jsx
+`jsx
 import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -3336,14 +3529,15 @@ export default function CinematicHomepage({ onOpenContact, onNavigateChapter }) 
   );
 }
 
-```
+`
 
 ---
 
-### File 13: `src/components/blueprint/ChapterPage.jsx`
-```jsx
+### File 13: src/components/blueprint/ChapterPage.jsx
+`jsx
 import React, { useState, useEffect } from 'react';
 import { CHAPTERS_DATA, CHAPTERS_FULL_CONTENT } from '../../utils/chapters';
+import ChapterStickySidebar from './ChapterStickySidebar';
 
 /**
  * ChapterPage represents an isolated, dedicated editorial view for chapters.
@@ -3409,44 +3603,140 @@ export default function ChapterPage({
   }, [chapter]);
 
   useEffect(() => {
+    if (window.lenis) {
+      window.lenis.scrollTo(0, { immediate: true });
+    }
     window.scrollTo({ top: 0, behavior: 'instant' });
     if (fullContent && fullContent.sections?.length > 0) {
       setActiveSection(fullContent.sections[0].id);
     }
   }, [chapterId, fullContent]);
 
-  // Section observer to update sticky navigation highlight
+  // Performant scroll-synchronized section tracking using IntersectionObserver
   useEffect(() => {
-    if (!fullContent) return;
+    if (!fullContent || !fullContent.sections || fullContent.sections.length === 0) return;
     const sectionIds = fullContent.sections.map((s) => s.id);
-    const handleScroll = () => {
-      for (const sId of sectionIds) {
+
+    if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
+      const visibleEntries = new Map();
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            visibleEntries.set(entry.target.id, entry);
+          });
+
+          // If near top of page, lock to first section
+          if (window.scrollY < 200) {
+            setActiveSection(sectionIds[0]);
+            return;
+          }
+
+          // Detect currently active section within the viewport reading zone (offset below top navbar)
+          let currentBest = null;
+          for (const sId of sectionIds) {
+            const entry = visibleEntries.get(sId);
+            if (entry && entry.isIntersecting) {
+              const rect = entry.boundingClientRect;
+              if (rect.top <= 260 && rect.bottom >= 80) {
+                currentBest = sId;
+              }
+            }
+          }
+
+          if (currentBest) {
+            setActiveSection(currentBest);
+          }
+        },
+        {
+          rootMargin: '-90px 0px -40% 0px',
+          threshold: [0, 0.1, 0.25, 0.5, 0.75, 1.0]
+        }
+      );
+
+      sectionIds.forEach((sId) => {
         const el = document.getElementById(sId);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 220 && rect.bottom >= 100) {
-            setActiveSection(sId);
-            break;
+        if (el) observer.observe(el);
+      });
+
+      // Smooth RAF scroll fallback for rapid jumps and edge boundaries (top/bottom)
+      let ticking = false;
+      const handleScrollFallback = () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            // Top of page: activate first section
+            if (window.scrollY < 200) {
+              setActiveSection(sectionIds[0]);
+              ticking = false;
+              return;
+            }
+
+            const scrollBottom = window.innerHeight + window.scrollY;
+            const docHeight = document.documentElement.scrollHeight;
+
+            // Bottom of page: activate last section only when genuinely scrolled deep
+            if (window.scrollY > 300 && docHeight - scrollBottom < 80) {
+              setActiveSection(sectionIds[sectionIds.length - 1]);
+              ticking = false;
+              return;
+            }
+
+            // Proximity scan
+            for (let i = sectionIds.length - 1; i >= 0; i--) {
+              const el = document.getElementById(sectionIds[i]);
+              if (el) {
+                const rect = el.getBoundingClientRect();
+                if (rect.top <= 240) {
+                  setActiveSection(sectionIds[i]);
+                  break;
+                }
+              }
+            }
+            ticking = false;
+          });
+          ticking = true;
+        }
+      };
+
+      window.addEventListener('scroll', handleScrollFallback, { passive: true });
+
+      return () => {
+        observer.disconnect();
+        window.removeEventListener('scroll', handleScrollFallback);
+      };
+    } else {
+      const handleScroll = () => {
+        for (const sId of sectionIds) {
+          const el = document.getElementById(sId);
+          if (el) {
+            const rect = el.getBoundingClientRect();
+            if (rect.top <= 240 && rect.bottom >= 80) {
+              setActiveSection(sId);
+              break;
+            }
           }
         }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+      };
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
   }, [chapterId, fullContent]);
 
   const scrollToSection = (id) => {
+    setActiveSection(id);
     const el = document.getElementById(id);
-    if (el) {
+    if (!el) return;
+
+    if (window.lenis) {
+      window.lenis.scrollTo(el, { offset: -100, duration: 1.0 });
+    } else {
       const top = el.getBoundingClientRect().top + window.scrollY - 100;
       window.scrollTo({ top, behavior: 'smooth' });
     }
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-[#050505] text-[#F3F4F6] pt-24 sm:pt-28 pb-24 px-4 sm:px-6 md:px-12 flex flex-col justify-between overflow-x-hidden selection:bg-white selection:text-black">
-      
+    <div className="relative w-full min-h-screen bg-[#050505] text-[#F3F4F6] pt-24 sm:pt-28 pb-24 px-4 sm:px-6 md:px-12 flex flex-col justify-between overflow-x-clip selection:bg-white selection:text-black">
+
       {/* ========================================================================= */}
       {/* TOP BREADCRUMB / BACK BAR                                                 */}
       {/* ========================================================================= */}
@@ -3504,51 +3794,14 @@ export default function ChapterPage({
         {/* ========================================================================= */}
         {fullContent ? (
           <div className="mt-12 sm:mt-16 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
-            
+
             {/* Desktop Sticky Index / Table of Contents */}
-            <aside className="hidden lg:block lg:col-span-3 sticky top-28 space-y-6">
-              <div className="p-5 border border-white/10 rounded-lg bg-[#0B0B0B]/60 backdrop-blur-sm space-y-4">
-                <div className="text-[10px] font-mono text-white/40 tracking-widest uppercase pb-2 border-b border-white/10 flex items-center justify-between">
-                  <span>TABLE OF CONTENTS</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
-                </div>
-                <nav className="space-y-1.5 font-mono text-xs">
-                  {fullContent.sections.map((sec) => (
-                    <button
-                      key={sec.id}
-                      type="button"
-                      onClick={() => scrollToSection(sec.id)}
-                      className={`w-full text-left py-1.5 px-2 rounded transition-all flex items-center justify-between cursor-pointer ${
-                        activeSection === sec.id
-                          ? 'bg-white text-black font-semibold'
-                          : 'text-white/50 hover:text-white hover:bg-white/5'
-                      }`}
-                    >
-                      <span className="truncate">{sec.index}. {sec.title}</span>
-                      <span className="text-[10px] opacity-60">→</span>
-                    </button>
-                  ))}
-                </nav>
-
-                <div className="pt-3 border-t border-white/10 text-[10px] font-mono text-white/30 space-y-1">
-                  <p>COORDINATE: {chapter.id === '01' ? '500.750' : chapter.id === '02' ? '450.1400' : `${chapter.yPos}.000`}</p>
-                  {chapter.primaryTopic && (
-                    <p className="text-white/50">TOPIC: {chapter.primaryTopic}</p>
-                  )}
-                  <p>STATUS: VERIFIED FIELD LOG</p>
-                </div>
-              </div>
-
-              <div className="p-4 border border-white/10 rounded-lg bg-[#0B0B0B]/30 text-xs font-mono text-white/40 space-y-2">
-                <div className="flex items-center gap-2 text-white/80">
-                  <span className="w-2 h-2 rounded-full bg-white/80" />
-                  <span className="text-[11px] font-semibold uppercase tracking-wider">THE DAY ZERO LOG</span>
-                </div>
-                <p className="text-[11px] leading-relaxed text-white/40">
-                  Documenting the messy, honest, raw beginning of products and builders before the spotlight arrives.
-                </p>
-              </div>
-            </aside>
+            <ChapterStickySidebar
+              chapter={chapter}
+              sections={fullContent.sections}
+              activeSection={activeSection}
+              onSelectSection={scrollToSection}
+            />
 
             {/* Main Editorial Reading Column */}
             <div className="lg:col-span-9 space-y-16 sm:space-y-20 max-w-3xl">
@@ -3632,9 +3885,8 @@ export default function ChapterPage({
                       ].map((item, idx) => (
                         <div
                           key={idx}
-                          className={`p-3.5 rounded border border-white/10 bg-[#0B0B0B]/50 font-mono text-xs text-white/70 flex items-start gap-3 ${
-                            idx === 4 ? 'sm:col-span-2' : ''
-                          }`}
+                          className={`p-3.5 rounded border border-white/10 bg-[#0B0B0B]/50 font-mono text-xs text-white/70 flex items-start gap-3 ${idx === 4 ? 'sm:col-span-2' : ''
+                            }`}
                         >
                           <span className="text-white/40 font-semibold">0{idx + 1}.</span>
                           <span>{item}</span>
@@ -3825,9 +4077,8 @@ export default function ChapterPage({
                       ].map((docItem, docIdx) => (
                         <div
                           key={docIdx}
-                          className={`p-3.5 rounded bg-[#0B0B0B] border border-white/10 flex items-center gap-3 font-mono text-xs sm:text-sm text-white/85 ${
-                            docIdx === 8 ? 'sm:col-span-2' : ''
-                          }`}
+                          className={`p-3.5 rounded bg-[#0B0B0B] border border-white/10 flex items-center gap-3 font-mono text-xs sm:text-sm text-white/85 ${docIdx === 8 ? 'sm:col-span-2' : ''
+                            }`}
                         >
                           <span className="w-4 h-4 rounded-full border border-white/30 flex items-center justify-center text-[9px] text-white/50 shrink-0">
                             ✓
@@ -3934,9 +4185,8 @@ export default function ChapterPage({
                       ].map((item, idx) => (
                         <div
                           key={idx}
-                          className={`p-3.5 rounded border border-white/10 bg-[#0B0B0B]/50 font-mono text-xs text-white/70 flex items-center gap-3 ${
-                            idx === 4 ? 'sm:col-span-2' : ''
-                          }`}
+                          className={`p-3.5 rounded border border-white/10 bg-[#0B0B0B]/50 font-mono text-xs text-white/70 flex items-center gap-3 ${idx === 4 ? 'sm:col-span-2' : ''
+                            }`}
                         >
                           <span className="text-white/40 font-semibold">0{idx + 1}.</span>
                           <span>{item}</span>
@@ -4056,9 +4306,8 @@ export default function ChapterPage({
                       ].map((item, idx) => (
                         <div
                           key={idx}
-                          className={`p-4 rounded border border-white/15 bg-white/[0.03] flex items-start gap-3 ${
-                            idx === 4 ? 'sm:col-span-2' : ''
-                          }`}
+                          className={`p-4 rounded border border-white/15 bg-white/[0.03] flex items-start gap-3 ${idx === 4 ? 'sm:col-span-2' : ''
+                            }`}
                         >
                           <span className="text-[10px] font-mono text-white/40 px-1.5 py-0.5 rounded bg-white/10 shrink-0">
                             P0{idx + 1}
@@ -4967,9 +5216,8 @@ export default function ChapterPage({
                       ].map((st, sIdx) => (
                         <div
                           key={sIdx}
-                          className={`p-4 rounded border border-white/10 bg-[#0B0B0B]/60 font-mono text-xs sm:text-sm text-white/85 flex items-center gap-3 ${
-                            sIdx === 3 ? 'border-white/30 bg-white/[0.04] text-white font-semibold' : ''
-                          }`}
+                          className={`p-4 rounded border border-white/10 bg-[#0B0B0B]/60 font-mono text-xs sm:text-sm text-white/85 flex items-center gap-3 ${sIdx === 3 ? 'border-white/30 bg-white/[0.04] text-white font-semibold' : ''
+                            }`}
                         >
                           <span className="text-white/40 font-semibold">0{sIdx + 1}.</span>
                           <span>{st}</span>
@@ -5358,11 +5606,11 @@ export default function ChapterPage({
                       <button
                         type="button"
                         onClick={() => {
-                          window.location.hash = 'products';
+                          if (onNavigateChapter) onNavigateChapter('06');
                         }}
                         className="inline-flex items-center gap-3 bg-white text-black font-mono text-xs sm:text-sm font-medium px-6 py-3.5 hover:bg-white/90 transition-all cursor-pointer shadow-lg shadow-white/10 group"
                       >
-                        <span className="tracking-widest uppercase">EXPLORE CURRENT MISSIONS</span>
+                        <span className="tracking-widest uppercase">EXPLORE FUTURE ECOSYSTEM</span>
                         <span className="group-hover:translate-x-1 transition-transform">→</span>
                       </button>
 
@@ -6244,7 +6492,7 @@ export default function ChapterPage({
           /* Dedicated Workspace for Chapter 07 (Ready for future chapters) */
           <div className="mt-12 sm:mt-16 w-full min-h-[420px] sm:min-h-[500px] border border-white/10 rounded-lg bg-[#0B0B0B]/40 flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-blueprint-dense opacity-40 pointer-events-none" />
-            
+
             <div className="relative z-10 space-y-4 max-w-md">
               <div className="w-10 h-10 mx-auto rounded-full border border-white/20 flex items-center justify-center text-xs font-mono text-white/60">
                 {chapter.id}
@@ -6267,21 +6515,161 @@ export default function ChapterPage({
 }
 
 
-```
+`
 
 ---
 
-### File 14: `src/components/products/ProductsPage.jsx`
-```jsx
-import React, { useState, useMemo } from 'react';
+### File 14: src/components/blueprint/ChapterStickySidebar.jsx
+`jsx
+import React from 'react';
+
+/**
+ * ChapterStickySidebar provides a sticky Table of Contents sidebar for Chapter editorial pages.
+ * Supports smooth scrolling to sections, active section highlighting, viewport height containment,
+ * and chapter coordinate metadata.
+ */
+export default function ChapterStickySidebar({
+  chapter,
+  sections = [],
+  activeSection,
+  onSelectSection
+}) {
+  if (!sections || sections.length === 0) return null;
+
+  return (
+    <aside
+      aria-label="Chapter Table of Contents"
+      className="hidden lg:block lg:col-span-3 sticky top-28 self-start max-h-[calc(100vh-8.5rem)] overflow-y-auto overscroll-contain pr-2 space-y-6 select-none z-20"
+      style={{
+        scrollbarWidth: 'thin',
+        scrollbarColor: 'rgba(255, 255, 255, 0.15) transparent'
+      }}
+    >
+      {/* Primary Table of Contents Card */}
+      <div className="p-5 border border-white/10 rounded-lg bg-[#0B0B0B]/70 backdrop-blur-md space-y-4 shadow-xl shadow-black/40">
+        <div className="text-[10px] font-mono text-white/40 tracking-widest uppercase pb-2 border-b border-white/10 flex items-center justify-between">
+          <span>TABLE OF CONTENTS</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-white/60 animate-pulse" />
+        </div>
+
+        <nav aria-label="Sections" className="space-y-1.5 font-mono text-xs">
+          {sections.map((sec) => {
+            const isActive = activeSection === sec.id;
+            return (
+              <button
+                key={sec.id}
+                type="button"
+                onClick={() => onSelectSection(sec.id)}
+                aria-current={isActive ? 'true' : undefined}
+                className={`w-full text-left py-1.5 px-2.5 rounded transition-all duration-150 flex items-center justify-between cursor-pointer group ${
+                  isActive
+                    ? 'bg-white text-black font-semibold shadow-md shadow-white/10 scale-[1.01]'
+                    : 'text-white/50 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <span className="truncate pr-2">
+                  {sec.index}. {sec.title}
+                </span>
+                <span
+                  className={`text-[10px] transition-transform duration-150 ${
+                    isActive
+                      ? 'opacity-90 translate-x-0.5'
+                      : 'opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5'
+                  }`}
+                >
+                  →
+                </span>
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Technical Coordinate & Topic Metadata */}
+        <div className="pt-3 border-t border-white/10 text-[10px] font-mono text-white/30 space-y-1">
+          <p>
+            COORDINATE:{' '}
+            {chapter.id === '01'
+              ? '500.750'
+              : chapter.id === '02'
+              ? '450.1400'
+              : `${chapter.yPos || '000'}.000`}
+          </p>
+          {chapter.primaryTopic && (
+            <p className="text-white/50">TOPIC: {chapter.primaryTopic}</p>
+          )}
+          <div className="flex items-center gap-1.5 pt-0.5">
+            <span className="w-1 h-1 rounded-full bg-emerald-400" />
+            <p className="text-white/40">STATUS: VERIFIED FIELD LOG</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Supporting Editorial Card: The Day Zero Log */}
+      <div className="p-4 border border-white/10 rounded-lg bg-[#0B0B0B]/40 backdrop-blur-sm text-xs font-mono text-white/40 space-y-2 border-l-2 border-l-white/30">
+        <div className="flex items-center gap-2 text-white/80">
+          <span className="w-2 h-2 rounded-full bg-white/80 animate-pulse" />
+          <span className="text-[11px] font-semibold uppercase tracking-wider">
+            THE DAY ZERO LOG
+          </span>
+        </div>
+        <p className="text-[11px] leading-relaxed text-white/40 font-light">
+          Documenting the messy, honest, raw beginning of products and builders before the spotlight arrives.
+        </p>
+      </div>
+    </aside>
+  );
+}
+
+`
+
+---
+
+### File 15: src/components/products/ProductsPage.jsx
+`jsx
+import React, { useState, useMemo, useEffect } from 'react';
 import ProductsHeroVisual from './ProductsHeroVisual';
 import ProductArchiveItem from './ProductArchiveItem';
 import ProductDetailModal from './ProductDetailModal';
+import DayZeroOsExperience from './DayZeroOsExperience';
 import { PRODUCTS_DATA } from './productsData';
 
-export default function ProductsPage({ onOpenContact }) {
+export default function ProductsPage({ onOpenContact, onLoadingChange }) {
   const [activeFilter, setActiveFilter] = useState('ALL');
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [initStage, setInitStage] = useState(0); // 0: index, 1: id, 2: name, 3: loading, 4: ready
+
+  const isDayZeroOs = selectedProduct && (selectedProduct.id === '01' || selectedProduct.title === 'DAY ZERO OS');
+
+  // Cinematic step initialization timeline sequence when entering Day Zero OS
+  useEffect(() => {
+    if (!isDayZeroOs) {
+      setInitStage(0);
+      if (onLoadingChange) onLoadingChange(false);
+      return;
+    }
+
+    setInitStage(0);
+    if (onLoadingChange) onLoadingChange(true);
+
+    const t1 = setTimeout(() => setInitStage(1), 250);
+    const t2 = setTimeout(() => setInitStage(2), 500);
+    const t3 = setTimeout(() => setInitStage(3), 850);
+    const t4 = setTimeout(() => {
+      setInitStage(4);
+      if (onLoadingChange) onLoadingChange(false);
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      if (window.lenis) {
+        window.lenis.scrollTo(0, { immediate: true });
+      }
+    }, 1300);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
+    };
+  }, [isDayZeroOs, onLoadingChange]);
 
   // Filter logic
   const filteredProducts = useMemo(() => {
@@ -6293,8 +6681,55 @@ export default function ProductsPage({ onOpenContact }) {
     return PRODUCTS_DATA;
   }, [activeFilter]);
 
+  // Seamless in-flow document rendering for Day Zero OS experience with cinematic entry animation
+  if (isDayZeroOs) {
+    if (initStage < 4) {
+      return (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black font-mono text-white select-none">
+          <div className="flex flex-col items-center justify-center space-y-4 p-8 text-center animate-in fade-in duration-300">
+            <div className="text-xs font-mono text-white/40 tracking-[0.3em] uppercase">
+              PRODUCT INDEX
+            </div>
+
+            {initStage >= 1 && (
+              <div className="text-3xl font-mono font-bold text-white/70 animate-in zoom-in-95 duration-200">
+                {selectedProduct.id}
+              </div>
+            )}
+
+            {initStage >= 2 && (
+              <div className="text-2xl sm:text-4xl font-display font-bold text-white uppercase tracking-widest animate-in fade-in slide-in-from-bottom-2 duration-200">
+                {selectedProduct.title}
+              </div>
+            )}
+
+            {initStage >= 3 && (
+              <div className="flex items-center gap-3 text-xs font-mono text-white/50 tracking-widest pt-4">
+                <span className="w-2 h-2 bg-white rounded-full animate-ping" />
+                <span>INITIALIZING BUILD SYSTEM...</span>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="relative w-full flex-1 flex flex-col pt-16 select-none">
+        <DayZeroOsExperience
+          onClose={() => {
+            setSelectedProduct(null);
+            setInitStage(0);
+            if (onLoadingChange) onLoadingChange(false);
+          }}
+          onOpenContact={onOpenContact}
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="relative w-full bg-[#050505] text-[#F3F4F6] min-h-screen pt-24 pb-20 select-none overflow-x-hidden">
+    <div className="relative w-full bg-[#050505] text-[#F3F4F6] flex-1 pt-24 pb-12 select-none overflow-x-hidden">
       {/* 03 / HEADER TECHNICAL IDENTIFIER */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-6">
         <div className="inline-flex items-center gap-3 px-3 py-1 border border-white/10 bg-[#0B0B0B] text-[10px] font-mono text-white/50 tracking-widest uppercase">
@@ -6457,7 +6892,7 @@ export default function ProductsPage({ onOpenContact }) {
       </section>
 
       {/* 09 / PRODUCT DETAIL TRANSITION MODAL */}
-      {selectedProduct && (
+      {selectedProduct && !isDayZeroOs && (
         <ProductDetailModal
           product={selectedProduct}
           onClose={() => setSelectedProduct(null)}
@@ -6468,12 +6903,12 @@ export default function ProductsPage({ onOpenContact }) {
   );
 }
 
-```
+`
 
 ---
 
-### File 15: `src/components/products/ProductsHeroVisual.jsx`
-```jsx
+### File 16: src/components/products/ProductsHeroVisual.jsx
+`jsx
 import React, { useState, useEffect, useRef } from 'react';
 
 export default function ProductsHeroVisual({ products, onSelectProduct }) {
@@ -6649,12 +7084,12 @@ export default function ProductsHeroVisual({ products, onSelectProduct }) {
   );
 }
 
-```
+`
 
 ---
 
-### File 16: `src/components/products/ProductArchiveItem.jsx`
-```jsx
+### File 17: src/components/products/ProductArchiveItem.jsx
+`jsx
 import React, { useState } from 'react';
 
 export default function ProductArchiveItem({ product, onInspect }) {
@@ -6812,19 +7247,21 @@ export default function ProductArchiveItem({ product, onInspect }) {
   );
 }
 
-```
+`
 
 ---
 
-### File 17: `src/components/products/ProductDetailModal.jsx`
-```jsx
+### File 18: src/components/products/ProductDetailModal.jsx
+`jsx
 import React, { useState, useEffect } from 'react';
+import DayZeroOsExperience from './DayZeroOsExperience';
 
 export default function ProductDetailModal({ product, onClose, onOpenContact }) {
   const [initStage, setInitStage] = useState(0); // 0: index, 1: id, 2: name, 3: loading, 4: ready
   const [activeTab, setActiveTab] = useState('SPECS');
 
-  const isVoidProduct = product?.status === 'VOID' || product?.id === '01';
+  const isDayZeroOs = product?.id === '01' || product?.title === 'DAY ZERO OS';
+  const isVoidProduct = (product?.status === 'VOID') && !isDayZeroOs;
 
   // Handle ESC key listener to exit modal / pitch black view
   useEffect(() => {
@@ -6889,9 +7326,11 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
         </div>
       )}
 
-      {/* FULL SYSTEM DEEP DIVE DRAWER / MODAL OR PITCH BLACK VOID */}
+      {/* FULL SYSTEM DEEP DIVE DRAWER / MODAL OR NEW DAY ZERO OS EXPERIENCE */}
       {initStage === 4 && (
-        isVoidProduct ? (
+        isDayZeroOs ? (
+          <DayZeroOsExperience onClose={onClose} onOpenContact={onOpenContact} />
+        ) : isVoidProduct ? (
           <div
             onClick={onClose}
             className="fixed inset-0 z-50 bg-black w-screen h-screen cursor-pointer select-none"
@@ -6949,11 +7388,10 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
                     key={tab}
                     type="button"
                     onClick={() => setActiveTab(tab)}
-                    className={`pb-3 transition-colors cursor-pointer tracking-wider ${
-                      activeTab === tab
-                        ? 'text-white border-b-2 border-white font-bold'
-                        : 'text-white/40 hover:text-white/80'
-                    }`}
+                    className={`pb-3 transition-colors cursor-pointer tracking-wider ${activeTab === tab
+                      ? 'text-white border-b-2 border-white font-bold'
+                      : 'text-white/40 hover:text-white/80'
+                      }`}
                   >
                     {tab}
                   </button>
@@ -7044,12 +7482,807 @@ export default function ProductDetailModal({ product, onClose, onOpenContact }) 
   );
 }
 
-```
+`
 
 ---
 
-### File 18: `src/components/products/productsData.js`
-```javascript
+### File 19: src/components/products/DayZeroOsExperience.jsx
+`jsx
+import React, { useEffect } from 'react';
+import {
+  ArrowRight,
+  ArrowDown,
+  Terminal,
+  FolderGit2,
+  AppWindow,
+  CheckSquare,
+  BookOpen,
+  Box,
+  Feather,
+  Shield,
+  GraduationCap,
+  Palette,
+  Briefcase,
+  Rocket,
+  MoreHorizontal,
+  User,
+  Atom,
+  Layers,
+  Zap,
+  Database,
+  Globe,
+  Smartphone,
+  Monitor
+} from 'lucide-react';
+
+const WEB_LOGIN_URL = 'https://day-zero-os.vercel.app/login';
+const DOWNLOAD_URL = 'https://day-zero-os.vercel.app/download';
+
+export default function DayZeroOsExperience({ onClose, _onOpenContact }) {
+  // ESC key listener to exit back to the products archive
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
+  return (
+    <div className="relative w-full bg-[#000000] text-[#F3F4F6] selection:bg-white selection:text-black font-sans">
+
+      {/* Main Container */}
+      <main className="relative w-full pt-16 pb-16">
+
+        {/* ========================================================================= */}
+        {/* 1. HERO SECTION */}
+        {/* ========================================================================= */}
+        <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-12 pb-24 lg:pt-16 lg:pb-32">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+
+            {/* Left Hero Column */}
+            <div className="lg:col-span-6 space-y-6">
+              <div className="text-xs font-mono tracking-[0.25em] text-neutral-400 uppercase">
+                — DIGITAL OPERATING SYSTEM
+              </div>
+
+              <h1 className="text-4xl sm:text-6xl md:text-7xl font-display font-extrabold tracking-tight text-white leading-[1.04]">
+                One Platform.<br />
+                Different <span className="font-serif italic font-normal text-neutral-200">Ways</span> of Working.
+              </h1>
+
+              <p className="text-sm sm:text-base md:text-lg font-sans text-neutral-400 font-light leading-relaxed max-w-xl">
+                Day Zero OS is a unified digital operating environment built to help people{' '}
+                <span className="text-white font-normal">organize their work, collaborate</span>, manage projects and grow — with specialized OS experiences for different sectors.
+              </p>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-wrap items-center gap-4 pt-2">
+                <a
+                  href={WEB_LOGIN_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white text-black font-mono text-xs sm:text-[13px] font-bold tracking-wider uppercase hover:bg-neutral-200 transition-all cursor-pointer shadow-[0_0_20px_rgba(255,255,255,0.18)]"
+                >
+                  <span>Open Day Zero OS</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </a>
+
+                <a
+                  href={DOWNLOAD_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/20 bg-transparent text-white font-mono text-xs sm:text-[13px] font-medium tracking-wider uppercase hover:border-white/50 hover:bg-white/5 transition-all cursor-pointer"
+                >
+                  <span>Download the App</span>
+                  <ArrowDown className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+
+            {/* Right Hero Column: Day Zero OS Dashboard Mockup */}
+            <div className="lg:col-span-6">
+              <div className="relative rounded-2xl border border-white/15 bg-[#0B0B0B] p-4 sm:p-5 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] overflow-hidden">
+                {/* Subtle background gradient depth */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-transparent pointer-events-none" />
+
+                {/* Window Header Bar with 3 dots */}
+                <div className="relative flex items-center justify-between pb-3 mb-3 border-b border-white/[0.08] text-[10px] font-mono text-neutral-400">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-white/20" />
+                    <span className="w-2 h-2 rounded-full bg-white/20" />
+                    <span className="w-2 h-2 rounded-full bg-white/20" />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="tracking-widest uppercase text-white/50 text-[9px]">DAY ZERO OS</span>
+                  </div>
+                  <div className="text-[9px] text-white/30">v1.0.0</div>
+                </div>
+
+                {/* Window Body Layout */}
+                <div className="grid grid-cols-12 gap-3 min-h-[310px]">
+                  {/* Mini Sidebar */}
+                  <div className="col-span-3 border-r border-white/[0.06] pr-2 space-y-1 text-[11px] font-mono">
+                    <div className="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/10 text-white font-medium">
+                      <Terminal className="w-3 h-3 text-emerald-400" />
+                      <span className="truncate">Home</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 px-2 py-1.5 rounded text-neutral-400 hover:text-white">
+                      <FolderGit2 className="w-3 h-3 text-neutral-500" />
+                      <span className="truncate">Projects</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 px-2 py-1.5 rounded text-neutral-400 hover:text-white">
+                      <CheckSquare className="w-3 h-3 text-neutral-500" />
+                      <span className="truncate">Tasks</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 px-2 py-1.5 rounded text-neutral-400 hover:text-white">
+                      <BookOpen className="w-3 h-3 text-neutral-500" />
+                      <span className="truncate">Knowledge</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 px-2 py-1.5 rounded text-neutral-400 hover:text-white">
+                      <Box className="w-3 h-3 text-neutral-500" />
+                      <span className="truncate">Assets</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 px-2 py-1.5 rounded text-neutral-400 hover:text-white">
+                      <User className="w-3 h-3 text-neutral-500" />
+                      <span className="truncate">Team</span>
+                    </div>
+                  </div>
+
+                  {/* Main Workspace Area */}
+                  <div className="col-span-9 pl-1 space-y-3">
+                    {/* Greeting & Subheading */}
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-xs font-display font-bold text-white tracking-wide">
+                          Good morning, Builder.
+                        </div>
+                        <div className="text-[10px] text-neutral-400 font-sans">
+                          Here's what's happening with your work today.
+                        </div>
+                      </div>
+                      <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[9px] font-mono text-white/70">
+                        DZ
+                      </div>
+                    </div>
+
+                    {/* 4 Metric Stats Cards */}
+                    <div className="grid grid-cols-4 gap-1.5">
+                      <div className="p-2 rounded-lg bg-black/40 border border-white/[0.06]">
+                        <div className="text-[8px] font-mono text-neutral-500 uppercase truncate">Active Projects</div>
+                        <div className="text-sm font-display font-bold text-white mt-0.5">4</div>
+                      </div>
+                      <div className="p-2 rounded-lg bg-black/40 border border-white/[0.06]">
+                        <div className="text-[8px] font-mono text-neutral-500 uppercase truncate">Open Tasks</div>
+                        <div className="text-sm font-display font-bold text-white mt-0.5">12</div>
+                      </div>
+                      <div className="p-2 rounded-lg bg-black/40 border border-white/[0.06]">
+                        <div className="text-[8px] font-mono text-neutral-500 uppercase truncate">Team Members</div>
+                        <div className="text-sm font-display font-bold text-white mt-0.5">3</div>
+                      </div>
+                      <div className="p-2 rounded-lg bg-black/40 border border-white/[0.06]">
+                        <div className="text-[8px] font-mono text-neutral-500 uppercase truncate">Updated Today</div>
+                        <div className="text-sm font-display font-bold text-emerald-400 mt-0.5">2</div>
+                      </div>
+                    </div>
+
+                    {/* Split Dashboard Row: Recent Projects & Upcoming Tasks */}
+                    <div className="grid grid-cols-2 gap-2 pt-1">
+                      {/* Recent Projects Card */}
+                      <div className="p-2.5 rounded-lg bg-black/40 border border-white/[0.06] space-y-2">
+                        <div className="flex items-center justify-between text-[9px] font-mono text-neutral-400 uppercase">
+                          <span>Recent Projects</span>
+                          <ArrowRight className="w-2.5 h-2.5 text-neutral-500" />
+                        </div>
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-between text-[10px]">
+                            <div className="flex items-center gap-1.5 truncate">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                              <span className="text-neutral-300 font-sans truncate">Aurora Engine</span>
+                            </div>
+                            <span className="text-[8px] font-mono text-neutral-500">v1.2</span>
+                          </div>
+                          <div className="flex items-center justify-between text-[10px]">
+                            <div className="flex items-center gap-1.5 truncate">
+                              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                              <span className="text-neutral-300 font-sans truncate">Nebula Cloud</span>
+                            </div>
+                            <span className="text-[8px] font-mono text-neutral-500">v0.8</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Upcoming Tasks Card */}
+                      <div className="p-2.5 rounded-lg bg-black/40 border border-white/[0.06] space-y-2">
+                        <div className="flex items-center justify-between text-[9px] font-mono text-neutral-400 uppercase">
+                          <span>Upcoming Tasks</span>
+                          <span className="text-[8px] font-mono text-white/30">3 pending</span>
+                        </div>
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-between text-[10px]">
+                            <div className="flex items-center gap-1.5 truncate">
+                              <CheckSquare className="w-2.5 h-2.5 text-neutral-500" />
+                              <span className="text-neutral-300 font-sans truncate">Finish API migration</span>
+                            </div>
+                            <span className="text-[8px] font-mono text-emerald-400">Today</span>
+                          </div>
+                          <div className="flex items-center justify-between text-[10px]">
+                            <div className="flex items-center gap-1.5 truncate">
+                              <CheckSquare className="w-2.5 h-2.5 text-neutral-500" />
+                              <span className="text-neutral-300 font-sans truncate">Design system updates</span>
+                            </div>
+                            <span className="text-[8px] font-mono text-neutral-500">Tomorrow</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* Thin Horizontal Divider */}
+        <div className="w-full border-t border-white/[0.08]" />
+
+        {/* ========================================================================= */}
+        {/* 2. THE PROBLEM & 3. THE SOLUTION */}
+        {/* ========================================================================= */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-24 md:py-32">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+
+            {/* THE PROBLEM */}
+            <div className="lg:col-span-5 space-y-6">
+              <div className="text-xs font-mono tracking-[0.25em] text-neutral-400 uppercase">
+                — WHY IT EXISTS
+              </div>
+
+              <h2 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                The Problem
+              </h2>
+
+              <p className="text-sm sm:text-base font-sans text-neutral-400 font-light leading-relaxed">
+                Teams struggle with communication, shared resources, tasks, deadlines and project status. Work becomes scattered across multiple tools, generic productivity tools often make users adapt their workflow to the software, and different sectors have fundamentally different ways of working.
+              </p>
+
+              {/* 4 Compact Information Blocks */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                <div className="p-3.5 rounded-xl border border-white/[0.08] bg-[#0B0B0B] space-y-1.5">
+                  <div className="text-white/40 font-mono text-xs">01 // STATUS</div>
+                  <div className="text-xs font-sans text-neutral-200 font-medium">Scattered Information</div>
+                  <div className="text-[11px] text-neutral-500 font-light leading-relaxed">Tasks and status lost between chat and docs.</div>
+                </div>
+
+                <div className="p-3.5 rounded-xl border border-white/[0.08] bg-[#0B0B0B] space-y-1.5">
+                  <div className="text-white/40 font-mono text-xs">02 // CONTEXT</div>
+                  <div className="text-xs font-sans text-neutral-200 font-medium">Tool Proliferation</div>
+                  <div className="text-[11px] text-neutral-500 font-light leading-relaxed">Constant switching destroys focused output.</div>
+                </div>
+
+                <div className="p-3.5 rounded-xl border border-white/[0.08] bg-[#0B0B0B] space-y-1.5">
+                  <div className="text-white/40 font-mono text-xs">03 // ADAPTATION</div>
+                  <div className="text-xs font-sans text-neutral-200 font-medium">Forced Conformity</div>
+                  <div className="text-[11px] text-neutral-500 font-light leading-relaxed">Users bend their workflow to match rigid software.</div>
+                </div>
+
+                <div className="p-3.5 rounded-xl border border-white/[0.08] bg-[#0B0B0B] space-y-1.5">
+                  <div className="text-white/40 font-mono text-xs">04 // SECTOR</div>
+                  <div className="text-xs font-sans text-neutral-200 font-medium">One-Size-Fits-None</div>
+                  <div className="text-[11px] text-neutral-500 font-light leading-relaxed">Engineers, creators, and teachers work differently.</div>
+                </div>
+              </div>
+            </div>
+
+            {/* THE SOLUTION */}
+            <div className="lg:col-span-7 flex flex-col justify-between space-y-8 lg:border-l lg:border-white/[0.08] lg:pl-16">
+              <div className="space-y-6">
+                <div className="text-xs font-mono tracking-[0.25em] text-neutral-400 uppercase">
+                  — THE PARADIGM SHIFT
+                </div>
+
+                <h2 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                  The Solution
+                </h2>
+
+                <p className="text-base sm:text-lg font-sans text-neutral-300 font-light leading-relaxed">
+                  Day Zero OS approaches the problem from the opposite direction: the operating environment should adapt to the user's workflow.
+                </p>
+              </div>
+
+              {/* Visual Callout Statement */}
+              <div className="p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0B0B0B] relative overflow-hidden">
+                <div className="absolute top-0 left-0 bottom-0 w-1 bg-white" />
+                <div className="text-xl sm:text-2xl md:text-3xl font-display font-semibold text-white tracking-tight leading-snug">
+                  Not just another tool.<br />
+                  <span className="text-neutral-400 font-light">A workspace that works the way you do.</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* Thin Horizontal Divider */}
+        <div className="w-full border-t border-white/[0.08]" />
+
+        {/* ========================================================================= */}
+        {/* 4. ENGINEER OS — CURRENT V1 SHOWCASE */}
+        {/* ========================================================================= */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-24 md:py-32">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+
+            {/* Left: Large Engineer OS Dashboard Visual */}
+            <div className="lg:col-span-6 order-2 lg:order-1">
+              <div className="relative rounded-2xl border border-white/15 bg-[#090909] p-5 sm:p-6 shadow-[0_25px_70px_-15px_rgba(0,0,0,0.95)]">
+                {/* Window Bar */}
+                <div className="flex items-center justify-between pb-3 mb-4 border-b border-white/[0.08]">
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-white/20" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-white/20" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-white/20" />
+                    </div>
+                    <span className="text-[10px] font-mono text-white/50 tracking-wider ml-2">DAY ZERO // ENGINEER OS</span>
+                  </div>
+                  <span className="px-2 py-0.5 rounded text-[9px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    CURRENT V1
+                  </span>
+                </div>
+
+                {/* Workspace Content Simulation */}
+                <div className="space-y-4">
+                  {/* Header Profile Banner */}
+                  <div className="p-4 rounded-xl bg-black/50 border border-white/[0.06] flex items-center justify-between">
+                    <div>
+                      <div className="text-xs font-mono text-neutral-500 uppercase tracking-widest">MISSION CONTROL</div>
+                      <div className="text-base font-display font-bold text-white mt-0.5">Engineering Workspace</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-[10px] font-mono text-emerald-400 font-bold">100% OPERATIONAL</div>
+                      <div className="text-[9px] font-mono text-neutral-500">Supabase RLS Active</div>
+                    </div>
+                  </div>
+
+                  {/* 3 Metric Cards */}
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="p-3 rounded-lg bg-black/40 border border-white/[0.06] text-center">
+                      <div className="text-[9px] font-mono text-neutral-500 uppercase">Active Projects</div>
+                      <div className="text-lg font-display font-bold text-white mt-1">4</div>
+                    </div>
+                    <div className="p-3 rounded-lg bg-black/40 border border-white/[0.06] text-center">
+                      <div className="text-[9px] font-mono text-neutral-500 uppercase">Open Tasks</div>
+                      <div className="text-lg font-display font-bold text-white mt-1">12</div>
+                    </div>
+                    <div className="p-3 rounded-lg bg-black/40 border border-white/[0.06] text-center">
+                      <div className="text-[9px] font-mono text-neutral-500 uppercase">In Progress</div>
+                      <div className="text-lg font-display font-bold text-white mt-1">3</div>
+                    </div>
+                  </div>
+
+                  {/* Projects Table Preview */}
+                  <div className="rounded-xl bg-black/40 border border-white/[0.06] p-3 space-y-2 text-xs">
+                    <div className="text-[9px] font-mono text-neutral-500 uppercase tracking-wider pb-1 border-b border-white/[0.04]">
+                      Recent Engineering Workspaces
+                    </div>
+                    <div className="flex items-center justify-between py-1 border-b border-white/[0.04]">
+                      <div className="flex items-center gap-2">
+                        <FolderGit2 className="w-3.5 h-3.5 text-neutral-400" />
+                        <span className="text-neutral-200 font-medium">Aurora</span>
+                        <span className="text-[9px] font-mono text-neutral-500">Web Application</span>
+                      </div>
+                      <div className="text-[9px] font-mono text-neutral-400">77% complete</div>
+                    </div>
+                    <div className="flex items-center justify-between py-1 border-b border-white/[0.04]">
+                      <div className="flex items-center gap-2">
+                        <Database className="w-3.5 h-3.5 text-neutral-400" />
+                        <span className="text-neutral-200 font-medium">Nebula</span>
+                        <span className="text-[9px] font-mono text-neutral-500">Backend System</span>
+                      </div>
+                      <div className="text-[9px] font-mono text-neutral-400">45% complete</div>
+                    </div>
+                    <div className="flex items-center justify-between py-1">
+                      <div className="flex items-center gap-2">
+                        <Smartphone className="w-3.5 h-3.5 text-neutral-400" />
+                        <span className="text-neutral-200 font-medium">Orion</span>
+                        <span className="text-[9px] font-mono text-neutral-500">Mobile Client</span>
+                      </div>
+                      <div className="text-[9px] font-mono text-neutral-400">20% complete</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Product Description & 8 Features List */}
+            <div className="lg:col-span-6 order-1 lg:order-2 space-y-6">
+              <div className="text-xs font-mono tracking-[0.25em] text-neutral-400 uppercase">
+                — CURRENT V1
+              </div>
+
+              <h2 className="text-4xl sm:text-5xl font-display font-extrabold tracking-tight text-white">
+                Engineer OS
+              </h2>
+
+              <p className="text-base sm:text-lg font-sans text-neutral-400 font-light leading-relaxed">
+                The first Day Zero OS experience, designed for engineers and builders who need a central environment to organize projects and the information surrounding them.
+              </p>
+
+              <div className="text-xs font-mono tracking-widest text-white/50 uppercase pt-2">
+                Key Features
+              </div>
+
+              {/* Clean Feature List with Minimal Line Icons */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div className="flex items-center gap-3 p-3 rounded-lg border border-white/[0.06] bg-[#0A0A0A]">
+                  <Terminal className="w-4 h-4 text-white/70 shrink-0" />
+                  <span className="text-xs font-mono text-neutral-300">Mission Control</span>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 rounded-lg border border-white/[0.06] bg-[#0A0A0A]">
+                  <FolderGit2 className="w-4 h-4 text-white/70 shrink-0" />
+                  <span className="text-xs font-mono text-neutral-300">Projects</span>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 rounded-lg border border-white/[0.06] bg-[#0A0A0A]">
+                  <AppWindow className="w-4 h-4 text-white/70 shrink-0" />
+                  <span className="text-xs font-mono text-neutral-300">Project Workspace</span>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 rounded-lg border border-white/[0.06] bg-[#0A0A0A]">
+                  <CheckSquare className="w-4 h-4 text-white/70 shrink-0" />
+                  <span className="text-xs font-mono text-neutral-300">Tasks & Planning</span>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 rounded-lg border border-white/[0.06] bg-[#0A0A0A]">
+                  <BookOpen className="w-4 h-4 text-white/70 shrink-0" />
+                  <span className="text-xs font-mono text-neutral-300">Knowledge</span>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 rounded-lg border border-white/[0.06] bg-[#0A0A0A]">
+                  <Box className="w-4 h-4 text-white/70 shrink-0" />
+                  <span className="text-xs font-mono text-neutral-300">Assets</span>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 rounded-lg border border-white/[0.06] bg-[#0A0A0A]">
+                  <Feather className="w-4 h-4 text-white/70 shrink-0" />
+                  <span className="text-xs font-mono text-neutral-300">Content Engine</span>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 rounded-lg border border-white/[0.06] bg-[#0A0A0A]">
+                  <Shield className="w-4 h-4 text-white/70 shrink-0" />
+                  <span className="text-xs font-mono text-neutral-300">Workspace Management</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* Thin Horizontal Divider */}
+        <div className="w-full border-t border-white/[0.08]" />
+
+        {/* ========================================================================= */}
+        {/* 5. SECTOR-SPECIFIC OS VISION */}
+        {/* ========================================================================= */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-24 md:py-32">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+
+            {/* Left Column */}
+            <div className="lg:col-span-4 space-y-4">
+              <div className="text-xs font-mono tracking-[0.25em] text-neutral-400 uppercase">
+                — THE BIGGER PICTURE
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-display font-bold text-white tracking-tight">
+                Sector-Specific OS Vision
+              </h2>
+              <p className="text-sm sm:text-base font-sans text-neutral-400 font-light leading-relaxed">
+                One platform. Multiple specialized OS experiences for different ways of working.
+              </p>
+            </div>
+
+            {/* Right Column: Premium Grid of Cards */}
+            <div className="lg:col-span-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+
+                {/* Card 1: Engineer OS */}
+                <div className="p-4 rounded-xl border border-white/25 bg-[#101010] space-y-3 relative overflow-hidden">
+                  <div className="flex items-center justify-between">
+                    <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center">
+                      <Terminal className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-[8px] font-mono uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                      V1 ACTIVE
+                    </span>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-display font-bold text-white">Engineer OS</h3>
+                    <div className="text-[10px] font-mono text-white/50">Engineers / builders</div>
+                  </div>
+                  <p className="text-xs font-sans text-neutral-400 font-light leading-relaxed">
+                    Build, organize, collaborate and ship.
+                  </p>
+                </div>
+
+                {/* Card 2: Student OS */}
+                <div className="p-4 rounded-xl border border-white/[0.08] bg-[#0A0A0A] space-y-3">
+                  <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center">
+                    <GraduationCap className="w-4 h-4 text-white/60" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-display font-bold text-white">Student OS</h3>
+                    <div className="text-[10px] font-mono text-white/40">Students</div>
+                  </div>
+                  <p className="text-xs font-sans text-neutral-400 font-light leading-relaxed">
+                    Organize academic work, subjects, study activities and student workflows.
+                  </p>
+                </div>
+
+                {/* Card 3: Creator OS */}
+                <div className="p-4 rounded-xl border border-white/[0.08] bg-[#0A0A0A] space-y-3">
+                  <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center">
+                    <Palette className="w-4 h-4 text-white/60" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-display font-bold text-white">Creator OS</h3>
+                    <div className="text-[10px] font-mono text-white/40">Creators</div>
+                  </div>
+                  <p className="text-xs font-sans text-neutral-400 font-light leading-relaxed">
+                    Organize ideas, content, assets and publishing workflows.
+                  </p>
+                </div>
+
+                {/* Card 4: Teacher OS */}
+                <div className="p-4 rounded-xl border border-white/[0.08] bg-[#0A0A0A] space-y-3">
+                  <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center">
+                    <BookOpen className="w-4 h-4 text-white/60" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-display font-bold text-white">Teacher OS</h3>
+                    <div className="text-[10px] font-mono text-white/40">Teachers / educators</div>
+                  </div>
+                  <p className="text-xs font-sans text-neutral-400 font-light leading-relaxed">
+                    Organize teaching, courses, students and educational workflows.
+                  </p>
+                </div>
+
+                {/* Card 5: Freelancer OS */}
+                <div className="p-4 rounded-xl border border-white/[0.08] bg-[#0A0A0A] space-y-3">
+                  <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center">
+                    <Briefcase className="w-4 h-4 text-white/60" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-display font-bold text-white">Freelancer OS</h3>
+                    <div className="text-[10px] font-mono text-white/40">Freelancers</div>
+                  </div>
+                  <p className="text-xs font-sans text-neutral-400 font-light leading-relaxed">
+                    Organize clients, projects, tasks, resources and delivery.
+                  </p>
+                </div>
+
+                {/* Card 6: Startup OS */}
+                <div className="p-4 rounded-xl border border-white/[0.08] bg-[#0A0A0A] space-y-3">
+                  <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center">
+                    <Rocket className="w-4 h-4 text-white/60" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-display font-bold text-white">Startup OS</h3>
+                    <div className="text-[10px] font-mono text-white/40">Startup teams</div>
+                  </div>
+                  <p className="text-xs font-sans text-neutral-400 font-light leading-relaxed">
+                    Organize company work, execution, projects and collaboration.
+                  </p>
+                </div>
+
+                {/* Card 7: And more... */}
+                <div className="p-4 rounded-xl border border-dashed border-white/15 bg-transparent space-y-3 sm:col-span-2 flex flex-col justify-center">
+                  <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center">
+                    <MoreHorizontal className="w-4 h-4 text-white/50" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-display font-bold text-white">And more...</h3>
+                    <div className="text-[10px] font-mono text-white/40">Platform Vision</div>
+                  </div>
+                  <p className="text-xs font-sans text-neutral-400 font-light leading-relaxed">
+                    More specialized sector experiences coming.
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* Thin Horizontal Divider */}
+        <div className="w-full border-t border-white/[0.08]" />
+
+        {/* ========================================================================= */}
+        {/* 6. HOW IT WORKS / TECHNICAL ARCHITECTURE */}
+        {/* ========================================================================= */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-24 md:py-32">
+          <div className="space-y-12">
+
+            {/* Header */}
+            <div className="max-w-3xl space-y-4">
+              <div className="text-xs font-mono tracking-[0.25em] text-neutral-400 uppercase">
+                — HOW IT WORKS
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-display font-bold text-white tracking-tight">
+                Simple. Secure. Scalable.
+              </h2>
+              <p className="text-sm sm:text-base font-sans text-neutral-400 font-light leading-relaxed">
+                Day Zero OS is built with a modern, scalable architecture using React, TypeScript and Supabase. Authentication, database access and row-level security ensure workspace data remains protected and accessible only within the appropriate workspace context.
+              </p>
+            </div>
+
+            {/* Horizontal Technical Architecture Diagram */}
+            <div className="p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0B0B0B] space-y-8">
+              <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 items-center text-center">
+
+                {/* 1: User */}
+                <div className="p-4 rounded-xl border border-white/[0.08] bg-[#070707] space-y-2 flex flex-col items-center justify-center">
+                  <User className="w-5 h-5 text-white/70" />
+                  <div className="text-xs font-mono font-bold text-white uppercase">User</div>
+                  <div className="text-[9px] font-mono text-white/40">Client Session</div>
+                </div>
+
+                {/* 2: React UI */}
+                <div className="p-4 rounded-xl border border-white/[0.08] bg-[#070707] space-y-2 flex flex-col items-center justify-center">
+                  <Atom className="w-5 h-5 text-white/70" />
+                  <div className="text-xs font-mono font-bold text-white uppercase">React UI</div>
+                  <div className="text-[9px] font-mono text-white/40">Vite + TypeScript</div>
+                </div>
+
+                {/* 3: Feature / Service Layer */}
+                <div className="p-4 rounded-xl border border-white/[0.08] bg-[#070707] space-y-2 flex flex-col items-center justify-center">
+                  <Layers className="w-5 h-5 text-white/70" />
+                  <div className="text-xs font-mono font-bold text-white uppercase truncate">Service Layer</div>
+                  <div className="text-[9px] font-mono text-white/40">Domain Hooks</div>
+                </div>
+
+                {/* 4: Supabase */}
+                <div className="p-4 rounded-xl border border-white/[0.08] bg-[#070707] space-y-2 flex flex-col items-center justify-center">
+                  <Zap className="w-5 h-5 text-emerald-400" />
+                  <div className="text-xs font-mono font-bold text-white uppercase">Supabase</div>
+                  <div className="text-[9px] font-mono text-white/40">Auth + Gateways</div>
+                </div>
+
+                {/* 5: PostgreSQL */}
+                <div className="p-4 rounded-xl border border-white/[0.08] bg-[#070707] space-y-2 flex flex-col items-center justify-center">
+                  <Database className="w-5 h-5 text-white/70" />
+                  <div className="text-xs font-mono font-bold text-white uppercase">PostgreSQL</div>
+                  <div className="text-[9px] font-mono text-white/40">RLS Enforced</div>
+                </div>
+
+              </div>
+
+              {/* Architecture Micro-Tags */}
+              <div className="flex flex-wrap items-center justify-center gap-2 pt-2 text-[11px] font-mono text-neutral-400">
+                <span className="px-3 py-1 rounded-full border border-white/10 bg-[#080808]">Authentication</span>
+                <span className="px-3 py-1 rounded-full border border-white/10 bg-[#080808]">RLS</span>
+                <span className="px-3 py-1 rounded-full border border-white/10 bg-[#080808]">Workspace Membership</span>
+                <span className="px-3 py-1 rounded-full border border-white/10 bg-[#080808]">PWA</span>
+                <span className="px-3 py-1 rounded-full border border-white/10 bg-[#080808]">Capacitor</span>
+                <span className="px-3 py-1 rounded-full border border-white/10 bg-[#080808]">Tauri</span>
+              </div>
+
+              {/* Security Positioning Statement */}
+              <div className="text-xs font-mono text-center text-neutral-400 border-t border-white/[0.08] pt-4">
+                Access control is enforced at the database layer, not only by hiding controls in the frontend.
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* Thin Horizontal Divider */}
+        <div className="w-full border-t border-white/[0.08]" />
+
+        {/* ========================================================================= */}
+        {/* 7. CROSS-PLATFORM */}
+        {/* ========================================================================= */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-24 md:py-32">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+
+            {/* Left Column */}
+            <div className="lg:col-span-5 space-y-3">
+              <div className="text-xs font-mono tracking-[0.25em] text-neutral-400 uppercase">
+                — CROSS-PLATFORM
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-display font-bold text-white tracking-tight">
+                Available On
+              </h2>
+              <p className="text-sm sm:text-base font-sans text-neutral-400 font-light leading-relaxed">
+                Access Day Zero OS on the platform that works for you.
+              </p>
+            </div>
+
+            {/* Right Column: 4 Platform Cards */}
+            <div className="lg:col-span-7">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                {/* Web */}
+                <div className="p-4 rounded-xl border border-white/10 bg-[#0B0B0B] space-y-2 flex flex-col items-center justify-center">
+                  <Globe className="w-5 h-5 text-white" />
+                  <div>
+                    <div className="text-xs font-display font-bold text-white">Web</div>
+                    <div className="text-[10px] font-mono text-white/40 mt-0.5">(Chrome, Firefox, Safari, Edge)</div>
+                  </div>
+                </div>
+
+                {/* PWA */}
+                <div className="p-4 rounded-xl border border-white/10 bg-[#0B0B0B] space-y-2 flex flex-col items-center justify-center">
+                  <AppWindow className="w-5 h-5 text-white" />
+                  <div>
+                    <div className="text-xs font-display font-bold text-white">PWA</div>
+                    <div className="text-[10px] font-mono text-white/40 mt-0.5">(Installable Web App)</div>
+                  </div>
+                </div>
+
+                {/* Android / iOS */}
+                <div className="p-4 rounded-xl border border-white/10 bg-[#0B0B0B] space-y-2 flex flex-col items-center justify-center">
+                  <Smartphone className="w-5 h-5 text-white" />
+                  <div>
+                    <div className="text-xs font-display font-bold text-white">Android / iOS</div>
+                    <div className="text-[10px] font-mono text-white/40 mt-0.5">(via Capacitor)</div>
+                  </div>
+                </div>
+
+                {/* Desktop */}
+                <div className="p-4 rounded-xl border border-white/10 bg-[#0B0B0B] space-y-2 flex flex-col items-center justify-center">
+                  <Monitor className="w-5 h-5 text-white" />
+                  <div>
+                    <div className="text-xs font-display font-bold text-white">Desktop</div>
+                    <div className="text-[10px] font-mono text-white/40 mt-0.5">(via Tauri)</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* BOTTOM RETURN TO ARCHIVE FOOTER */}
+        {/* ========================================================================= */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-8">
+          <div className="p-6 sm:p-8 rounded-2xl border border-white/10 bg-[#0A0A0A] flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+            <div className="space-y-1">
+              <div className="text-xs font-mono text-white/40 uppercase tracking-widest">
+                EXPLORE MORE EXPERIMENTS & BUILDS
+              </div>
+              <div className="text-lg font-display font-bold text-white">
+                Ready to return to the product archive?
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-6 py-3 rounded-full bg-white text-black font-mono text-xs font-bold tracking-wider uppercase hover:bg-neutral-200 transition-all cursor-pointer shadow-[0_0_20px_rgba(255,255,255,0.18)] shrink-0"
+            >
+              ← Back to Product Archive
+            </button>
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+  );
+}
+
+`
+
+---
+
+### File 20: src/components/products/productsData.js
+`jsx
 export const PRODUCTS_DATA = [
   {
     id: '01',
@@ -7088,6 +8321,156 @@ engine.bootSequence();`,
   },
 ];
 
-```
+`
 
 ---
+
+### File 21: src/components/notFound/NotFoundPage.jsx
+`jsx
+import React from 'react';
+import { motion } from 'framer-motion';
+
+export default function NotFoundPage({ onGoHome, onGoBack }) {
+  const handleReturnHome = (e) => {
+    if (e) e.preventDefault();
+    if (onGoHome) {
+      onGoHome();
+    } else {
+      window.location.href = '/';
+    }
+  };
+
+  const handleBack = (e) => {
+    if (e) e.preventDefault();
+    if (onGoBack) {
+      onGoBack();
+    } else if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      handleReturnHome(e);
+    }
+  };
+
+  return (
+    <div className="relative min-h-screen w-full flex flex-col justify-between bg-[#050505] text-[#F3F4F6] select-none font-sans overflow-hidden">
+      {/* 1. BRAND HEADER (Clean Day Zero Identity only) */}
+      <header className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-6 sm:pt-8 flex items-center justify-between">
+        <button
+          type="button"
+          onClick={handleReturnHome}
+          className="flex items-center gap-2.5 sm:gap-3 group text-left shrink-0 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-white/40 rounded-sm"
+          title="Return to Day Zero Home"
+          aria-label="Day Zero Home"
+        >
+          <div className="w-7 h-7 sm:w-8 sm:h-8 relative flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+            <svg viewBox="0 0 600 600" className="w-7 h-7 sm:w-8 sm:h-8 overflow-visible" aria-hidden="true">
+              <g>
+                <path d="M 85 300 L 515 300" fill="none" stroke="#ffffff" strokeWidth="7" strokeLinecap="round" />
+                <path d="M 470 300 A 170 170 0 1 0 433.96 404.66" fill="none" stroke="#ffffff" strokeWidth="18" strokeLinecap="round" strokeLinejoin="round" />
+                <g transform="translate(437.65, 399.93) rotate(-52.3)">
+                  <path d="M 14 0 L -8 -9 L -2 0 L -8 9 Z" fill="#ffffff" stroke="#ffffff" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" />
+                </g>
+              </g>
+            </svg>
+          </div>
+
+          <div className="flex flex-col">
+            <span className="font-display text-xs sm:text-sm tracking-[0.22em] font-semibold text-white uppercase whitespace-nowrap">
+              DAY ZERO
+            </span>
+          </div>
+        </button>
+      </header>
+
+      {/* 2. HERO (Minimal, calm, strong typography, zero macro clutter) */}
+      <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 py-10 my-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full max-w-2xl mx-auto flex flex-col items-center text-center"
+        >
+          {/* Dominant Clean 404 Typography */}
+          <h1
+            className="font-display font-black text-8xl xs:text-9xl sm:text-[11rem] md:text-[13rem] lg:text-[15rem] leading-none tracking-tighter text-white select-none"
+            aria-label="404 Error: Page Not Found"
+          >
+            404
+          </h1>
+
+          {/* Short Confident Headline */}
+          <h2 className="mt-2 sm:mt-4 text-xl sm:text-2xl md:text-3xl font-display font-bold tracking-tight text-white uppercase max-w-lg">
+            THIS SPACE DOESN'T EXIST.
+          </h2>
+
+          {/* Concise Supporting Copy */}
+          <p className="mt-3 text-xs sm:text-sm md:text-base font-sans font-light text-white/50 max-w-md leading-relaxed">
+            Looks like you've reached a part of the system that isn't available.
+          </p>
+
+          {/* Action CTAs */}
+          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full max-w-xs sm:max-w-none">
+            {/* Primary Action: Return to Day Zero */}
+            <button
+              type="button"
+              onClick={handleReturnHome}
+              className="w-full sm:w-auto px-7 sm:px-8 py-3.5 rounded-full bg-white text-black font-mono text-xs sm:text-[13px] font-bold tracking-wider uppercase transition-all duration-300 hover:bg-neutral-200 hover:shadow-[0_0_25px_rgba(255,255,255,0.2)] hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            >
+              <span>RETURN TO DAY ZERO</span>
+              <svg
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              >
+                <path
+                  d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+
+            {/* Secondary Action: Go Back */}
+            <button
+              type="button"
+              onClick={handleBack}
+              className="w-full sm:w-auto px-5 py-3 rounded-full border border-white/10 hover:border-white/25 bg-transparent hover:bg-white/5 text-white/50 hover:text-white font-mono text-xs sm:text-[12px] tracking-widest uppercase transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+            >
+              <svg
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-3.5 h-3.5"
+                aria-hidden="true"
+              >
+                <path
+                  d="M13 8H3M3 8L7.5 3.5M3 8L7.5 12.5"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span>GO BACK</span>
+            </button>
+          </div>
+        </motion.div>
+      </main>
+
+      {/* 3. MINIMAL EMPTY FOOTER SPACER */}
+      <footer className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pb-6 sm:pb-8 flex items-center justify-between text-[10px] font-mono text-white/20">
+        <span>DAY ZERO</span>
+        <span>© {new Date().getFullYear()}</span>
+      </footer>
+    </div>
+  );
+}
+
+`
+
+---
+
