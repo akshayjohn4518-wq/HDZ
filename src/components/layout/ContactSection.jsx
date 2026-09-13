@@ -335,20 +335,20 @@ export default function ContactSection({ onClose }) {
             </div>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] text-white/60">
               <a
-                href="mailto:akshayjohn4518@gmail.com"
+                href="mailto:dayzeromedia.co@gmail.com"
                 className="inline-flex items-center gap-2 hover:text-white transition-colors"
               >
                 <Mail className="w-3.5 h-3.5 text-white/40" />
-                <span>akshayjohn4518@gmail.com</span>
+                <span>dayzeromedia.co@gmail.com</span>
               </a>
 
               <div className="inline-flex items-center gap-2 text-white/50">
                 <MapPin className="w-3.5 h-3.5 text-white/40" />
-                <span>HYDERBAD, India</span>
+                <span>HYDERABAD, India</span>
               </div>
 
               <a
-                href="https://linkedin.com/company/dayzero"
+                href="https://www.linkedin.com/in/heyitsdayzero/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 hover:text-white transition-colors"
@@ -356,7 +356,19 @@ export default function ContactSection({ onClose }) {
                 <span className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-[2px] bg-white/20 text-white text-[9px] font-bold">
                   in
                 </span>
-                <span>/dayzero</span>
+                <span>/heyitsdayzero</span>
+              </a>
+
+              <a
+                href="https://github.com/heyitsdayzero/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 hover:text-white transition-colors"
+              >
+                <span className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-[2px] bg-white/20 text-white text-[9px] font-bold">
+                  gh
+                </span>
+                <span>/heyitsdayzero</span>
               </a>
             </div>
           </div>

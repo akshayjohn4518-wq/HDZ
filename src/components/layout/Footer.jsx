@@ -22,12 +22,20 @@ export default function Footer({ onReplayIntro, onOpenContact }) {
         {/* Right: Minimal Links & Copyright */}
         <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-[10px] sm:text-[11px] text-white/40 uppercase tracking-wider">
           <a
-            href="https://github.com"
+            href="https://github.com/heyitsdayzero/"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition-colors"
           >
             GITHUB
+          </a>
+          <a
+            href="https://www.linkedin.com/in/heyitsdayzero/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-white transition-colors"
+          >
+            LINKEDIN
           </a>
           <button
             type="button"
